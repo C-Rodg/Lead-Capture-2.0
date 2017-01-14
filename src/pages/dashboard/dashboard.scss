@@ -1,0 +1,82 @@
+page-dashboard {
+    .dashboard-numbers {
+        line-height: 1.2;
+        background-color: color($colors, p-primary);
+        color: color($colors, p-text);
+        border-right: 1px solid color($colors, p-divider);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .dashboard-number {
+            font-size: 1.8em;
+        }        
+    }
+
+    .dashboard-event-info {
+        h2 {
+            font-weight: bold;
+        }
+    }
+
+    .dashboard-add {
+        ion-icon {
+            font-size: 5.5em;
+            color: rgba(0,0,0,.8);
+        }
+
+        .dashboard-add-text {
+            border-top: 1px solid color($colors, white-divider);
+            padding-top:10px;
+            padding-bottom: 8px;
+        }
+    }
+
+    .dashboard-view {
+        .dashboard-view-icon {
+            border-right: 1px solid color($colors, white-divider);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+        }
+
+        ion-col {
+            padding-top: 25px;
+            padding-bottom: 25px;
+        }
+    }
+
+    .settings-box {
+        flex-grow: 1;
+        display: flex;
+        padding: 0;
+
+        ion-icon {
+            font-size: 2.5em;
+        }
+
+        ion-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 0;
+        }
+
+        h2 {
+            font-size: 1.5em;
+        }
+    }
+
+    .dashboard-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .settings-row {
+        flex-grow: 1;
+    }
+}

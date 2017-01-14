@@ -1,9 +1,17 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform} from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { Page1 } from '../pages/page1/page1';
 import { Page2 } from '../pages/page2/page2';
+
+
+// Side Menu Pages
+import { Dashboard } from '../pages/dashboard/dashboard';
+import { List } from '../pages/list/list';
+import { Scan } from '../pages/scan/scan';
+import { Device } from '../pages/device/device';
+import { Settings } from '../pages/settings/settings';
 
 
 @Component({
@@ -12,17 +20,21 @@ import { Page2 } from '../pages/page2/page2';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = Page1;
+  rootPage: any = Dashboard;
 
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{title: string, component: any, icon : string}>;
 
   constructor(public platform: Platform) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Page One', component: Page1 },
-      { title: 'Page Two', component: Page2 }
+      { title: 'Dashboard', component: Dashboard, icon : 'home'},
+      { title: 'Add New Lead', component: Scan, icon : 'add'},
+      { title: 'View Leads', component: List, icon : 'list-box'},
+      { title: 'Sync Leads', component: Page2, icon : 'refresh'},
+      { title: 'Edit User', component: Device, icon : 'create'},
+      { title: 'Settings', component: Settings, icon : 'settings'}
     ];
 
   }
@@ -38,7 +50,12 @@ export class MyApp {
 
   openPage(page) {
     // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
+    // we wouldn't want the back button to show in this scenario   
+    if(page.icon === 'refresh') {
+      // TODO: SYNC content
+      alert("SYNCING LEADS");
+      return false;
+    }
     this.nav.setRoot(page.component);
   }
 }

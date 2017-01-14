@@ -14,3 +14,26 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+
+.side-menu {
+    .item-block .item-inner {
+        border-bottom: 0;
+    }
+
+    .item {
+        border-bottom: 1px solid #dedede;
+    }
+
+    .item:first-child {
+        padding-top: 5px;
+    }
+}
+
+// ion-col.dashboard-numbers {
+//     font-size: 1.5em;
+//     line-height: 1;
+//     background-color: color($colors, p-primary);
+//     color: color($colors, p-text);
+//     border-right: 1px solid color($colors, p-divider);
+// }

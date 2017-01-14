@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-navbar color="p-primary-dark" padding-top>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Dashboard</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div class="dashboard-container">
+
+    <ion-card>
+      <ion-row>
+        <ion-col width-25 text-center class="dashboard-numbers" stretch>
+            <div class="dashboard-number">279</div>
+            <div center>leads</div>
+        </ion-col>
+        <ion-col class="dashboard-event-info" padding-left>
+        <h2>Salesforce World Tour - NYC 2017</h2>
+        <p>Tyler Jackson</p>
+        </ion-col>
+      </ion-row>    
+    </ion-card>  
+
+    <ion-card class="dashboard-add" [navPush]="scanPage">
+      <ion-row >
+        <ion-col text-center>
+          <ion-icon name="add"></ion-icon>
+        </ion-col>
+      </ion-row>
+      <ion-row class="dashboard-add-text">
+        <ion-col text-center>
+          <h1>Add New Lead</h1>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+    <ion-card class="dashboard-view" [navPush]="listPage">
+      <ion-row>
+        <ion-col width-25 text-center stretch class="dashboard-view-icon">
+          <ion-icon name="list-box"></ion-icon>
+        </ion-col>
+        <ion-col center padding-left>
+          <h1>View Leads</h1>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+    <ion-row class="settings-row">
+
+      <ion-col width-50 class="settings-box">
+        <ion-card [navPush]="devicePage">
+          <ion-row>
+            <ion-col text-center>
+              <ion-icon name="create"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col text-center>
+              <h2>Edit User</h2>
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </ion-col>
+
+
+      <ion-col width-50 class="settings-box">
+        <ion-card [navPush]="settingsPage">
+          <ion-row>
+            <ion-col text-center>
+              <ion-icon name="settings"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col text-center>
+              <h2>Settings</h2>
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </ion-col>
+
+    </ion-row>
+  </div>
+</ion-content>

@@ -1,15 +1,16 @@
-<ion-menu [content]="content">
+<ion-menu [content]="content" color="p-primary">
   <ion-header>
-    <ion-toolbar>
-      <ion-title>Menu</ion-title>
+    <ion-toolbar color="p-primary-dark" padding-top>
+      <ion-title>Validar Lead Capture</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-content>
-    <ion-list>
+    <ion-list class="side-menu">
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
+        <ion-icon name={{p.icon}} item-left></ion-icon>
         {{p.title}}
-      </button>
+      </button>      
     </ion-list>
   </ion-content>
 
