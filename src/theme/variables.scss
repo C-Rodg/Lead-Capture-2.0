@@ -46,6 +46,7 @@ $colors: (
 // --------------------------------------------------
 // iOS only Sass variables can go here
 
+ion-item.input-has-value:not(.input-has-focus),
 ion-item.input-has-focus {
   border-bottom-color: color($colors, p-primary) !important;
   box-shadow: color($colors, p-primary) 0 -1px 0 0 inset !important;

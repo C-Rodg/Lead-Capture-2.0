@@ -12,129 +12,46 @@
 <ion-content padding>
     <div>
       <h3>
-        Select a User <span class="add-icon" (click)="addUser()"><ion-icon name="add"></ion-icon></span>
+        Select a User <span class="add-icon" (click)="navToModal('user', '')"><ion-icon name="add"></ion-icon></span>
       </h3>
        <ion-list no-lines>
 
-        <ion-item-sliding>
-          <ion-item>
-            Booth Station
-          </ion-item>
-          <ion-item-options side="right">
-            <button ion-button color="p-primary">
-              <ion-icon name="create"></ion-icon>
-              Edit
-            </button>
-            <button ion-button color="danger" >
-              <ion-icon name="trash"></ion-icon>
-              Delete
-            </button>
-          </ion-item-options>
-        </ion-item-sliding>
-
-        <ion-item-sliding>
-          <ion-item class="active-list-item">
-            Tom Douglas
-          </ion-item>
-          <ion-item-options side="right">
-            <button ion-button color="p-primary">
-              <ion-icon name="create"></ion-icon>
-              Edit
-            </button>
-            <button ion-button color="danger" >
-              <ion-icon name="trash"></ion-icon>
-              Delete
-            </button>
-          </ion-item-options>
-        </ion-item-sliding>
-
-        <ion-item-sliding>
-          <ion-item>
-            Johnny Walker
-          </ion-item>
-          <ion-item-options side="right">
-            <button ion-button color="p-primary">
-              <ion-icon name="create"></ion-icon>
-              Edit
-            </button>
-            <button ion-button color="danger" >
-              <ion-icon name="trash"></ion-icon>
-              Delete
-            </button>
-          </ion-item-options>
-        </ion-item-sliding>
+         <ion-item-sliding *ngFor="let person of users; let idx = index;">
+           <ion-item [ngClass]="{'active-list-item': person === selectedUser}" (click)="selectSetting('user', person)">{{ person }}</ion-item>
+           <ion-item-options side="right">
+             <button ion-button color="p-primary" (click)="navToModal('user', person, idx)">
+                <ion-icon name="create"></ion-icon>
+                Edit
+             </button>
+             <button ion-button color="danger" (click)="deleteSetting('user', idx)">
+               <ion-icon name="trash"></ion-icon>
+               Delete
+             </button>
+           </ion-item-options>
+         </ion-item-sliding>
+        
       </ion-list>
     </div>
     <div>
       <h3>
-        Select a Station <span class="add-icon" (click)="addStation()"><ion-icon name="add"></ion-icon></span>
+        Select a Station <span class="add-icon" (click)="navToModal('station', '')"><ion-icon name="add"></ion-icon></span>
       </h3>
 
       <ion-list no-lines>
 
-        <ion-item-sliding>
-          <ion-item>
-            Booth
-          </ion-item>
-          <ion-item-options side="right">
-            <button ion-button color="p-primary">
-              <ion-icon name="create"></ion-icon>
-              Edit
-            </button>
-            <button ion-button color="danger" >
-              <ion-icon name="trash"></ion-icon>
-              Delete
-            </button>
-          </ion-item-options>
-        </ion-item-sliding>
-
-        <ion-item-sliding>
-          <ion-item class="active-list-item">
-            Meeting
-          </ion-item>
-          <ion-item-options side="right">
-            <button ion-button color="p-primary">
-              <ion-icon name="create"></ion-icon>
-              Edit
-            </button>
-            <button ion-button color="danger" >
-              <ion-icon name="trash"></ion-icon>
-              Delete
-            </button>
-          </ion-item-options>
-        </ion-item-sliding>
-
-        <ion-item-sliding>
-          <ion-item>
-            Session
-          </ion-item>
-          <ion-item-options side="right">
-            <button ion-button color="p-primary">
-              <ion-icon name="create"></ion-icon>
-              Edit
-            </button>
-            <button ion-button color="danger" >
-              <ion-icon name="trash"></ion-icon>
-              Delete
-            </button>
-          </ion-item-options>
-        </ion-item-sliding>
-
-        <ion-item-sliding>
-          <ion-item>
-            Other
-          </ion-item>
-          <ion-item-options side="right">
-            <button ion-button color="p-primary">
-              <ion-icon name="create"></ion-icon>
-              Edit
-            </button>
-            <button ion-button color="danger" >
-              <ion-icon name="trash"></ion-icon>
-              Delete
-            </button>
-          </ion-item-options>
-        </ion-item-sliding>
+         <ion-item-sliding *ngFor="let station of stations; let idx = index;">
+           <ion-item [ngClass]="{'active-list-item': station === selectedStation}" (click)="selectSetting('station', station)">{{ station }}</ion-item>
+           <ion-item-options side="right">
+             <button ion-button color="p-primary" (click)="navToModal('station', station, idx)">
+                <ion-icon name="create"></ion-icon>
+                Edit
+             </button>
+             <button ion-button color="danger" (click)="deleteSetting('station', idx)">
+               <ion-icon name="trash"></ion-icon>
+               Delete
+             </button>
+           </ion-item-options>
+         </ion-item-sliding>
 
       </ion-list>
     </div>

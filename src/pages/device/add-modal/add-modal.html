@@ -2,10 +2,10 @@
    <ion-toolbar color="p-primary-dark" padding-top>
        <ion-title>
            <span class="back-icon"><ion-icon (click)="dismiss()" name="arrow-back"></ion-icon></span>
-           Add User
+           {{ titleStr }}
         </ion-title>
         <ion-buttons end>
-            <button ion-button (click)="saveNewUser()">
+            <button ion-button (click)="saveNewDevice()">
                 <span ion-text>Save</span>
             </button>
         </ion-buttons>
@@ -15,7 +15,7 @@
 <ion-content padding-top>
   <ion-list>
       <ion-item>
-        <ion-input class="validar-input" type="text" placeholder="New User" ></ion-input>
+        <ion-input class="validar-input" type="text" placeholder="{{ placeholderStr }}" [(ngModel)]="inputVal" ></ion-input>
       </ion-item>
   </ion-list>
 </ion-content>
