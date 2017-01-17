@@ -1,6 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
-//import { Nav, NavController } from 'ionic-angular';
 import { List } from '../list/list';
 import { Scan } from '../scan/scan';
 import { Device } from '../device/device';
@@ -22,10 +21,6 @@ export class Dashboard {
     this.scanPage = Scan;
     this.devicePage = Device;
     this.settingsPage = Settings;
-  }
-
-  openPage(p) {
-
   }
 
 }

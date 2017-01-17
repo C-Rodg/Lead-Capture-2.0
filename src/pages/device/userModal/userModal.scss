@@ -1,0 +1,12 @@
+userModal {
+    .back-icon ion-icon{
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-right: 15px;
+    }
+
+    .list-md .item-input.input-has-focus {
+        border-bottom-color: color($colors, p-primary);
+        box-shadow: color($colors, p-primary) 0 -1px 0 0 inset;
+    }
+}

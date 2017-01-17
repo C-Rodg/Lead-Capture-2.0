@@ -9,6 +9,8 @@ import { List } from '../pages/list/list';
 import { Scan } from '../pages/scan/scan';
 import { Device } from '../pages/device/device';
 import { Settings } from '../pages/settings/settings';
+import { UserModal } from '../pages/device/userModal/userModal';
+import { StationModal } from '../pages/device/stationModal/stationModal';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { Settings } from '../pages/settings/settings';
     List,
     Scan,
     Device,
-    Settings
+    Settings,
+    UserModal,
+    StationModal
   ],
   imports: [
     IonicModule.forRoot(MyApp, {
@@ -35,7 +39,9 @@ import { Settings } from '../pages/settings/settings';
     List,
     Scan,
     Device,
-    Settings
+    Settings,
+    UserModal,
+    StationModal
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
 })

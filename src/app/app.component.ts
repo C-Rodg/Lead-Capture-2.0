@@ -2,10 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform} from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
-import { Page1 } from '../pages/page1/page1';
-import { Page2 } from '../pages/page2/page2';
-
-
 // Side Menu Pages
 import { Dashboard } from '../pages/dashboard/dashboard';
 import { List } from '../pages/list/list';
@@ -27,12 +23,12 @@ export class MyApp {
   constructor(public platform: Platform) {
     this.initializeApp();
 
-    // used for an example of ngFor and navigation
+    // TODO: convert 'sync leads' to action button
     this.pages = [
       { title: 'Dashboard', component: Dashboard, icon : 'home'},
       { title: 'Add New Lead', component: Scan, icon : 'add'},
       { title: 'View Leads', component: List, icon : 'list-box'},
-      { title: 'Sync Leads', component: Page2, icon : 'refresh'},
+      { title: 'Sync Leads', component: "", icon : 'refresh'},
       { title: 'Edit User', component: Device, icon : 'create'},
       { title: 'Settings', component: Settings, icon : 'settings'}
     ];

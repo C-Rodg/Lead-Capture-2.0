@@ -3,15 +3,139 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Edit User</ion-title>
+    <ion-title>
+      Edit User       
+    </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h3>Edit User</h3>
+    <div>
+      <h3>
+        Select a User <span class="add-icon" (click)="addUser()"><ion-icon name="add"></ion-icon></span>
+      </h3>
+       <ion-list no-lines>
 
-  <p>
-    User/Device Settings
-  </p>
+        <ion-item-sliding>
+          <ion-item>
+            Booth Station
+          </ion-item>
+          <ion-item-options side="right">
+            <button ion-button color="p-primary">
+              <ion-icon name="create"></ion-icon>
+              Edit
+            </button>
+            <button ion-button color="danger" >
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
 
+        <ion-item-sliding>
+          <ion-item class="active-list-item">
+            Tom Douglas
+          </ion-item>
+          <ion-item-options side="right">
+            <button ion-button color="p-primary">
+              <ion-icon name="create"></ion-icon>
+              Edit
+            </button>
+            <button ion-button color="danger" >
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item-sliding>
+          <ion-item>
+            Johnny Walker
+          </ion-item>
+          <ion-item-options side="right">
+            <button ion-button color="p-primary">
+              <ion-icon name="create"></ion-icon>
+              Edit
+            </button>
+            <button ion-button color="danger" >
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </div>
+    <div>
+      <h3>
+        Select a Station <span class="add-icon" (click)="addStation()"><ion-icon name="add"></ion-icon></span>
+      </h3>
+
+      <ion-list no-lines>
+
+        <ion-item-sliding>
+          <ion-item>
+            Booth
+          </ion-item>
+          <ion-item-options side="right">
+            <button ion-button color="p-primary">
+              <ion-icon name="create"></ion-icon>
+              Edit
+            </button>
+            <button ion-button color="danger" >
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item-sliding>
+          <ion-item class="active-list-item">
+            Meeting
+          </ion-item>
+          <ion-item-options side="right">
+            <button ion-button color="p-primary">
+              <ion-icon name="create"></ion-icon>
+              Edit
+            </button>
+            <button ion-button color="danger" >
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item-sliding>
+          <ion-item>
+            Session
+          </ion-item>
+          <ion-item-options side="right">
+            <button ion-button color="p-primary">
+              <ion-icon name="create"></ion-icon>
+              Edit
+            </button>
+            <button ion-button color="danger" >
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item-sliding>
+          <ion-item>
+            Other
+          </ion-item>
+          <ion-item-options side="right">
+            <button ion-button color="p-primary">
+              <ion-icon name="create"></ion-icon>
+              Edit
+            </button>
+            <button ion-button color="danger" >
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+
+      </ion-list>
+    </div>
 </ion-content>
