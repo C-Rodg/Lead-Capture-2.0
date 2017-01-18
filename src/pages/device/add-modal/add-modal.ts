@@ -34,14 +34,16 @@ export class AddModal {
       this.viewCtrl.dismiss({save: false, val : this.inputVal});
     }
 
-    saveNewDevice() {
-      // TODO: SAVE NEW User/Station
+    saveNewDevice() {      
       let dataObj = {
         save : true,
         val : this.inputVal
       };
       if(this.isEdit){
         dataObj['editIndex'] = this.editIdx; 
+      }
+      if(!this.inputVal){
+        dataObj['save'] = false;
       }
       this.viewCtrl.dismiss(dataObj);
     }

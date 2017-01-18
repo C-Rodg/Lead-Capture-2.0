@@ -42,9 +42,12 @@ $colors: (
 );  
 
 
-// App iOS Variables
+// App Theme
 // --------------------------------------------------
-// iOS only Sass variables can go here
+// Ionic apps can have different themes applied, which can
+// then be future customized. This import comes last
+// so that the above variables are used and Ionic's
+// default are overridden.
 
 ion-item.input-has-value:not(.input-has-focus),
 ion-item.input-has-focus {
@@ -52,28 +55,29 @@ ion-item.input-has-focus {
   box-shadow: color($colors, p-primary) 0 -1px 0 0 inset !important;
 }
 
+.inline-card-button {
+  .inline-card-icon {
+        border-right: 1px solid color($colors, white-divider);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2em;
+    }
 
+    ion-col {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
 
-// App Material Design Variables
-// --------------------------------------------------
-// Material Design only Sass variables can go here
+    .secondary-text {
+      line-height: 1.1;
+      color: color($colors, p-text-secondary);
 
-
-
-
-// App Windows Variables
-// --------------------------------------------------
-// Windows only Sass variables can go here
-
-
-
-
-// App Theme
-// --------------------------------------------------
-// Ionic apps can have different themes applied, which can
-// then be future customized. This import comes last
-// so that the above variables are used and Ionic's
-// default are overridden.
+      ion-icon {
+        vertical-align: middle;
+      }
+    }
+}
 
 @import "ionic.theme.default";
 

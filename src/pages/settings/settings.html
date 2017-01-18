@@ -7,11 +7,88 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h3>Settings</h3>
+<ion-content>
+  <div class="settings-container">
 
-  <p>
-    Settings content
-  </p>
+    <ion-card class="settings-card inline-card-button">
+      <ion-row>
+        <ion-col class="inline-card-icon" width-25 text-center stretch>
+          <ion-icon name="ios-swap"></ion-icon>
+        </ion-col>
+         <ion-col center padding-left>
+          <h1>Change Event</h1>
+        </ion-col>
+      </ion-row>
+    </ion-card>
 
+    <ion-card class="settings-card inline-card-button" [navPush]="devicePage">
+      <ion-row>
+        <ion-col class="inline-card-icon" width-25 text-center stretch>
+          <ion-icon name="ios-create-outline"></ion-icon>
+        </ion-col>
+         <ion-col center padding-left>
+          <h1>Edit User</h1>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+     <ion-card class="settings-card inline-card-button">
+      <ion-row>
+        <ion-col class="inline-card-icon" width-25 text-center stretch>
+          <ion-icon name="ios-cloud-upload-outline"></ion-icon>
+        </ion-col>
+         <ion-col center padding-left>
+          <h1>Upload Scans</h1>
+          <p class="secondary-text" >Pending Upload: 21</p>
+          <p class="secondary-text" >Pending Translation: 42</p>          
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+    <ion-card class="settings-card">
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Quick Scan Mode</ion-label>
+            <ion-toggle color="p-accent"></ion-toggle>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+           <ion-item>
+            <ion-label>Show Deleted Records</ion-label>
+            <ion-toggle color="p-accent"></ion-toggle>
+          </ion-item>         
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Autoupload every {{ autouploadTime }} mins</ion-label>
+           <ion-range min="1" max="10" step="1" snaps="true" color="p-accent" [(ngModel)]="autouploadTime">
+             <ion-icon range-left isActive="false" name="ios-timer-outline"></ion-icon>
+             <ion-icon range-right name="timer" name="ios-timer"></ion-icon>
+           </ion-range>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+     <ion-card class="settings-card inline-card-button">
+      <ion-row>
+        <ion-col class="inline-card-icon" width-25 text-center stretch>
+          <ion-icon name="ios-information-circle-outline"></ion-icon>
+        </ion-col>
+         <ion-col center padding-left>
+          <h1>About</h1>
+          <p class="secondary-text">AVE-LeadCapture version 2.0.0</p>
+          <p class="secondary-text">iPhone running iOS 10.2</p>
+          <p class="secondary-text">Sled-scanner: disconnected</p>
+          <p class="secondary-text">Cameras: front <ion-icon name="ios-checkmark"></ion-icon> | back <ion-icon name="ios-close"></ion-icon></p>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+  </div>
 </ion-content>
