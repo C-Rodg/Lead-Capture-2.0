@@ -4,14 +4,89 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>View Leads</ion-title>
+    <ion-buttons end class="navbar-btns">
+      <button ion-button icon-only (tap)="toggleSearchBox()">
+         <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
+  <ion-toolbar color="p-primary-dark" *ngIf="showSearch" >
+       <ion-searchbar (search)="searchByBadgeId($event)"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <h3>View Leads</h3>
+<ion-content class="{{showSearch ? 'search-open' : ''}}">
 
-  <p>
-    View Leads content
-  </p>
-  
+  <ion-card>
+    <ion-list no-lines>
+      <ion-item-sliding>
+        <ion-item>Julie Ashford</ion-item>
+        <ion-item-options side="right">
+          <button ion-button color="p-primary" >
+          <ion-icon name="create"></ion-icon>
+          Edit
+        </button>
+        <button ion-button color="danger">
+          <ion-icon name="trash"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+    </ion-list>
+  </ion-card>
+
+   <ion-card>
+    <ion-list no-lines>
+      <ion-item-sliding>
+        <ion-item>Brock Osweiler</ion-item>
+        <ion-item-options side="right">
+          <button ion-button color="p-primary" >
+          <ion-icon name="create"></ion-icon>
+          Edit
+        </button>
+        <button ion-button color="danger">
+          <ion-icon name="trash"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+    </ion-list>
+  </ion-card>
+
+   <ion-card>
+    <ion-list no-lines>
+      <ion-item-sliding>
+        <ion-item>Tom Savage</ion-item>
+        <ion-item-options side="right">
+          <button ion-button color="p-primary" >
+          <ion-icon name="create"></ion-icon>
+          Edit
+        </button>
+        <button ion-button color="danger">
+          <ion-icon name="trash"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+    </ion-list>
+  </ion-card>
+
+   <ion-card>
+    <ion-list no-lines>
+      <ion-item-sliding>
+        <ion-item>Miller Stevens</ion-item>
+        <ion-item-options side="right">
+          <button ion-button color="p-primary" >
+          <ion-icon name="create"></ion-icon>
+          Edit
+        </button>
+        <button ion-button color="danger">
+          <ion-icon name="trash"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+    </ion-list>
+  </ion-card>
+    
 </ion-content>

@@ -7,9 +7,15 @@ import { NavController } from 'ionic-angular';
   templateUrl: 'list.html'
 })
 export class List {
+  
+  showSearch : Boolean = false;
 
   constructor(public navCtrl: NavController) {
     
+  }
+
+  toggleSearchBox() {
+    this.showSearch = !this.showSearch;
   }
 
 }
