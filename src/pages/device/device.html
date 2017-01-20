@@ -12,18 +12,18 @@
 <ion-content padding>
     <div>
       <h3>
-        Select a User <span class="add-icon" (click)="navToModal('user', '')"><ion-icon name="add"></ion-icon></span>
+        Select a User <span class="add-icon" (tap)="navToModal('user', '')"><ion-icon name="add"></ion-icon></span>
       </h3>
        <ion-list no-lines>
 
          <ion-item-sliding *ngFor="let person of users; let idx = index;">
            <ion-item [ngClass]="{'active-list-item': person === selectedUser}" (click)="selectSetting('user', person)">{{ person }}</ion-item>
            <ion-item-options side="right">
-             <button ion-button color="p-primary" (click)="navToModal('user', person, idx)">
+             <button ion-button color="p-primary" (tap)="navToModal('user', person, idx)">
                 <ion-icon name="create"></ion-icon>
                 Edit
              </button>
-             <button ion-button color="danger" (click)="deleteSetting('user', idx)">
+             <button ion-button color="danger" (tap)="deleteSetting('user', idx)">
                <ion-icon name="trash"></ion-icon>
                Delete
              </button>
@@ -34,7 +34,7 @@
     </div>
     <div>
       <h3>
-        Select a Station <span class="add-icon" (click)="navToModal('station', '')"><ion-icon name="add"></ion-icon></span>
+        Select a Station <span class="add-icon" (tap)="navToModal('station', '')"><ion-icon name="add"></ion-icon></span>
       </h3>
 
       <ion-list no-lines>
@@ -42,11 +42,11 @@
          <ion-item-sliding *ngFor="let station of stations; let idx = index;">
            <ion-item [ngClass]="{'active-list-item': station === selectedStation}" (click)="selectSetting('station', station)">{{ station }}</ion-item>
            <ion-item-options side="right">
-             <button ion-button color="p-primary" (click)="navToModal('station', station, idx)">
+             <button ion-button color="p-primary" (tap)="navToModal('station', station, idx)">
                 <ion-icon name="create"></ion-icon>
                 Edit
              </button>
-             <button ion-button color="danger" (click)="deleteSetting('station', idx)">
+             <button ion-button color="danger" (tap)="deleteSetting('station', idx)">
                <ion-icon name="trash"></ion-icon>
                Delete
              </button>

@@ -18,20 +18,7 @@ page-dashboard {
         h2 {
             font-weight: bold;
         }
-    }
-
-    .dashboard-add {
-        ion-icon {
-            font-size: 5.5em;
-            color: rgba(0,0,0,.8);
-        }
-
-        .dashboard-add-text {
-            border-top: 1px solid color($colors, white-divider);
-            padding-top:10px;
-            padding-bottom: 8px;
-        }
-    }
+    }    
 
     .dashboard-view {
         .dashboard-view-icon {

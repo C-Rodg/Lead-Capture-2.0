@@ -1,11 +1,11 @@
 <ion-header>
    <ion-toolbar color="p-primary-dark" padding-top>
        <ion-title>
-           <span class="back-icon"><ion-icon (click)="dismiss()" name="arrow-back"></ion-icon></span>
+           <span class="back-icon"><ion-icon (tap)="dismiss()" name="arrow-back"></ion-icon></span>
            {{ titleStr }}
         </ion-title>
         <ion-buttons end>
-            <button ion-button (click)="saveNewDevice()">
+            <button ion-button (tap)="saveNewDevice()">
                 <span ion-text>Save</span>
             </button>
         </ion-buttons>

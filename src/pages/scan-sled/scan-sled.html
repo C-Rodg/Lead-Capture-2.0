@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar color="p-primary-dark" padding-top>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Scan</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  
+   <ion-card class="square-card-btn scan-sled-button" (touchstart)="scanBtnClicked($event, true)" (touchend)="scanBtnClicked($event, false)">
+      <ion-row class="scan-sled-icon">
+        <ion-col text-center>
+          <ion-icon name="qr-scanner"></ion-icon>
+        </ion-col>
+      </ion-row>
+      <ion-row class="square-card-btn-text">
+        <ion-col text-center>
+          <h1>SCAN</h1>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+</ion-content>
+
+<ion-footer class="scan-footer">
+  <ion-toolbar color="p-primary">
+        <div class="scan-device-info">
+          <ion-icon name="information-circle" (tap)="editUserPage()"></ion-icon>Mikey Albert - Session
+        </div>
+  </ion-toolbar>
+   <ion-toolbar color="p-primary">
+       <ion-searchbar (search)="searchByBadgeId($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-footer>

@@ -5,9 +5,10 @@ import { StatusBar, Splashscreen } from 'ionic-native';
 // Side Menu Pages
 import { Dashboard } from '../pages/dashboard/dashboard';
 import { List } from '../pages/list/list';
-import { Scan } from '../pages/scan/scan';
 import { Device } from '../pages/device/device';
 import { Settings } from '../pages/settings/settings';
+import { ScanCamera } from '../pages/scan-camera/scan-camera';
+import { ScanSled } from '../pages/scan-sled/scan-sled';
 
 
 @Component({
@@ -23,10 +24,17 @@ export class MyApp {
   constructor(public platform: Platform) {
     this.initializeApp();
 
-    // TODO: convert 'sync leads' to action button
+    // TODO: convert 'sync leads' to action button, show scan camera vs scan sled
+    let sled = true,
+        scanPage;
+    if (sled){
+      scanPage = ScanSled;
+    } else {
+      scanPage = ScanCamera;
+    }
     this.pages = [
       { title: 'Dashboard', component: Dashboard, icon : 'home'},
-      { title: 'Add New Lead', component: Scan, icon : 'add'},
+      { title: 'Add New Lead', component: scanPage, icon : 'add'},
       { title: 'View Leads', component: List, icon : 'list-box'},
       { title: 'Sync Leads', component: "", icon : 'refresh'},
       { title: 'Edit User', component: Device, icon : 'create'},

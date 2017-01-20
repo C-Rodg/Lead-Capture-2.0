@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar color="p-primary-dark" padding-top>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Scan</ion-title>
+    <ion-buttons end class="navbar-btns">
+    <button ion-button icon-only (tap)="toggleLight()">
+      <ion-icon name="{{torch === 'OFF' ? 'ios-flash-outline' : 'ios-flash'}}"></ion-icon>
+    </button>
+    <button ion-button icon-only (tap)="toggleCamera()">
+      <ion-icon name="reverse-camera"></ion-icon>
+    </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content></ion-content>
+
+<ion-footer class="scan-footer">
+  <ion-toolbar color="p-primary">
+        <div class="scan-device-info">
+          <ion-icon name="information-circle" (tap)="editUserPage()"></ion-icon>Marv Albert - Session
+        </div>
+  </ion-toolbar>
+   <ion-toolbar color="p-primary">
+       <ion-searchbar (search)="searchByBadgeId($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-footer>

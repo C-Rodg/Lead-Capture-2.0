@@ -44,11 +44,9 @@ $colors: (
 
 // App Theme
 // --------------------------------------------------
-// Ionic apps can have different themes applied, which can
-// then be future customized. This import comes last
-// so that the above variables are used and Ionic's
-// default are overridden.
 
+
+// Inline Card Buttons on Dashboard, Settings, Device pages
 ion-item.input-has-value:not(.input-has-focus),
 ion-item.input-has-focus {
   border-bottom-color: color($colors, p-primary) !important;
@@ -76,6 +74,47 @@ ion-item.input-has-focus {
       ion-icon {
         vertical-align: middle;
       }
+    }
+}
+
+// Square Card button - 1 icon, 1 text line - Dashboard, ScanSled page
+.square-card-btn {
+    ion-icon {
+        font-size: 5.5em;
+        color: rgba(0,0,0,.8);
+    }
+
+    .square-card-btn-text {
+        border-top: 1px solid color($colors, white-divider);
+        padding-top:10px;
+        padding-bottom: 8px;
+    }
+}
+
+// Navbar Right buttons
+.navbar-btns {
+  button {
+    margin-right: 12px;
+  }
+}
+
+// Search Bar, Device info on Scan pages
+.scan-footer {
+    ion-toolbar {
+        min-height: auto;
+    }
+
+    .scan-device-info {
+        padding: 7px 3px 2px 3px;
+        color: color($colors, light);
+        font-size: 1.2em;
+        white-space: nowrap;
+
+        ion-icon {
+            padding-right: 5px;
+            margin-right: 5px;
+            padding-left: 5px;
+        }
     }
 }
 
