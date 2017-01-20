@@ -2,4 +2,44 @@ page-list {
     .search-open {
         margin-top: 56px;
     }
+
+    .active-slide .button  {
+        height: 100%;
+        padding-left: 0.8em;
+        padding-right: 0.8em;
+    }
+
+    .active-slide .button:first-child {
+        padding-left: 1.2em;
+        padding-right: 1.2em;
+    }
+
+    .list__contactbox {
+        border-left: 3px solid color($colors, p-primary);
+        border-width: 3px !important;
+
+        h1 {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            margin-bottom: 4px
+        }
+
+        ion-label {
+            margin: 21px 0 14px 0;
+        }    
+
+        .list__contactbox__date {
+            position: absolute;
+            top: 4px;
+            right: 12px;
+        }
+    }
+
+    .list__footer {
+        .button {
+            padding-top:10px;
+            padding-bottom: 10px;
+            font-size: 1.6em;
+        }
+    }
 }

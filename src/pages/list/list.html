@@ -11,16 +11,21 @@
     </ion-buttons>
   </ion-navbar>
   <ion-toolbar color="p-primary-dark" *ngIf="showSearch" >
-       <ion-searchbar (search)="searchByBadgeId($event)"></ion-searchbar>
+       <ion-searchbar (ionInput)="filterLeads($event)" ></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="{{showSearch ? 'search-open' : ''}}">
 
-  <ion-card>
+<div *ngFor="let person of leads;" >
+<ion-card >
     <ion-list no-lines>
       <ion-item-sliding>
-        <ion-item>Julie Ashford</ion-item>
+        <ion-item class="list__contactbox">
+          <h1>{{person.firstName + " " + person.lastName}}</h1>
+          <p>{{person.company}}</p>
+          <p class="list__contactbox__date"><small>{{person.date}}</small></p>
+        </ion-item>
         <ion-item-options side="right">
           <button ion-button color="p-primary" >
           <ion-icon name="create"></ion-icon>
@@ -34,59 +39,12 @@
     </ion-item-sliding>
     </ion-list>
   </ion-card>
-
-   <ion-card>
-    <ion-list no-lines>
-      <ion-item-sliding>
-        <ion-item>Brock Osweiler</ion-item>
-        <ion-item-options side="right">
-          <button ion-button color="p-primary" >
-          <ion-icon name="create"></ion-icon>
-          Edit
-        </button>
-        <button ion-button color="danger">
-          <ion-icon name="trash"></ion-icon>
-          Delete
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
-    </ion-list>
-  </ion-card>
-
-   <ion-card>
-    <ion-list no-lines>
-      <ion-item-sliding>
-        <ion-item>Tom Savage</ion-item>
-        <ion-item-options side="right">
-          <button ion-button color="p-primary" >
-          <ion-icon name="create"></ion-icon>
-          Edit
-        </button>
-        <button ion-button color="danger">
-          <ion-icon name="trash"></ion-icon>
-          Delete
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
-    </ion-list>
-  </ion-card>
-
-   <ion-card>
-    <ion-list no-lines>
-      <ion-item-sliding>
-        <ion-item>Miller Stevens</ion-item>
-        <ion-item-options side="right">
-          <button ion-button color="p-primary" >
-          <ion-icon name="create"></ion-icon>
-          Edit
-        </button>
-        <button ion-button color="danger">
-          <ion-icon name="trash"></ion-icon>
-          Delete
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
-    </ion-list>
-  </ion-card>
+</div>
     
 </ion-content>
+
+<ion-footer class="list__footer">
+  <ion-toolbar >
+    <button color="p-primary" ion-button block >Add New Record</button>
+  </ion-toolbar>
+</ion-footer>
