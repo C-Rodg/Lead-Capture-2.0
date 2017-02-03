@@ -32,6 +32,10 @@ export class ScanCamera {
     this.http.post('http://localhost/barcodecontrol', this.camera).map(res => res.json()).subscribe(data => console.log(data));
   }
 
+  ionViewWillLeave() {
+    this.http.post('http://localhost/barcodecontrol', { visible: "NO" }).map(res => res.json()).subscribe(data => console.log(data));
+  }
+
   toggleLight() {
     this.torch = (this.torch === "OFF") ? "ON" : "OFF";
     this.http.post('http://localhost/barcodecontrol', {torch : this.torch}).map(res => res.json()).subscribe(data => console.log(data));

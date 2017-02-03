@@ -29,4 +29,8 @@ export class ScanSled {
     }
   }
 
+  startLineaScan() {
+    
+  }
+
 }
