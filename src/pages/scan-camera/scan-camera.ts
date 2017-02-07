@@ -27,7 +27,6 @@ export class ScanCamera {
 
   constructor(public navCtrl: NavController, public http : Http) {
     this.devicePage = Device;
-
    
     this.http.post('http://localhost/barcodecontrol', this.camera).map(res => res.json()).subscribe(data => console.log(data));
   }
