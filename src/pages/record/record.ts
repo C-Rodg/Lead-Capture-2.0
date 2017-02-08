@@ -12,6 +12,8 @@ export class Record {
   badgeId;
   company;
 
+  capturePage : string = "contact";
+
   constructor(public navCtrl: NavController, params: NavParams) {
     let person = params.data;
     this.firstName = person.firstName,

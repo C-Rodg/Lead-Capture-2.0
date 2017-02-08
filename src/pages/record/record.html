@@ -29,4 +29,47 @@
     </ion-row>    
   </ion-card> 
 
+  <div [ngSwitch]="capturePage">
+
+    <div *ngSwitchCase="'contact'">
+      <ion-card class="lead-ranking-card">
+       
+        <ion-card-content>
+          <ion-list>
+            <ion-item>
+              <ion-label>Rank</ion-label>
+              <ion-select>
+                <ion-option value="qrRank_Hot">Hot</ion-option>
+                <ion-option value="qrRank_Warm">Warm</ion-option>
+                <ion-option value="qrRank_Cold">Cold</ion-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div *ngSwitchCase="'qualifiers'">Qualifiers Page</div>
+
+    <div *ngSwitchCase="'notes'">Notes Page</div>
+
+  </div>
+
 </ion-content>
+
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-segment color="p-primary" [(ngModel)]="capturePage">
+      <ion-segment-button value="contact">
+        Contact 
+      </ion-segment-button>
+      <ion-segment-button value="qualifiers">
+        Qualifiers
+      </ion-segment-button>
+      <ion-segment-button value="notes">
+        Notes
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-footer>
