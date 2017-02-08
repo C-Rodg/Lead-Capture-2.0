@@ -11,6 +11,7 @@ import { Settings } from '../pages/settings/settings';
 import { AddModal } from '../pages/device/add-modal/add-modal';
 import { ScanCamera } from '../pages/scan-camera/scan-camera';
 import { ScanSled } from '../pages/scan-sled/scan-sled';
+import { Record } from '../pages/record/record';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { ScanSled } from '../pages/scan-sled/scan-sled';
     ScanSled,
     Device,
     Settings,
-    AddModal
+    AddModal,
+    Record
   ],
   imports: [
     IonicModule.forRoot(MyApp, {
@@ -42,7 +44,8 @@ import { ScanSled } from '../pages/scan-sled/scan-sled';
     ScanSled,
     Device,
     Settings,
-    AddModal
+    AddModal,
+    Record
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
 })

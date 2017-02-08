@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { Device } from '../device/device';
+import { Record } from '../record/record';
 
 // TEMPORARY FOR TESTING
 import { Http } from '@angular/http';
@@ -27,7 +28,7 @@ export class ScanCamera {
 
   constructor(public navCtrl: NavController, public http : Http) {
     this.devicePage = Device;
-   
+    (<any>window).OnDataRead = this.handleDataRead.bind(this);
     this.http.post('http://localhost/barcodecontrol', this.camera).map(res => res.json()).subscribe(data => console.log(data));
   }
 
@@ -51,6 +52,11 @@ export class ScanCamera {
 
   searchByBadgeId(event) {
     alert("SEARCHING for" + event.target.value);
+  }
+
+  handleDataRead(d) {
+    alert("Read badge from CAMERA\n" + JSON.stringify(d));
+    this.navCtrl.push(Record, {firstName : "Thomas", lastName : "Williams", badgeId : "T12345689", company: "Imagination Records, Inc."});
   }
 
 }

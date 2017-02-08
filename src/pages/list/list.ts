@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 
 import { NavController } from 'ionic-angular';
 
+import { ScanSled } from '../scan-sled/scan-sled';
+import { ScanCamera } from '../scan-camera/scan-camera';
+
 // TESTING
 const leads = [{
   firstName : "Julie", lastName: "Williams", company : "Validar, Inc.", date : "JUN 20, 2:34 PM"
@@ -28,9 +31,18 @@ export class List {
   showSearch : Boolean = false;
 
   leads : Array<any>;
+  scanPage : Component;
 
   constructor(public navCtrl: NavController) {
     this.leads = leads;
+
+    // TODO: convert 'sync leads' to action button, show scan camera vs scan sled
+    let sled = true;
+    if (sled){
+      this.scanPage = ScanSled;
+    } else {
+      this.scanPage = ScanCamera;
+    }
   }
 
   initializeList() {
