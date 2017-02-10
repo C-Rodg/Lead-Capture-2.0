@@ -13,8 +13,11 @@
 </ion-header>
 
 <ion-content>
-  
- <ion-card class="default-info-card">
+ <form [formGroup]="recordForm">
+
+   <div><button (click)="logForm()">Log Form</button></div>
+
+ <ion-card class="default-info-card" formGroupName="leadRanking">
     <ion-row>
       <ion-col width-25 text-center class="icon-column" stretch>
           <div>
@@ -28,10 +31,10 @@
       <ion-list class="small-select">
             <ion-item>
               <ion-label>Lead Ranking</ion-label>
-              <ion-select color="p-primary">
-                <ion-option value="qrRank_Hot">Hot</ion-option>
-                <ion-option value="qrRank_Warm">Warm</ion-option>
-                <ion-option value="qrRank_Cold">Cold</ion-option>
+              <ion-select color="p-primary" formControlName="lcLeadRank">
+                <ion-option value="lcRank_Hot">Hot</ion-option>
+                <ion-option value="lcRank_Warm">Warm</ion-option>
+                <ion-option value="lcRank_Cold">Cold</ion-option>
               </ion-select>
             </ion-item>
           </ion-list>
@@ -39,60 +42,58 @@
     </ion-row>    
   </ion-card> 
 
-  <!--<div [ngSwitch]="pages.current">-->
-
-      <ion-card class="contact-info-card validar-form" [hidden]="capturePage !== 'contact'">  
+      <ion-card class="contact-info-card validar-form" [hidden]="capturePage !== 'contact'" formGroupName="contact">  
         <ion-card-header>Contact Information:</ion-card-header>     
         <ion-card-content>
           <ion-list>
 
             <ion-item class="req">
               <ion-label stacked>First Name</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcFirstName"></ion-input>
             </ion-item>
             <ion-item class="req">
               <ion-label stacked>Last Name</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcLastName"></ion-input>
             </ion-item>
             <ion-item class="req">
               <ion-label  stacked>Company</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcCompany"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label  stacked>Email</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcEmail"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label  stacked>Address 1</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcAddress1"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label  stacked>City</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcCity"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label  stacked>Zip Code</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcZip"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label  stacked>State</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcState"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label  stacked>Country</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcCountry"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label  stacked>Phone</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcPhone"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label  stacked>Fax</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcFax"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label  stacked>Mobile</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcMobile"></ion-input>
             </ion-item>
 
 
@@ -100,75 +101,75 @@
         </ion-card-content>
       </ion-card>
 
-      <ion-card class="qualifiers-card validar-form" [hidden]="capturePage !== 'qualifiers'">
+      <ion-card class="qualifiers-card validar-form" [hidden]="capturePage !== 'qualifiers'" formGroupName="qualifiers">
         <ion-card-header>Qualifiers:</ion-card-header>
         <ion-card-content>
           <ion-list>
 
             <ion-item>
               <ion-label  stacked>Company Product List</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcProductList"></ion-input>
             </ion-item>
 
             <ion-item class="req">
-              <ion-label>Yes, I agree to the privacy policy for this event</ion-label>
-              <ion-checkbox color="p-primary-dark"></ion-checkbox>
+              <ion-label>Yes, I agree to the privacy policy for this eventNOT WORKING???</ion-label>
+              <ion-checkbox color="p-primary-dark" formControlName="lcPrivacy_Yes"></ion-checkbox>
             </ion-item>
 
             <ion-item class="req">
               <ion-label  stacked>What types of controllers do you use? And where do you think you'll use them?</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcControllers"></ion-input>
             </ion-item>
 
             <ion-item class="req">
               <ion-label>What type of products are you interested in?</ion-label>
-              <ion-select>
-                <ion-option value="Validar Demo">Validar Demo</ion-option>
-                <ion-option value="iOS Lead Capture">iOS Lead Capture</ion-option>
-                <ion-option value="Registration Check-in Application">Registration Check-in Application</ion-option>
-                <ion-option value="iOS Session Scanning">iOS Session Scanning</ion-option>
-                <ion-option value="Lead Import">Lead Import</ion-option>
-                <ion-option value="Everything">Everything</ion-option>
+              <ion-select formControlName="lcProducts">
+                <ion-option value="lcProducts_1">Validar Demo</ion-option>
+                <ion-option value="lcProducts_2">iOS Lead Capture</ion-option>
+                <ion-option value="lcProducts_3">Registration Check-in Application</ion-option>
+                <ion-option value="lcProducts_4">iOS Session Scanning</ion-option>
+                <ion-option value="lcProducts_5">Lead Import</ion-option>
+                <ion-option value="lcProducts_6">Everything</ion-option>
               </ion-select>
             </ion-item>
 
             <ion-item>
               <ion-label>What is the best color?</ion-label>
-              <ion-select>
-                <ion-option value="Blue">Blue</ion-option>
-                <ion-option value="Red">Red</ion-option>
-                <ion-option value="Purple">Purple</ion-option>
-                <ion-option value="Green">Green</ion-option>
+              <ion-select formControlName="lcColor">
+                <ion-option value="lcColor_1">Blue</ion-option>
+                <ion-option value="lcColor_2">Red</ion-option>
+                <ion-option value="lcColor_3">Purple</ion-option>
+                <ion-option value="lcColor_4">Green</ion-option>
               </ion-select>
             </ion-item>
 
              <ion-item class="req">
               <ion-label>What bands do you enjoy?</ion-label>
-              <ion-select multiple="true">
-                <ion-option value="ACDC">ACDC</ion-option>
-                <ion-option value="Rolling Stone">Rolling Stone</ion-option>
-                <ion-option value="Jimi Hendrix">Jimi Hendrix</ion-option>
-                <ion-option value="Bob Dylan">Bob Dylan</ion-option>
-                <ion-option value="The Beatles">The Beatles</ion-option>
+              <ion-select multiple="true" formControlName="lcBands">
+                <ion-option value="lcBands_1">ACDC</ion-option>
+                <ion-option value="lcBands_2">Rolling Stone</ion-option>
+                <ion-option value="lcBands_3">Jimi Hendrix</ion-option>
+                <ion-option value="lcBands_4">Bob Dylan</ion-option>
+                <ion-option value="lcBands_5">The Beatles</ion-option>
               </ion-select>
             </ion-item>
 
             <ion-item>
               <ion-label>Should we contact you?</ion-label>
-              <ion-select>
-                <ion-option value="Yes">Yes</ion-option>
-                <ion-option value="No">No</ion-option>                
+              <ion-select formControlName="lcContactMe">
+                <ion-option value="lcContactMe_1">Yes</ion-option>
+                <ion-option value="lcContactMe_2">No</ion-option>                
               </ion-select>
             </ion-item>
 
             <ion-item>
               <ion-label  stacked>Any other concerns?</ion-label>
-              <ion-input type="text"></ion-input>
+              <ion-input type="text" formControlName="lcConcerns"></ion-input>
             </ion-item>
 
             <ion-item class="req">
               <ion-label stacked>Additional Comments</ion-label>
-              <ion-textarea ></ion-textarea>                
+              <ion-textarea formControlName="lcComments"></ion-textarea>                
             </ion-item> 
 
 
@@ -176,20 +177,19 @@
         </ion-card-content>
       </ion-card>
 
-      <ion-card class="notes-card" [hidden]="capturePage !== 'notes'">
+      <ion-card class="notes-card" [hidden]="capturePage !== 'notes'" formGroupName="notes">
         <ion-card-header>Notes:</ion-card-header>     
           <ion-card-content>
             <ion-list>
               <ion-item>
-                <ion-textarea [(ngModel)]="notes"></ion-textarea>                
+                <ion-textarea formControlName="lcNotes"></ion-textarea>                
               </ion-item>            
-              <ion-badge [ngClass]="{'error-badge': notes.length > 500}" color="p-primary" >{{notes.length}}/500</ion-badge>             
+              <ion-badge [ngClass]="{'error-badge': recordForm.value.notes.lcNotes.length > 500}" color="p-primary" >{{recordForm.value.notes.lcNotes.length}}/500</ion-badge>             
             </ion-list>
           </ion-card-content>
       </ion-card>
 
-  <!--</div>-->
-  
+  </form>
 </ion-content>
 
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { Device } from '../device/device';
@@ -14,18 +14,29 @@ import 'rxjs/add/operator/map';
 })
 export class ScanSled {
 
-  constructor(public navCtrl: NavController, public http: Http) {
-    (<any>window).OnDataRead = this.handleDataRead.bind(this);
+  constructor(public navCtrl: NavController, public http: Http, private zone: NgZone) {
+    
   }
 
   ionViewDidEnter() {
+    (<any>window).OnDataRead = this.onZoneDataRead.bind(this);
     this.http.get(`http://localhost/linea/enableButtonScan`).map((res) => res.json()).subscribe((data) => console.log(data));
   }
 
-  ionViewDidLeave() {
-    // Should I set window.OnDataRead to null??
-
+  ionViewWillLeave() {
     this.http.get(`http://localhost/linea/disableButtonScan`).map((res) => res.json()).subscribe((data) => console.log(data));
+  }
+
+  ionViewDidLeave() {
+    (<any>window).OnDataRead = null;
+  }
+
+  onZoneDataRead(data) {
+    let scannedData = data;
+    this.zone.run(() => {
+      alert(JSON.stringify(scannedData));
+      this.navCtrl.push(Record);
+    });
   }
 
   editUserPage() {
@@ -49,12 +60,5 @@ export class ScanSled {
   lineaScanCmd(cmd) {
     this.http.get(`http://localhost/linea/${cmd}`).map((res) => res.json()).subscribe((data) => console.log(data));
   }
-
-  handleDataRead(d) {
-    alert("Read badge from LINEA:\n" + JSON.stringify(d));
-    this.navCtrl.push(Record);
-  }
-
-
 
 }

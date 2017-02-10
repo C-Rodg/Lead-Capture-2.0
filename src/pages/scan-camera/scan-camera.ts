@@ -28,15 +28,7 @@ export class ScanCamera  {
 
   constructor(public navCtrl: NavController, public http : Http, private zone: NgZone) {
     this.devicePage = Device;        
-  }
-
-  onZoneDataRead(data) {
-    let scannedData = data;
-    this.zone.run(() => {
-      alert(JSON.stringify(scannedData));
-      this.navCtrl.push(Record);
-    });
-  }  
+  } 
 
   ionViewWillEnter() {
     (<any>window).OnDataRead = this.onZoneDataRead.bind(this);
@@ -47,10 +39,17 @@ export class ScanCamera  {
     this.http.post('http://localhost/barcodecontrol', { visible: "NO" }).map(res => res.json()).subscribe(data => console.log(data));
   }
 
-  // Do I need this to prevent memory leaks?
   ionViewDidLeave() {
     (<any>window).OnDataRead = null;
   }
+
+  onZoneDataRead(data) {
+    let scannedData = data;
+    this.zone.run(() => {
+      alert(JSON.stringify(scannedData));
+      this.navCtrl.push(Record);
+    });
+  } 
 
   toggleLight() {
     this.torch = (this.torch === "OFF") ? "ON" : "OFF";

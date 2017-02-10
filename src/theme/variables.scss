@@ -47,8 +47,10 @@ $colors: (
 
 
 // Changing Select Radio Button color
-$alert-md-button-background-color-activated: color($colors, p-primary-dark);
 $alert-md-button-text-color: color($colors, p-primary-dark);
+
+// Hide bottom box shadow on text inputs
+$text-input-md-show-focus-highlight: false;
 
 
 
