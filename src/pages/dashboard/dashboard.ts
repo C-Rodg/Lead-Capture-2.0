@@ -8,6 +8,7 @@ import { ScanSled } from '../scan-sled/scan-sled';
 
 // TESTING - REMOVE
 import { Record } from '../record/record';
+import { NavController } from 'ionic-angular';
 
 @Component({
   selector: 'page-dashboard',
@@ -23,7 +24,7 @@ export class Dashboard {
   // REMOVE THIS ITEM
   recordPage : Component;
 
-  constructor() {
+  constructor(public navCtrl : NavController) {
     this.listPage = List;    
     this.devicePage = Device;
     this.settingsPage = Settings;
@@ -40,6 +41,10 @@ export class Dashboard {
       scanPage = ScanCamera;
     }
     this.scanPage = scanPage;
+  }
+
+  navigateToRecord() {
+    this.navCtrl.push(Record);
   }
 
 

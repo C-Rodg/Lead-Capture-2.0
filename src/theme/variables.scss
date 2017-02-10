@@ -46,6 +46,13 @@ $colors: (
 // --------------------------------------------------
 
 
+// Changing Select Radio Button color
+$alert-md-button-background-color-activated: color($colors, p-primary-dark);
+$alert-md-button-text-color: color($colors, p-primary-dark);
+
+
+
+
 // Inline Card Buttons on Dashboard, Settings, Device pages
 ion-item.input-has-value:not(.input-has-focus),
 ion-item.input-has-focus {
@@ -119,7 +126,6 @@ ion-item.input-has-focus {
 }
 
 @import "ionic.theme.default";
-
 
 // Ionicons
 // --------------------------------------------------

@@ -5,15 +5,15 @@
     </button>
     <ion-title>Record</ion-title>
     <ion-buttons end class="navbar-btns">
-      <button ion-button>
-         Save
+      <button ion-button (click)="saveRecord()">
+         Save {{recordCount}}
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
- 
+  
  <ion-card class="default-info-card">
     <ion-row>
       <ion-col width-25 text-center class="icon-column" stretch>
@@ -25,44 +25,179 @@
       <ion-col class="info-column" padding-left>
       <h2>Tyler Jackson</h2>
       <p>Imagination Enterprises, Inc.</p>
-      </ion-col>
-    </ion-row>    
-  </ion-card> 
-
-  <div [ngSwitch]="capturePage">
-
-    <div *ngSwitchCase="'contact'">
-      <ion-card class="lead-ranking-card">
-       
-        <ion-card-content>
-          <ion-list>
+      <ion-list class="small-select">
             <ion-item>
-              <ion-label>Rank</ion-label>
-              <ion-select>
+              <ion-label>Lead Ranking</ion-label>
+              <ion-select color="p-primary">
                 <ion-option value="qrRank_Hot">Hot</ion-option>
                 <ion-option value="qrRank_Warm">Warm</ion-option>
                 <ion-option value="qrRank_Cold">Cold</ion-option>
               </ion-select>
             </ion-item>
           </ion-list>
+      </ion-col>
+    </ion-row>    
+  </ion-card> 
+
+  <!--<div [ngSwitch]="pages.current">-->
+
+      <ion-card class="contact-info-card validar-form" [hidden]="capturePage !== 'contact'">  
+        <ion-card-header>Contact Information:</ion-card-header>     
+        <ion-card-content>
+          <ion-list>
+
+            <ion-item class="req">
+              <ion-label stacked>First Name</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+            <ion-item class="req">
+              <ion-label stacked>Last Name</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+            <ion-item class="req">
+              <ion-label  stacked>Company</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label  stacked>Email</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label  stacked>Address 1</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label  stacked>City</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label  stacked>Zip Code</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label  stacked>State</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label  stacked>Country</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label  stacked>Phone</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label  stacked>Fax</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label  stacked>Mobile</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+
+
+          </ion-list>
         </ion-card-content>
       </ion-card>
-    </div>
 
-    <div *ngSwitchCase="'qualifiers'">Qualifiers Page</div>
+      <ion-card class="qualifiers-card validar-form" [hidden]="capturePage !== 'qualifiers'">
+        <ion-card-header>Qualifiers:</ion-card-header>
+        <ion-card-content>
+          <ion-list>
 
-    <div *ngSwitchCase="'notes'">Notes Page</div>
+            <ion-item>
+              <ion-label  stacked>Company Product List</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
 
-  </div>
+            <ion-item class="req">
+              <ion-label>Yes, I agree to the privacy policy for this event</ion-label>
+              <ion-checkbox color="p-primary-dark"></ion-checkbox>
+            </ion-item>
 
+            <ion-item class="req">
+              <ion-label  stacked>What types of controllers do you use? And where do you think you'll use them?</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+
+            <ion-item class="req">
+              <ion-label>What type of products are you interested in?</ion-label>
+              <ion-select>
+                <ion-option value="Validar Demo">Validar Demo</ion-option>
+                <ion-option value="iOS Lead Capture">iOS Lead Capture</ion-option>
+                <ion-option value="Registration Check-in Application">Registration Check-in Application</ion-option>
+                <ion-option value="iOS Session Scanning">iOS Session Scanning</ion-option>
+                <ion-option value="Lead Import">Lead Import</ion-option>
+                <ion-option value="Everything">Everything</ion-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>What is the best color?</ion-label>
+              <ion-select>
+                <ion-option value="Blue">Blue</ion-option>
+                <ion-option value="Red">Red</ion-option>
+                <ion-option value="Purple">Purple</ion-option>
+                <ion-option value="Green">Green</ion-option>
+              </ion-select>
+            </ion-item>
+
+             <ion-item class="req">
+              <ion-label>What bands do you enjoy?</ion-label>
+              <ion-select multiple="true">
+                <ion-option value="ACDC">ACDC</ion-option>
+                <ion-option value="Rolling Stone">Rolling Stone</ion-option>
+                <ion-option value="Jimi Hendrix">Jimi Hendrix</ion-option>
+                <ion-option value="Bob Dylan">Bob Dylan</ion-option>
+                <ion-option value="The Beatles">The Beatles</ion-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Should we contact you?</ion-label>
+              <ion-select>
+                <ion-option value="Yes">Yes</ion-option>
+                <ion-option value="No">No</ion-option>                
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-label  stacked>Any other concerns?</ion-label>
+              <ion-input type="text"></ion-input>
+            </ion-item>
+
+            <ion-item class="req">
+              <ion-label stacked>Additional Comments</ion-label>
+              <ion-textarea ></ion-textarea>                
+            </ion-item> 
+
+
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="notes-card" [hidden]="capturePage !== 'notes'">
+        <ion-card-header>Notes:</ion-card-header>     
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-textarea [(ngModel)]="notes"></ion-textarea>                
+              </ion-item>            
+              <ion-badge [ngClass]="{'error-badge': notes.length > 500}" color="p-primary" >{{notes.length}}/500</ion-badge>             
+            </ion-list>
+          </ion-card-content>
+      </ion-card>
+
+  <!--</div>-->
+  
 </ion-content>
 
 
 <ion-footer>
   <ion-toolbar>
-    <ion-segment color="p-primary" [(ngModel)]="capturePage">
-      <ion-segment-button value="contact">
-        Contact 
+    <ion-segment color="p-primary-dark" [(ngModel)]="capturePage">
+      <ion-segment-button  value="contact">
+        Contact
       </ion-segment-button>
       <ion-segment-button value="qualifiers">
         Qualifiers

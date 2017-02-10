@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { Device } from '../device/device';
@@ -12,7 +12,7 @@ import 'rxjs/add/operator/map';
   selector: 'page-scan-camera',
   templateUrl: 'scan-camera.html'
 })
-export class ScanCamera {
+export class ScanCamera  {
   devicePage : Component;
 
   // TESTING - THIS SHOULD COME FROM SERVICE
@@ -26,14 +26,30 @@ export class ScanCamera {
     };
   torch = "OFF";
 
-  constructor(public navCtrl: NavController, public http : Http) {
-    this.devicePage = Device;
-    (<any>window).OnDataRead = this.handleDataRead.bind(this);
+  constructor(public navCtrl: NavController, public http : Http, private zone: NgZone) {
+    this.devicePage = Device;        
+  }
+
+  onZoneDataRead(data) {
+    let scannedData = data;
+    this.zone.run(() => {
+      alert(JSON.stringify(scannedData));
+      this.navCtrl.push(Record);
+    });
+  }  
+
+  ionViewWillEnter() {
+    (<any>window).OnDataRead = this.onZoneDataRead.bind(this);
     this.http.post('http://localhost/barcodecontrol', this.camera).map(res => res.json()).subscribe(data => console.log(data));
   }
 
   ionViewWillLeave() {
     this.http.post('http://localhost/barcodecontrol', { visible: "NO" }).map(res => res.json()).subscribe(data => console.log(data));
+  }
+
+  // Do I need this to prevent memory leaks?
+  ionViewDidLeave() {
+    (<any>window).OnDataRead = null;
   }
 
   toggleLight() {
@@ -52,11 +68,6 @@ export class ScanCamera {
 
   searchByBadgeId(event) {
     alert("SEARCHING for" + event.target.value);
-  }
-
-  handleDataRead(d) {
-    alert("Read badge from CAMERA\n" + JSON.stringify(d));
-    this.navCtrl.push(Record, {firstName : "Thomas", lastName : "Williams", badgeId : "T12345689", company: "Imagination Records, Inc."});
   }
 
 }

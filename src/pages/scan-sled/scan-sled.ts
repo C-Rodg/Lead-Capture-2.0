@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { Device } from '../device/device';
+import { Record } from '../record/record';
 
 // TEMPORARY FOR TESTING
 import { Http } from '@angular/http';
@@ -14,7 +15,7 @@ import 'rxjs/add/operator/map';
 export class ScanSled {
 
   constructor(public navCtrl: NavController, public http: Http) {
-    (<any>window).OnDataRead = this.handleDataRead;
+    (<any>window).OnDataRead = this.handleDataRead.bind(this);
   }
 
   ionViewDidEnter() {
@@ -51,6 +52,7 @@ export class ScanSled {
 
   handleDataRead(d) {
     alert("Read badge from LINEA:\n" + JSON.stringify(d));
+    this.navCtrl.push(Record);
   }
 
 
