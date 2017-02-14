@@ -2,6 +2,10 @@ import { Component } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 
+import { pickManyValidator } from '../../helpers/pickManyValidator';
+
+import survey from './survey';
+console.log(survey);
 
 @Component({
   selector: 'page-record',
@@ -31,6 +35,8 @@ export class Record {
     // this.badgeId = person.badgeId,
     // this.company = person.company;
 
+    
+
     // TODO: Import Form object
     this.recordForm = this.formBuilder.group({
       leadRanking : this.formBuilder.group({
@@ -52,17 +58,17 @@ export class Record {
       }),
       qualifiers : this.formBuilder.group({
         lcProductList : [''],
-        lcPrivacy_Yes : [''],
+        lcPrivacy_Yes : [false],    // Validators.pattern('true')
         lcControllers : [''],
-        lcProducts : [''],
+        lcProducts : ['', Validators.required], // Validators.required
         lcColor : [''],
-        lcBands : [''],
+        lcBands : ['', Validators.compose([Validators.required, pickManyValidator])],
         lcContactMe : [''],
         lcConcerns : [''],
         lcComments : ['']
       }),
       notes : this.formBuilder.group({
-        lcNotes : ['']
+        lcNotes : ['']      // Validators.required
       })
     });
     

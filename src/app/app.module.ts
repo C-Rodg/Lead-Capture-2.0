@@ -13,6 +13,7 @@ import { ScanCamera } from '../pages/scan-camera/scan-camera';
 import { ScanSled } from '../pages/scan-sled/scan-sled';
 import { Record } from '../pages/record/record';
 
+import { TextInput } from '../pages/record/textInput';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { Record } from '../pages/record/record';
     Device,
     Settings,
     AddModal,
-    Record
+    Record,
+    TextInput
   ],
   imports: [
     IonicModule.forRoot(MyApp, {

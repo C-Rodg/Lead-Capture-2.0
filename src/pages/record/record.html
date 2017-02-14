@@ -43,10 +43,14 @@
   </ion-card> 
 
       <ion-card class="contact-info-card validar-form" [hidden]="capturePage !== 'contact'" formGroupName="contact">  
-        <ion-card-header>Contact Information:</ion-card-header>     
+        <ion-card-header>
+          Contact Information:                   
+        </ion-card-header>     
         <ion-card-content>
           <ion-list>
-
+            
+            <text-input tag="qrFirstName" prompt="First Name" required={{true}}></text-input>
+            
             <ion-item class="req">
               <ion-label stacked>First Name</ion-label>
               <ion-input type="text" formControlName="lcFirstName"></ion-input>
