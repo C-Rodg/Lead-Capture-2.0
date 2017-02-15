@@ -49,12 +49,14 @@
         <ion-card-content>
           <ion-list>
             
-            <text-input tag="qrFirstName" prompt="First Name" required={{true}}></text-input>
             
+            <text-input tag="lcFirstName" prompt="First Name" required={{false}}></text-input>
+
             <ion-item class="req">
               <ion-label stacked>First Name</ion-label>
               <ion-input type="text" formControlName="lcFirstName"></ion-input>
             </ion-item>
+
             <ion-item class="req">
               <ion-label stacked>Last Name</ion-label>
               <ion-input type="text" formControlName="lcLastName"></ion-input>
