@@ -13,7 +13,10 @@ import { ScanCamera } from '../pages/scan-camera/scan-camera';
 import { ScanSled } from '../pages/scan-sled/scan-sled';
 import { Record } from '../pages/record/record';
 
-import { TextInput } from '../pages/record/textInput';
+import { TextInput, TextArea, PickoneInput } from '../pages/form-items/';
+
+import { ReactiveFormsModule } from '@angular/forms';
+//import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,12 +31,16 @@ import { TextInput } from '../pages/record/textInput';
     Settings,
     AddModal,
     Record,
-    TextInput
+    TextInput,
+    TextArea,
+    PickoneInput
   ],
   imports: [
     IonicModule.forRoot(MyApp, {
       mode : 'md'
     })
+    ,ReactiveFormsModule
+    //,FormsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

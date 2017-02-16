@@ -20,7 +20,9 @@ export class Record {
   lastName;
   badgeId;
   company;
-  notes : string = "";    
+  notes : string = "";  
+
+  sampleOptions: any;  
 
   constructor(public navCtrl: NavController, 
               params: NavParams, 
@@ -34,6 +36,19 @@ export class Record {
     // this.lastName = person.lastName,
     // this.badgeId = person.badgeId,
     // this.company = person.company;
+
+    this.sampleOptions = [{
+                    tag: "lcProducts_1",
+                    prompt: "Validar Demo"
+                },
+                {
+                    tag: "lcProducts_2",
+                    prompt: "iOS Lead Capture"
+                },
+                {
+                    tag: "lcProducts_3",
+                    prompt: "Registration Check-in Application"
+                }];
 
     
 

@@ -1,18 +1,15 @@
 import { Component, Input } from '@angular/core';
-//import {IONIC_DIRECTIVES} from 'ionic-angular';
 
 @Component({
-    selector: 'text-input',
-    // directives: [],
+    selector: 'text-area',
     template: `
     <ion-item [ngClass]="{'req' : (required == 'true')}">
         <ion-label stacked>{{prompt}}</ion-label>
-        <ion-input type="text" ></ion-input>
+        <ion-textarea type="text" ></ion-textarea>
     </ion-item>
     `
 })
-export class TextInput {
-    @Input() tag:string;
+export class TextArea {
     @Input() prompt:string;
-    @Input() required: boolean;
+    @Input() required: string;
 }

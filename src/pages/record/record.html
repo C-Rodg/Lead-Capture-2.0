@@ -50,57 +50,18 @@
           <ion-list>
             
             
-            <text-input tag="lcFirstName" prompt="First Name" required={{false}}></text-input>
-
-            <ion-item class="req">
-              <ion-label stacked>First Name</ion-label>
-              <ion-input type="text" formControlName="lcFirstName"></ion-input>
-            </ion-item>
-
-            <ion-item class="req">
-              <ion-label stacked>Last Name</ion-label>
-              <ion-input type="text" formControlName="lcLastName"></ion-input>
-            </ion-item>
-            <ion-item class="req">
-              <ion-label  stacked>Company</ion-label>
-              <ion-input type="text" formControlName="lcCompany"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label  stacked>Email</ion-label>
-              <ion-input type="text" formControlName="lcEmail"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label  stacked>Address 1</ion-label>
-              <ion-input type="text" formControlName="lcAddress1"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label  stacked>City</ion-label>
-              <ion-input type="text" formControlName="lcCity"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label  stacked>Zip Code</ion-label>
-              <ion-input type="text" formControlName="lcZip"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label  stacked>State</ion-label>
-              <ion-input type="text" formControlName="lcState"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label  stacked>Country</ion-label>
-              <ion-input type="text" formControlName="lcCountry"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label  stacked>Phone</ion-label>
-              <ion-input type="text" formControlName="lcPhone"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label  stacked>Fax</ion-label>
-              <ion-input type="text" formControlName="lcFax"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label  stacked>Mobile</ion-label>
-              <ion-input type="text" formControlName="lcMobile"></ion-input>
-            </ion-item>
+            <text-input prompt="First Name" required="true" formControlName="lcFirstName"></text-input>
+            <text-input prompt="Last Name" required="true" formControlName="lcLastName"></text-input>
+            <text-input prompt="Company" required="true" formControlName="lcCompany"></text-input>
+            <text-input prompt="Email" required="false" formControlName="lcEmail"></text-input>
+            <text-input prompt="Address 1" required="false" formControlName="lcAddress1"></text-input>
+            <text-input prompt="City" required="false" formControlName="lcCity"></text-input>
+            <text-input prompt="Zip Code" required="false" formControlName="lcZip"></text-input>
+            <text-input prompt="State" required="false" formControlName="lcState"></text-input>
+            <text-input prompt="Country" required="false" formControlName="lcCountry"></text-input>
+            <text-input prompt="Phone" required="false" formControlName="lcPhone"></text-input>
+            <text-input prompt="Fax" required="false" formControlName="lcFax"></text-input>
+            <text-input prompt="Mobile" required="false" formControlName="lcMobile"></text-input>
 
 
           </ion-list>
@@ -112,10 +73,8 @@
         <ion-card-content>
           <ion-list>
 
-            <ion-item>
-              <ion-label  stacked>Company Product List</ion-label>
-              <ion-input type="text" formControlName="lcProductList"></ion-input>
-            </ion-item>
+            <text-input prompt="Company Product List" required="false" formControlName="lcProductList"></text-input>
+
 
             <ion-item class="req">
               <ion-label>Yes, I agree to the privacy policy for this eventNOT WORKING???</ion-label>
@@ -160,24 +119,20 @@
               </ion-select>
             </ion-item>
 
-            <ion-item>
+            <!--<ion-item>
               <ion-label>Should we contact you?</ion-label>
               <ion-select formControlName="lcContactMe">
                 <ion-option value="lcContactMe_1">Yes</ion-option>
                 <ion-option value="lcContactMe_2">No</ion-option>                
               </ion-select>
-            </ion-item>
+            </ion-item>-->
 
-            <ion-item>
-              <ion-label  stacked>Any other concerns?</ion-label>
-              <ion-input type="text" formControlName="lcConcerns"></ion-input>
-            </ion-item>
+            <!--<pickone-input prompt="Should we contact you?" required="false" [pickOptions]="sampleOptions" formControlName="lcContactMe" ngDefaultControl></pickone-input>-->
 
-            <ion-item class="req">
-              <ion-label stacked>Additional Comments</ion-label>
-              <ion-textarea formControlName="lcComments"></ion-textarea>                
-            </ion-item> 
+            <pickone-input formControlName="lcContactMe" prompt="Should we contact you?" required="false" [pickOptions]="sampleOptions" ></pickone-input>
 
+            <text-input prompt="Any other concerns?" required="false" formControlName="lcConcerns"></text-input>
+            <text-area prompt="Additional Comments" required="false" formControlName="lcComments"></text-area>
 
           </ion-list>
         </ion-card-content>
