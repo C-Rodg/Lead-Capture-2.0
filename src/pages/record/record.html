@@ -29,14 +29,9 @@
       <h2>Tyler Jackson</h2>
       <p>Imagination Enterprises, Inc.</p>
       <ion-list class="small-select">
-            <ion-item>
-              <ion-label>Lead Ranking</ion-label>
-              <ion-select color="p-primary" formControlName="lcLeadRank">
-                <ion-option value="lcRank_Hot">Hot</ion-option>
-                <ion-option value="lcRank_Warm">Warm</ion-option>
-                <ion-option value="lcRank_Cold">Cold</ion-option>
-              </ion-select>
-            </ion-item>
+          <div *ngFor="let lead of leadrankingObj"> 
+            <pickone-input *ngIf="lead.type === 'PICKONE'" prompt={{lead.prompt}} required={{lead.required}} [pickOptions]="lead.options" formControlName={{lead.tag}} ></pickone-input>
+          </div>           
           </ion-list>
       </ion-col>
     </ion-row>    
@@ -48,21 +43,14 @@
         </ion-card-header>     
         <ion-card-content>
           <ion-list>
-            
-            
-            <text-input prompt="First Name" required="true" formControlName="lcFirstName"></text-input>
-            <text-input prompt="Last Name" required="true" formControlName="lcLastName"></text-input>
-            <text-input prompt="Company" required="true" formControlName="lcCompany"></text-input>
-            <text-input prompt="Email" required="false" formControlName="lcEmail"></text-input>
-            <text-input prompt="Address 1" required="false" formControlName="lcAddress1"></text-input>
-            <text-input prompt="City" required="false" formControlName="lcCity"></text-input>
-            <text-input prompt="Zip Code" required="false" formControlName="lcZip"></text-input>
-            <text-input prompt="State" required="false" formControlName="lcState"></text-input>
-            <text-input prompt="Country" required="false" formControlName="lcCountry"></text-input>
-            <text-input prompt="Phone" required="false" formControlName="lcPhone"></text-input>
-            <text-input prompt="Fax" required="false" formControlName="lcFax"></text-input>
-            <text-input prompt="Mobile" required="false" formControlName="lcMobile"></text-input>
 
+            <div *ngFor="let contactItem of contactObj">              
+              <text-input *ngIf="contactItem.type === 'TEXT'" prompt={{contactItem.prompt}} required={{contactItem.required}} formControlName={{contactItem.tag}}></text-input>
+              <text-area *ngIf="contactItem.type === 'TEXTAREA'" prompt={{contactItem.prompt}} required={{contactItem.required}} formControlName={{contactItem.tag}}></text-area>              
+              <checkbox-input *ngIf="contactItem.type === 'CHECKBOX'" prompt={{contactItem.prompt}} required={{contactItem.required}} formControlName={{contactItem.tag}}></checkbox-input>
+              <pickmany-input *ngIf="contactItem.type === 'PICKMANY'" prompt={{contactItem.prompt}} required={{contactItem.required}} [pickOptions]="contactItem.options" formControlName={{contactItem.tag}}></pickmany-input> 
+              <pickone-input *ngIf="contactItem.type === 'PICKONE'" prompt={{contactItem.prompt}} required={{contactItem.required}} [pickOptions]="contactItem.options" formControlName={{contactItem.tag}} ></pickone-input>
+            </div>                       
 
           </ion-list>
         </ion-card-content>
@@ -73,66 +61,13 @@
         <ion-card-content>
           <ion-list>
 
-            <text-input prompt="Company Product List" required="false" formControlName="lcProductList"></text-input>
-
-
-            <ion-item class="req">
-              <ion-label>Yes, I agree to the privacy policy for this eventNOT WORKING???</ion-label>
-              <ion-checkbox color="p-primary-dark" formControlName="lcPrivacy_Yes"></ion-checkbox>
-            </ion-item>
-
-            <ion-item class="req">
-              <ion-label  stacked>What types of controllers do you use? And where do you think you'll use them?</ion-label>
-              <ion-input type="text" formControlName="lcControllers"></ion-input>
-            </ion-item>
-
-            <ion-item class="req">
-              <ion-label>What type of products are you interested in?</ion-label>
-              <ion-select formControlName="lcProducts">
-                <ion-option value="lcProducts_1">Validar Demo</ion-option>
-                <ion-option value="lcProducts_2">iOS Lead Capture</ion-option>
-                <ion-option value="lcProducts_3">Registration Check-in Application</ion-option>
-                <ion-option value="lcProducts_4">iOS Session Scanning</ion-option>
-                <ion-option value="lcProducts_5">Lead Import</ion-option>
-                <ion-option value="lcProducts_6">Everything</ion-option>
-              </ion-select>
-            </ion-item>
-
-            <ion-item>
-              <ion-label>What is the best color?</ion-label>
-              <ion-select formControlName="lcColor">
-                <ion-option value="lcColor_1">Blue</ion-option>
-                <ion-option value="lcColor_2">Red</ion-option>
-                <ion-option value="lcColor_3">Purple</ion-option>
-                <ion-option value="lcColor_4">Green</ion-option>
-              </ion-select>
-            </ion-item>
-
-             <ion-item class="req">
-              <ion-label>What bands do you enjoy?</ion-label>
-              <ion-select multiple="true" formControlName="lcBands">
-                <ion-option value="lcBands_1">ACDC</ion-option>
-                <ion-option value="lcBands_2">Rolling Stone</ion-option>
-                <ion-option value="lcBands_3">Jimi Hendrix</ion-option>
-                <ion-option value="lcBands_4">Bob Dylan</ion-option>
-                <ion-option value="lcBands_5">The Beatles</ion-option>
-              </ion-select>
-            </ion-item>
-
-            <!--<ion-item>
-              <ion-label>Should we contact you?</ion-label>
-              <ion-select formControlName="lcContactMe">
-                <ion-option value="lcContactMe_1">Yes</ion-option>
-                <ion-option value="lcContactMe_2">No</ion-option>                
-              </ion-select>
-            </ion-item>-->
-
-            <!--<pickone-input prompt="Should we contact you?" required="false" [pickOptions]="sampleOptions" formControlName="lcContactMe" ngDefaultControl></pickone-input>-->
-
-            <pickone-input formControlName="lcContactMe" prompt="Should we contact you?" required="false" [pickOptions]="sampleOptions" ></pickone-input>
-
-            <text-input prompt="Any other concerns?" required="false" formControlName="lcConcerns"></text-input>
-            <text-area prompt="Additional Comments" required="false" formControlName="lcComments"></text-area>
+            <div *ngFor="let qualifier of qualifiersObj">              
+              <text-input *ngIf="qualifier.type === 'TEXT'" prompt={{qualifier.prompt}} required={{qualifier.required}} formControlName={{qualifier.tag}}></text-input>
+              <text-area *ngIf="qualifier.type === 'TEXTAREA'" prompt={{qualifier.prompt}} required={{qualifier.required}} formControlName={{qualifier.tag}}></text-area>              
+              <checkbox-input *ngIf="qualifier.type === 'CHECKBOX'" prompt={{qualifier.prompt}} required={{qualifier.required}} formControlName={{qualifier.tag}}></checkbox-input>
+              <pickmany-input *ngIf="qualifier.type === 'PICKMANY'" prompt={{qualifier.prompt}} required={{qualifier.required}} [pickOptions]="qualifier.options" formControlName={{qualifier.tag}}></pickmany-input> 
+              <pickone-input *ngIf="qualifier.type === 'PICKONE'" prompt={{qualifier.prompt}} required={{qualifier.required}} [pickOptions]="qualifier.options" formControlName={{qualifier.tag}} ></pickone-input>
+            </div>
 
           </ion-list>
         </ion-card-content>
@@ -142,9 +77,10 @@
         <ion-card-header>Notes:</ion-card-header>     
           <ion-card-content>
             <ion-list>
-              <ion-item>
-                <ion-textarea formControlName="lcNotes"></ion-textarea>                
-              </ion-item>            
+              <div *ngFor="let note of notesObj">
+                <text-input *ngIf="note.type === 'TEXT'" prompt={{note.prompt}} required={{note.required}} formControlName={{note.tag}}></text-input>
+                <text-area *ngIf="note.type === 'TEXTAREA'" prompt={{note.prompt}} required={{note.required}} formControlName={{note.tag}}></text-area>                
+              </div>
               <ion-badge [ngClass]="{'error-badge': recordForm.value.notes.lcNotes.length > 500}" color="p-primary" >{{recordForm.value.notes.lcNotes.length}}/500</ion-badge>             
             </ion-list>
           </ion-card-content>

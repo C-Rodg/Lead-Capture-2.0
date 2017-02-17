@@ -3,19 +3,19 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 const noop = () => {};
 
-export const CUSTOM_PICKONE_CONTROL_VALUE_ACCESSOR: any = {
+export const CUSTOM_PICKMANY_CONTROL_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => PickoneInput),
+    useExisting: forwardRef(() => PickmanyInput),
     multi: true
 };
 
 @Component({
-    selector: 'pickone-input',
-    providers: [CUSTOM_PICKONE_CONTROL_VALUE_ACCESSOR],
+    selector: 'pickmany-input',
+    providers: [CUSTOM_PICKMANY_CONTROL_VALUE_ACCESSOR],
     template: `
     <ion-item [ngClass]="{'req' : (required == 'true')}">
         <ion-label>{{prompt}}</ion-label>
-        <ion-select (ionChange)="selectItem($event)" (click)="selectOpened()">
+        <ion-select (ionChange)="selectItem($event)" (click)="selectOpened()" multiple="true">
             <ion-option  *ngFor="let option of pickOptions"
             value={{option.tag}}
             >
@@ -25,7 +25,7 @@ export const CUSTOM_PICKONE_CONTROL_VALUE_ACCESSOR: any = {
     </ion-item>
     `
 })
-export class PickoneInput implements ControlValueAccessor {
+export class PickmanyInput implements ControlValueAccessor {
     @Input() prompt:string;
     @Input() required: string;
     @Input() pickOptions: any;

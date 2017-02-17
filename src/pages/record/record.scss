@@ -124,6 +124,10 @@ page-record {
         ion-badge.error-badge {
             background-color: color($colors, danger);
         }
+
+        ion-label {
+            display: none;
+        }
     }
 
 }

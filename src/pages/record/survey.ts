@@ -29,6 +29,24 @@ const survey = {
             tag: "lcAddress1",
             prompt: "Address",
             required: false
+        },
+        {
+            type: "TEXT",
+            tag: "lcCity",
+            prompt: "City",
+            required: false
+        },
+        {
+            type: "TEXT",
+            tag: "lcState",
+            prompt: "State",
+            required: false
+        },
+        {
+            type: "TEXT",
+            tag: "lcCountry",
+            prompt: "Country",
+            required: false
         }
     ],
 
@@ -42,12 +60,12 @@ const survey = {
         {
             type: "CHECKBOX",
             tag: "lcPrivacy",
-            prompt: "",
+            prompt: "Yes, I agree to the privacy policy for this event?",
             required: false,
             options : [
                 {
                     tag: "lcPrivacy_Yes",
-                    prompt: "Yes, I agree to the privacy policy for this event?"
+                    prompt: ""
                 }
             ]
         },

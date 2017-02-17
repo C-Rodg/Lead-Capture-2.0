@@ -15,6 +15,11 @@ export class Record {
   capturePage : string = "contact";
   canExit : boolean = false;
   recordForm : FormGroup;
+
+  contactObj : any = [];
+  qualifiersObj : any = [];
+  leadrankingObj : any = [];
+  notesObj : any = [];
   
   firstName;
   lastName;
@@ -29,6 +34,12 @@ export class Record {
               public toastCtrl: ToastController, 
               public alertCtrl : AlertController,
               private formBuilder: FormBuilder) {
+
+    let formItems = survey.survey;
+    this.contactObj = formItems.contact;
+    this.qualifiersObj = formItems.qualifiers;
+    this.leadrankingObj = formItems.leadRanking;
+    this.notesObj = formItems.notes;
 
     // TODO: Parse out data passed...
     // let person = params.data;
@@ -63,17 +74,13 @@ export class Record {
         lcCompany : ['', Validators.required],
         lcEmail : [''],
         lcAddress1 : [''],
-        lcCity : [''],
-        lcZip : [''],
-        lcState : [''],
-        lcCountry: [''],
-        lcPhone: [''],
-        lcFax: [''],
-        lcMobile: ['']
+        lcCity: [],
+        lcState: [],
+        lcCountry: []
       }),
       qualifiers : this.formBuilder.group({
         lcProductList : [''],
-        lcPrivacy_Yes : [false],    // Validators.pattern('true')
+        lcPrivacy : [false],    // Validators.pattern('true')
         lcControllers : [''],
         lcProducts : ['', Validators.required], // Validators.required
         lcColor : [''],

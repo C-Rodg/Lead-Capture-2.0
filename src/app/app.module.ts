@@ -13,7 +13,7 @@ import { ScanCamera } from '../pages/scan-camera/scan-camera';
 import { ScanSled } from '../pages/scan-sled/scan-sled';
 import { Record } from '../pages/record/record';
 
-import { TextInput, TextArea, PickoneInput } from '../pages/form-items/';
+import { TextInput, TextArea, PickoneInput, PickmanyInput, CheckboxInput } from '../pages/form-items/';
 
 import { ReactiveFormsModule } from '@angular/forms';
 //import { FormsModule } from '@angular/forms';
@@ -33,7 +33,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     Record,
     TextInput,
     TextArea,
-    PickoneInput
+    PickoneInput,
+    PickmanyInput,
+    CheckboxInput
   ],
   imports: [
     IonicModule.forRoot(MyApp, {
