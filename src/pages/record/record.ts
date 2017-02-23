@@ -46,54 +46,84 @@ export class Record {
     // this.firstName = person.firstName,
     // this.lastName = person.lastName,
     // this.badgeId = person.badgeId,
-    // this.company = person.company;
-
-    this.sampleOptions = [{
-                    tag: "lcProducts_1",
-                    prompt: "Validar Demo"
-                },
-                {
-                    tag: "lcProducts_2",
-                    prompt: "iOS Lead Capture"
-                },
-                {
-                    tag: "lcProducts_3",
-                    prompt: "Registration Check-in Application"
-                }];
-
-    
+    // this.company = person.company;     
 
     // TODO: Import Form object
-    this.recordForm = this.formBuilder.group({
-      leadRanking : this.formBuilder.group({
-        lcLeadRank : [""]
-      }),
-      contact : this.formBuilder.group({
-        lcFirstName : ['', Validators.required],
-        lcLastName : ['', Validators.required],
-        lcCompany : ['', Validators.required],
-        lcEmail : [''],
-        lcAddress1 : [''],
-        lcCity: [],
-        lcState: [],
-        lcCountry: []
-      }),
-      qualifiers : this.formBuilder.group({
-        lcProductList : [''],
-        lcPrivacy : [false],    // Validators.pattern('true')
-        lcControllers : [''],
-        lcProducts : ['', Validators.required], // Validators.required
-        lcColor : [''],
-        lcBands : ['', Validators.compose([Validators.required, pickManyValidator])],
-        lcContactMe : [''],
-        lcConcerns : [''],
-        lcComments : ['']
-      }),
-      notes : this.formBuilder.group({
-        lcNotes : ['']      // Validators.required
-      })
-    });
+    this.recordForm = this.formBuilder.group(this.generateFreshForm());
+    // this.recordForm = this.formBuilder.group({
+    //   leadRanking : this.formBuilder.group({
+    //     lcLeadRank : [""]
+    //   }),
+    //   contact : this.formBuilder.group({
+    //     lcFirstName : ['', Validators.required],
+    //     lcLastName : ['', Validators.required],
+    //     lcCompany : ['', Validators.required],
+    //     lcEmail : [''],
+    //     lcAddress1 : [''],
+    //     lcCity: [],
+    //     lcState: [],
+    //     lcCountry: []
+    //   }),
+    //   qualifiers : this.formBuilder.group({
+    //     lcProductList : [''],
+    //     lcPrivacy : [false],    // Validators.pattern('true')
+    //     lcControllers : [''],
+    //     lcProducts : ['', Validators.required], // Validators.required
+    //     lcColor : [''],
+    //     lcBands : ['', Validators.compose([Validators.required, pickManyValidator])],
+    //     lcContactMe : [''],
+    //     lcConcerns : [''],
+    //     lcComments : ['']
+    //   }),
+    //   notes : this.formBuilder.group({
+    //     lcNotes : ['']      // Validators.required
+    //   })
+    // });
     
+  }
+
+  generateFreshForm() {
+    let leadRanking = {},
+        contact = {},
+        qualifiers = {},
+        notes = {},
+        form = survey.survey,
+        obj = {};
+
+    form.contact.forEach((item) => {
+      this.createQuestionFormGroup(item, contact);
+    });
+    form.leadRanking.forEach((item) => {
+      this.createQuestionFormGroup(item, leadRanking);
+    });
+    form.notes.forEach((item) => {
+      this.createQuestionFormGroup(item, notes);
+    });
+    form.qualifiers.forEach((item) => {
+      this.createQuestionFormGroup(item, qualifiers);
+    });
+
+    obj['leadRanking'] = this.formBuilder.group(leadRanking);
+    obj['contact'] = this.formBuilder.group(contact);
+    obj['notes'] = this.formBuilder.group(notes);
+    obj['qualifiers'] = this.formBuilder.group(qualifiers);
+
+    console.log(obj);
+    return obj;
+  }
+
+  createQuestionFormGroup(item, arr) {
+    let validateArr = <any>[''];
+      if (item.required) {        
+        if (item.type === "TEXT" || item.type === 'TEXTAREA' || item.type === 'PICKONE') {
+          validateArr.push(Validators.required);
+        } else if (item.type === 'PICKMANY') {
+          validateArr.push(Validators.compose([Validators.required, pickManyValidator]));
+        } else if (item.type === 'CHECKBOX') {
+          validateArr.push(Validators.pattern('true'));
+        }        
+      }
+      arr[item.tag] = validateArr;
   }
 
   ionViewCanLeave() {
