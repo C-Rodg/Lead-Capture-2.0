@@ -210,7 +210,7 @@ const survey = {
         {
             type: 'TEXTAREA',
             tag: 'lcNotes',
-            prompt: 'Notes:',
+            prompt: 'Notes',
             required : true
         }
     ]

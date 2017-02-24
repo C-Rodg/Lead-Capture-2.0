@@ -20,6 +20,8 @@ export class Record {
   qualifiersObj : any = [];
   leadrankingObj : any = [];
   notesObj : any = [];
+
+  requiredFields : any = [];
   
   firstName;
   lastName;
@@ -50,36 +52,23 @@ export class Record {
 
     // TODO: Import Form object
     this.recordForm = this.formBuilder.group(this.generateFreshForm());
-    // this.recordForm = this.formBuilder.group({
-    //   leadRanking : this.formBuilder.group({
-    //     lcLeadRank : [""]
-    //   }),
-    //   contact : this.formBuilder.group({
-    //     lcFirstName : ['', Validators.required],
-    //     lcLastName : ['', Validators.required],
-    //     lcCompany : ['', Validators.required],
-    //     lcEmail : [''],
-    //     lcAddress1 : [''],
-    //     lcCity: [],
-    //     lcState: [],
-    //     lcCountry: []
-    //   }),
-    //   qualifiers : this.formBuilder.group({
-    //     lcProductList : [''],
-    //     lcPrivacy : [false],    // Validators.pattern('true')
-    //     lcControllers : [''],
-    //     lcProducts : ['', Validators.required], // Validators.required
-    //     lcColor : [''],
-    //     lcBands : ['', Validators.compose([Validators.required, pickManyValidator])],
-    //     lcContactMe : [''],
-    //     lcConcerns : [''],
-    //     lcComments : ['']
-    //   }),
-    //   notes : this.formBuilder.group({
-    //     lcNotes : ['']      // Validators.required
-    //   })
-    // });
+    this.requiredFields = this.markRequiredFields(formItems);    
     
+  }
+
+  markRequiredFields(form) {
+    const { contact, qualifiers, notes, leadRanking } = form;
+    let reqs = {};
+    [contact, qualifiers, notes, leadRanking].forEach((group) => {
+      group.forEach((question) => {
+        if (question.required) {
+          reqs[question.tag] = question.prompt;          
+        }
+      });
+    });
+    
+    console.log(reqs);
+    return reqs;
   }
 
   generateFreshForm() {
@@ -153,11 +142,27 @@ export class Record {
     return true;
   }
 
+  searchForInvalidField(form) {    
+    const { contact, leadRanking, qualifiers, notes } = form;
+    for (let group of [contact, leadRanking, qualifiers, notes]) {
+      if (!group.valid) {
+        let controls = group.controls;
+        for (let prop in controls) {
+          if (controls.hasOwnProperty(prop) && !controls[prop].valid) {
+            console.log(prop);
+            return prop;
+          }
+        }
+      }
+    }
+  }
+
   saveRecord() {
     // Check for required fields
     if (!this.recordForm.valid) {
+      let reqField = this.requiredFields[this.searchForInvalidField(this.recordForm.controls)];
       let toast = this.toastCtrl.create({
-        message: "... is a required field.",
+        message: `${reqField} is required.`,
         duration: 3000,
         position: 'top'
       });
