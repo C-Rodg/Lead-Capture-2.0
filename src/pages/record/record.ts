@@ -4,8 +4,7 @@ import { NavController, NavParams, ToastController, AlertController } from 'ioni
 
 import { pickManyValidator } from '../../helpers/pickManyValidator';
 
-import survey from './survey';
-console.log(survey);
+import survey from '../../config/survey';
 
 @Component({
   selector: 'page-record',
