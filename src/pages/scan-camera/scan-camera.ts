@@ -4,7 +4,7 @@ import { NavController } from 'ionic-angular';
 import { Device } from '../device/device';
 import { Record } from '../record/record';
 
-import { ParseBadgeService } from '../../providers/parseBadgeService';
+import { ParseBadgeHelper } from '../../helpers/parseBadgeHelper';
 
 // TEMPORARY FOR TESTING
 import { Http } from '@angular/http';
@@ -12,8 +12,7 @@ import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'page-scan-camera',
-  templateUrl: 'scan-camera.html',
-  providers: [ParseBadgeService]
+  templateUrl: 'scan-camera.html'
 })
 export class ScanCamera  {
   devicePage : Component;
@@ -29,7 +28,7 @@ export class ScanCamera  {
     };
   torch = "OFF";
 
-  constructor(public navCtrl: NavController, public http : Http, private zone: NgZone, private parseBadgeService : ParseBadgeService) {
+  constructor(public navCtrl: NavController, public http : Http, private zone: NgZone, private parseBadgeHelper : ParseBadgeHelper) {
     this.devicePage = Device;        
   } 
 
@@ -49,7 +48,7 @@ export class ScanCamera  {
   onZoneDataRead(data) {
     let scannedData = data;
     this.zone.run(() => {
-      let parsedObj = this.parseBadgeService.parse(scannedData);
+      let parsedObj = this.parseBadgeHelper.parse(scannedData);
       this.navCtrl.push(Record, parsedObj);
     });
   } 

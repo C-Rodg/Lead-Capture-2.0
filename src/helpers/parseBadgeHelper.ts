@@ -1,11 +1,4 @@
-import { Injectable } from '@angular/core';
-
-@Injectable()
-export class ParseBadgeService {
-
-    symbology : string = null;
-    scannerSource : string = null;
-    scannedData : string = null;
+export class ParseBadgeHelper {
 
     constructor() {
         console.log("Creating parse badge service");
