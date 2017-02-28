@@ -5,10 +5,7 @@ import { Device } from '../device/device';
 import { Record } from '../record/record';
 
 import { SettingsService } from '../../providers/settingsService';
-
-// TEMPORARY FOR TESTING
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { ScanSledService } from '../../providers/scanSledService';
 
 @Component({
   selector: 'page-scan-sled',
@@ -16,17 +13,20 @@ import 'rxjs/add/operator/map';
 })
 export class ScanSled {
 
-  constructor(public navCtrl: NavController, public http: Http, private zone: NgZone, private settingsService: SettingsService) {
+  constructor(public navCtrl: NavController, 
+    private zone: NgZone, 
+    private settingsService: SettingsService,
+    private scanSledService: ScanSledService ) {
     
   }
 
   ionViewDidEnter() {
     (<any>window).OnDataRead = this.onZoneDataRead.bind(this);
-    this.http.get(`http://localhost/linea/enableButtonScan`).map((res) => res.json()).subscribe((data) => console.log(data));
+    this.scanSledService.sendScanCommand('enableButtonScan');   
   }
 
   ionViewWillLeave() {
-    this.http.get(`http://localhost/linea/disableButtonScan`).map((res) => res.json()).subscribe((data) => console.log(data));
+    this.scanSledService.sendScanCommand('disableButtonScan');      
   }
 
   ionViewDidLeave() {
@@ -36,6 +36,7 @@ export class ScanSled {
   onZoneDataRead(data) {
     let scannedData = data;
     this.zone.run(() => {
+      // TODO: SEND SCANNED DATA TO PARSING SERVICE
       alert(JSON.stringify(scannedData));
       this.navCtrl.push(Record);
     });
@@ -46,21 +47,18 @@ export class ScanSled {
   }
 
   searchByBadgeId(event) {
+    // TODO: SEARCH FOR ATTENDEE BY BADGE ID
     alert("Searching for " + event.target.value);
   }
 
   scanBtnClicked(event, status) {
     if (status) {
       event.currentTarget.classList.add('scan-clicked');
-      this.lineaScanCmd('startScan');
+      this.scanSledService.sendScanCommand('startScan');
     } else {
       event.currentTarget.classList.remove('scan-clicked');
-      this.lineaScanCmd('stopScan');
+      this.scanSledService.sendScanCommand('stopScan');
     }
   }
-
-  lineaScanCmd(cmd) {
-    this.http.get(`http://localhost/linea/${cmd}`).map((res) => res.json()).subscribe((data) => console.log(data));
-  }
-
+  
 }

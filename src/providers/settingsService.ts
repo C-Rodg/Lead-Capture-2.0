@@ -13,9 +13,7 @@ export class SettingsService {
     stations: Array<string> = ["Booth", "Meeting", "Session", "Other"];
 
 
-    constructor() {
-        console.log("Creating settings service");
-    }
+    constructor() {  }
 
     // Set Primitive setting value
     setValue(val, prop) {

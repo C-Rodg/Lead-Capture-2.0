@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 
+import { SettingsService } from './settingsService';
+
 @Injectable()
 export class ParseBadgeService {
 
-    constructor() {
+    constructor(private settingsService : SettingsService) {
         console.log("Creating parse badge service");
     }
 

@@ -16,6 +16,8 @@ import { TextInput, TextArea, PickoneInput, PickmanyInput, CheckboxInput } from 
 
 import { ParseBadgeService } from '../providers/parseBadgeService';
 import { SettingsService } from '../providers/settingsService';
+import { ScanCameraService } from '../providers/scanCameraService';
+import { ScanSledService } from '../providers/scanSledService';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -60,6 +62,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     AddModal,
     Record
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, SettingsService, ParseBadgeService]
+  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, 
+    SettingsService, 
+    ParseBadgeService,
+    ScanCameraService,
+    ScanSledService
+    ]
 })
 export class AppModule {}

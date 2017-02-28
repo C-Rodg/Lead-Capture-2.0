@@ -6,7 +6,7 @@
     <ion-title>Scan</ion-title>
     <ion-buttons end class="navbar-btns">
     <button ion-button icon-only (tap)="toggleLight()">
-      <ion-icon name="{{torch === 'OFF' ? 'ios-flash-outline' : 'ios-flash'}}"></ion-icon>
+      <ion-icon name="{{scanCameraService.torch === 'OFF' ? 'ios-flash-outline' : 'ios-flash'}}"></ion-icon>
     </button>
     <button ion-button icon-only (tap)="toggleCamera()">
       <ion-icon name="reverse-camera"></ion-icon>

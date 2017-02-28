@@ -4,12 +4,10 @@ import { NavController } from 'ionic-angular';
 import { Device } from '../device/device';
 import { Record } from '../record/record';
 
+import { ScanCameraService } from '../../providers/scanCameraService';
 import { ParseBadgeService } from '../../providers/parseBadgeService';
 import { SettingsService } from '../../providers/settingsService';
 
-// TEMPORARY FOR TESTING
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'page-scan-camera',
@@ -18,28 +16,21 @@ import 'rxjs/add/operator/map';
 export class ScanCamera  {
   devicePage : Component;
 
-  // TESTING - THIS SHOULD COME FROM SERVICE
-  camera = {
-      visible : "YES",
-      camera : "BACK",
-      top: 62,
-      left: 0,
-      width: 320,
-      height: 404
-    };
-  torch = "OFF";
-
-  constructor(public navCtrl: NavController, public http : Http, private zone: NgZone, private parseBadgeService : ParseBadgeService, private settingsService: SettingsService) {
-    this.devicePage = Device;        
+  constructor(public navCtrl: NavController, 
+    private zone: NgZone, 
+    private scanCameraService : ScanCameraService,
+    private parseBadgeService : ParseBadgeService, 
+    private settingsService: SettingsService) {
+      this.devicePage = Device;        
   } 
 
   ionViewWillEnter() {
     (<any>window).OnDataRead = this.onZoneDataRead.bind(this);
-    this.http.post('http://localhost/barcodecontrol', this.camera).map(res => res.json()).subscribe(data => console.log(data));
+    this.scanCameraService.turnOn();    
   }
 
   ionViewWillLeave() {
-    this.http.post('http://localhost/barcodecontrol', { visible: "NO" }).map(res => res.json()).subscribe(data => console.log(data));
+    this.scanCameraService.turnOff();    
   }
 
   ionViewDidLeave() {
@@ -55,13 +46,11 @@ export class ScanCamera  {
   } 
 
   toggleLight() {
-    this.torch = (this.torch === "OFF") ? "ON" : "OFF";
-    this.http.post('http://localhost/barcodecontrol', {torch : this.torch}).map(res => res.json()).subscribe(data => console.log(data));
+    this.scanCameraService.toggleTorch();    
   }
 
   toggleCamera() {
-    this.camera.camera = (this.camera.camera === "FRONT") ? "BACK" : "FRONT";
-    this.http.post('http://localhost/barcodecontrol', this.camera).map(res => res.json()).subscribe(data => console.log(data));
+    this.scanCameraService.toggleCamera();    
   }
 
   editUserPage() {
@@ -69,6 +58,7 @@ export class ScanCamera  {
   }
 
   searchByBadgeId(event) {
+    // TODO: SEARCH FOR PERSON BY BADGE ID
     alert("SEARCHING for" + event.target.value);
   }
 
