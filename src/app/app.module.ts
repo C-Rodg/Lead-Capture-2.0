@@ -18,6 +18,7 @@ import { ParseBadgeService } from '../providers/parseBadgeService';
 import { SettingsService } from '../providers/settingsService';
 import { ScanCameraService } from '../providers/scanCameraService';
 import { ScanSledService } from '../providers/scanSledService';
+import { SoundService } from '../providers/soundService';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -66,7 +67,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     SettingsService, 
     ParseBadgeService,
     ScanCameraService,
-    ScanSledService
+    ScanSledService,
+    SoundService
     ]
 })
 export class AppModule {}

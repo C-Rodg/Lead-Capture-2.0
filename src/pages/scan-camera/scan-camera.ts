@@ -7,6 +7,7 @@ import { Record } from '../record/record';
 import { ScanCameraService } from '../../providers/scanCameraService';
 import { ParseBadgeService } from '../../providers/parseBadgeService';
 import { SettingsService } from '../../providers/settingsService';
+import { SoundService } from '../../providers/soundService';
 
 
 @Component({
@@ -20,8 +21,10 @@ export class ScanCamera  {
     private zone: NgZone, 
     private scanCameraService : ScanCameraService,
     private parseBadgeService : ParseBadgeService, 
-    private settingsService: SettingsService) {
-      this.devicePage = Device;        
+    private settingsService: SettingsService,
+    private soundService: SoundService) {
+      this.devicePage = Device;  
+      this.soundService.playSilent();      
   } 
 
   ionViewWillEnter() {
@@ -40,6 +43,7 @@ export class ScanCamera  {
   onZoneDataRead(data) {
     let scannedData = data;
     this.zone.run(() => {
+      this.soundService.playGranted();
       let parsedObj = this.parseBadgeService.parse(scannedData);
       this.navCtrl.push(Record, parsedObj);
     });

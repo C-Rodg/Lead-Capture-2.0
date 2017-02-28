@@ -28,8 +28,6 @@ export class Record {
   company;
   notes : string = "";  
 
-  sampleOptions: any;  
-
   constructor(public navCtrl: NavController, 
               params: NavParams, 
               public toastCtrl: ToastController, 
@@ -55,6 +53,7 @@ export class Record {
     
   }
 
+  // Determine which fields are required for form submission
   markRequiredFields(form) {
     const { contact, qualifiers, notes, leadRanking } = form;
     let reqs = {};
@@ -68,6 +67,7 @@ export class Record {
     return reqs;
   }
 
+  // Generate the 3-page form - contact, qualifiers, notes + leadranking
   generateFreshForm() {
     let leadRanking = {},
         contact = {},
@@ -97,6 +97,7 @@ export class Record {
     return obj;
   }
 
+  // Create the validation object
   createQuestionFormGroup(item, arr) {
     let validateArr = <any>[''];
       if (item.required) {        
@@ -111,6 +112,7 @@ export class Record {
       arr[item.tag] = validateArr;
   }
 
+  // Alert user that data will be lost
   ionViewCanLeave() {
     if (!this.canExit) {
       let confirm = this.alertCtrl.create({
@@ -138,6 +140,7 @@ export class Record {
     return true;
   }
 
+  // Validate form
   searchForInvalidField(form) {    
     const { contact, leadRanking, qualifiers, notes } = form;
     for (let group of [contact, leadRanking, qualifiers, notes]) {
@@ -145,7 +148,6 @@ export class Record {
         let controls = group.controls;
         for (let prop in controls) {
           if (controls.hasOwnProperty(prop) && !controls[prop].valid) {
-            console.log(prop);
             return prop;
           }
         }
@@ -153,6 +155,7 @@ export class Record {
     }
   }
 
+  // Save form
   saveRecord() {
     // Check for required fields
     if (!this.recordForm.valid) {
