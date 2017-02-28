@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-
 import { NavController } from 'ionic-angular';
 
 import { Device } from '../device/device';
+import { SettingsService } from '../../providers/settingsService';
 
 @Component({
   selector: 'page-settings',
@@ -11,10 +11,12 @@ import { Device } from '../device/device';
 export class Settings {
   devicePage : Component;
 
-  autouploadTime : Number = 4;
+  backgroundUploadWait : Number;
+  quickScanMode : boolean;
+  showDeleted : boolean;  
 
-  constructor(public navCtrl: NavController) {
-    this.devicePage = Device;
-  }
+  constructor(public navCtrl: NavController, private settingsService: SettingsService) {
+    this.devicePage = Device;    
+  }  
 
 }

@@ -1,4 +1,7 @@
-export class ParseBadgeHelper {
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class ParseBadgeService {
 
     constructor() {
         console.log("Creating parse badge service");
@@ -32,7 +35,7 @@ export class ParseBadgeHelper {
         } else if (checkSymbology === 'QRCODE') {
             this.parseQrCode(scannedData);
         } else if (checkSymbology === 'PDF417') {
-
+            this.parsePDF417(scannedData);
         } else if (checkSymbology === 'CODE128') {
             this.alertSymbologyScan(symbology, scannedData);
             return;
@@ -165,6 +168,16 @@ export class ParseBadgeHelper {
             }
         }
 
+        scannedId = scannedId.replace(/^\s+|\s+$/g, "");
+        if (scannedId && scannedId.length < 384) {
+            // TODO: PLAY GRANTED SOUND
+
+            // TODO: TRY TO FIND LEAD
+
+                // TODO: IF LEAD IS FOUND, SAVE VISIT AND MARK UNDELETED, TRY TO TRANSLATE IF ONLINE AND HAVE NOT TRANSLATED
+
+                // TODO: LEAD ISN'T FOUND, CREATE RESPONSES ARRAY, SAVE LEAD, ATTEMPT TO TRANSLATE
+        }
     }
 
     // Alert symbology, show scan data

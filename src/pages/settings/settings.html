@@ -50,7 +50,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Quick Scan Mode</ion-label>
-            <ion-toggle color="p-accent"></ion-toggle>
+            <ion-toggle color="p-accent" [(ngModel)]="settingsService.quickScanMode"></ion-toggle>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -58,15 +58,15 @@
         <ion-col>
            <ion-item>
             <ion-label>Show Deleted Records</ion-label>
-            <ion-toggle color="p-accent"></ion-toggle>
+            <ion-toggle color="p-accent" [(ngModel)]="settingsService.showDeleted"></ion-toggle>
           </ion-item>         
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-label>Autoupload every {{ autouploadTime }} mins</ion-label>
-           <ion-range min="1" max="10" step="1" snaps="true" color="p-accent" [(ngModel)]="autouploadTime">
+            <ion-label>Autoupload every {{ settingsService.backgroundUploadWait }} mins</ion-label>
+           <ion-range min="1" max="10" step="1" snaps="true" color="p-accent" [(ngModel)]="settingsService.backgroundUploadWait">
              <ion-icon range-left isActive="false" name="ios-timer-outline"></ion-icon>
              <ion-icon range-right name="timer" name="ios-timer"></ion-icon>
            </ion-range>

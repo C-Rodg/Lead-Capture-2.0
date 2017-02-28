@@ -27,7 +27,7 @@
 <ion-footer class="scan-footer">
   <ion-toolbar color="p-primary" (tap)="editUserPage()">
         <div class="scan-device-info">
-          <ion-icon name="information-circle" ></ion-icon>Mikey Albert - Session
+          <ion-icon name="information-circle" ></ion-icon>{{settingsService.currentUser}} - {{settingsService.currentStation}}
         </div>
   </ion-toolbar>
    <ion-toolbar color="p-primary">

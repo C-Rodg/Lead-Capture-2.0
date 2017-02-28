@@ -4,6 +4,8 @@ import { NavController } from 'ionic-angular';
 import { Device } from '../device/device';
 import { Record } from '../record/record';
 
+import { SettingsService } from '../../providers/settingsService';
+
 // TEMPORARY FOR TESTING
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -14,7 +16,7 @@ import 'rxjs/add/operator/map';
 })
 export class ScanSled {
 
-  constructor(public navCtrl: NavController, public http: Http, private zone: NgZone) {
+  constructor(public navCtrl: NavController, public http: Http, private zone: NgZone, private settingsService: SettingsService) {
     
   }
 

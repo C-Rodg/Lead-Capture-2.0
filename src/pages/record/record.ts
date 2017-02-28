@@ -65,8 +65,6 @@ export class Record {
         }
       });
     });
-    
-    console.log(reqs);
     return reqs;
   }
 
@@ -96,7 +94,6 @@ export class Record {
     obj['notes'] = this.formBuilder.group(notes);
     obj['qualifiers'] = this.formBuilder.group(qualifiers);
 
-    console.log(obj);
     return obj;
   }
 

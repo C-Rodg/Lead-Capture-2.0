@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 
 import { AddModal } from './add-modal/add-modal';
+import { SettingsService } from '../../providers/settingsService';
 
 @Component({
   selector: 'page-device',
@@ -9,36 +10,29 @@ import { AddModal } from './add-modal/add-modal';
 })
 export class Device {
 
-  // FOR TESTING:
-  users : Array<string>;
-  stations : Array<string>;
-  selectedUser : string;
-  selectedStation : string;
-
-  constructor(public navCtrl: NavController, public modalCtrl : ModalController) {
-    
-    // FOR TESTING:
-    this.users = ["Booth Station", "Tommy Douglas", "Johnny Walker"];
-    this.selectedUser = this.users[1];    
-    this.stations = ["Booth", "Meeting", "Session", "Other"];
-    this.selectedStation = this.stations[2];
-  }
+  constructor(public navCtrl: NavController, public modalCtrl : ModalController, private settingsService: SettingsService) { }
 
   // Select a User/Station
   selectSetting(type, val) {
     if(type === 'user') {
-      this.selectedUser = val;
+      this.settingsService.setValue(val, 'currentUser');
     } else if (type === 'station') {
-      this.selectedStation = val;
+      this.settingsService.setValue(val, 'currentStation');
     }
   }
 
   // Delete a User/Station
   deleteSetting(type, idx) {
     if(type === 'user'){
-      this.users.splice(idx, 1);
+      if (this.settingsService.users[idx] === this.settingsService.currentUser){
+        this.settingsService.setValue("", "currentUser");
+      }
+      this.settingsService.deleteArraySetting(idx, 'users');
     } else if (type === 'station') {
-      this.stations.splice(idx, 1);
+      if (this.settingsService.stations[idx] === this.settingsService.currentStation) {
+        this.settingsService.setValue("", "currentStation");
+      }
+      this.settingsService.deleteArraySetting(idx, 'stations');
     }
   }
   
@@ -47,12 +41,12 @@ export class Device {
     if(user === 'user') {
       let modal = this.modalCtrl.create(AddModal, {mode: 'User', edit: editValue, editIdx : editIdx});
       modal.onDidDismiss(data => {
-        if(data.save){
-          this.selectedUser = data.val;
+        if(data.save){          
+          this.settingsService.setValue(data.val, 'currentUser');
           if(data.hasOwnProperty('editIndex')) {
-            this.users[data.editIndex] = data.val;
+            this.settingsService.setArraySetting(data.val, data.editIndex, 'users');            
           } else {
-            this.users.push(data.val);
+            this.settingsService.pushArraySetting(data.val, 'users');
           }
         }
       });
@@ -61,11 +55,11 @@ export class Device {
       let modal = this.modalCtrl.create(AddModal, {mode: 'Station', edit: editValue, editIdx : editIdx});
       modal.onDidDismiss(data => {
         if(data.save) {
-          this.selectedStation = data.val;
+          this.settingsService.setValue(data.val, 'currentStation');
           if(data.hasOwnProperty('editIndex')) {
-            this.stations[data.editIndex] = data.val;
+            this.settingsService.setArraySetting(data.val, data.editIndex, 'stations');
           } else {
-            this.stations.push(data.val);
+            this.settingsService.pushArraySetting(data.val, 'stations');            
           }
         }
         

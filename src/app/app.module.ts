@@ -12,11 +12,13 @@ import { AddModal } from '../pages/device/add-modal/add-modal';
 import { ScanCamera } from '../pages/scan-camera/scan-camera';
 import { ScanSled } from '../pages/scan-sled/scan-sled';
 import { Record } from '../pages/record/record';
-
 import { TextInput, TextArea, PickoneInput, PickmanyInput, CheckboxInput } from '../pages/form-items/';
 
+import { ParseBadgeService } from '../providers/parseBadgeService';
+import { SettingsService } from '../providers/settingsService';
+
 import { ReactiveFormsModule } from '@angular/forms';
-//import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -58,6 +60,6 @@ import { ReactiveFormsModule } from '@angular/forms';
     AddModal,
     Record
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
+  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, SettingsService, ParseBadgeService]
 })
 export class AppModule {}
