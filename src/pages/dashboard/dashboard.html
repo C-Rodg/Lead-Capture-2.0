@@ -17,12 +17,12 @@
     <ion-card>
       <ion-row>
         <ion-col width-25 text-center class="dashboard-numbers" stretch>
-            <div class="dashboard-number">279</div>
+            <div class="dashboard-number">{{totalLeads}}</div>
             <div center>leads</div>
         </ion-col>
         <ion-col class="dashboard-event-info" padding-left>
-        <h2>Salesforce World Tour - NYC 2017</h2>
-        <p>Tyler Jackson</p>
+        <h2>{{eventName}}</h2>
+        <p>{{settingsService.currentUser}}</p>
         </ion-col>
       </ion-row>    
     </ion-card>  

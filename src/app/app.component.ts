@@ -10,6 +10,10 @@ import { Settings } from '../pages/settings/settings';
 import { ScanCamera } from '../pages/scan-camera/scan-camera';
 import { ScanSled } from '../pages/scan-sled/scan-sled';
 
+import { InfoService } from '../providers/infoService';
+import { SeatService } from '../providers/seatService';
+import { LoginService } from '../providers/loginService';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -21,7 +25,7 @@ export class MyApp {
 
   pages: Array<{title: string, component: any, icon : string}>;
 
-  constructor(public platform: Platform) {
+  constructor(public platform: Platform, private infoService: InfoService, private loginService: LoginService, private seatService: SeatService) {
     this.initializeApp();
 
     // TODO: convert 'sync leads' to action button, show scan camera vs scan sled
@@ -40,6 +44,33 @@ export class MyApp {
       { title: 'Edit User', component: Device, icon : 'create'},
       { title: 'Settings', component: Settings, icon : 'settings'}
     ];
+
+    this.loginService.getAuthToken()
+      .then(this.infoService.async)
+      .then(this.seatService.getSeat)
+      .then((data) => {
+        if (data && data['SeatGuid']) {
+          alert("EXISTING SEAT HAS BEEN SUCCESSFULLY FETCHED PRIOR AND STORED");
+        } else {
+          alert("NO CURRENT SEAT - FINDING ONE...");
+          this.seatService.acquireSeat().then((d) => {
+            alert("ACQUIRED SEAT! ALL GOOD!");
+          });
+        }
+      });
+   
+    // this.infoService.async().then((data) => {      
+    //   this.seatService.getSeat().then((data) => {
+    //     if (data && data['SeatGuid']) {
+    //       alert("EXISTING SEAT HAS BEEN SUCCESSFULLY FETCHED PRIOR AND STORED");
+    //     } else {
+    //       alert("NO CURRENT SEAT, lets find one");
+    //       this.seatService.acquireSeat().then((data) => {
+    //         alert("ACQUIRED A SEAT!");
+    //       })
+    //     }
+    //   });
+    // }).catch((err) => {});
 
   }
 

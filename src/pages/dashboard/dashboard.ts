@@ -6,6 +6,8 @@ import { Settings } from '../settings/settings';
 import { ScanCamera } from '../scan-camera/scan-camera';
 import { ScanSled } from '../scan-sled/scan-sled';
 
+import { SettingsService } from '../../providers/settingsService';
+
 // TESTING - REMOVE
 import { Record } from '../record/record';
 import { NavController } from 'ionic-angular';
@@ -21,10 +23,14 @@ export class Dashboard {
   devicePage : Component;
   settingsPage : Component;
 
+  eventName : string = "Salesforce World Tour 2017";
+  totalLeads : string = "271";
+
+
   // REMOVE THIS ITEM
   recordPage : Component;
 
-  constructor(public navCtrl : NavController) {
+  constructor(public navCtrl : NavController, private settingsService: SettingsService) {
     this.listPage = List;    
     this.devicePage = Device;
     this.settingsPage = Settings;
