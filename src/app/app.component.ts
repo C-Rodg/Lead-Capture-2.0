@@ -44,20 +44,36 @@ export class MyApp {
       { title: 'Edit User', component: Device, icon : 'create'},
       { title: 'Settings', component: Settings, icon : 'settings'}
     ];
+    
+    this.infoService.startUpApplication().subscribe((data) => {
+        alert('success!');
+        alert(JSON.stringify(data));
+    }, (error) => {
+      alert("RAN INTO AN ISSUE!");
+      alert(error);
+    });
 
-    this.loginService.getAuthToken()
-      .then(this.infoService.async)
-      .then(this.seatService.getSeat)
-      .then((data) => {
-        if (data && data['SeatGuid']) {
-          alert("EXISTING SEAT HAS BEEN SUCCESSFULLY FETCHED PRIOR AND STORED");
-        } else {
-          alert("NO CURRENT SEAT - FINDING ONE...");
-          this.seatService.acquireSeat().then((d) => {
-            alert("ACQUIRED SEAT! ALL GOOD!");
-          });
-        }
-      });
+    // this.infoService.getLeadClientInfo().subscribe((data) => {
+    //     alert('success!');
+    // }, (error) => {
+    //   alert("RAN INTO AN ISSUE!");
+    //   alert(error);
+    // });
+
+    // this.infoService.async()
+    //   .then(this.loginService.getAuthToken)
+    //   //.then(() => { this.loginService.getAuthToken()})
+    //   .then(this.seatService.getSeat)
+    //   .then((data) => {
+    //     if (data && data['SeatGuid']) {
+    //       alert("EXISTING SEAT HAS BEEN SUCCESSFULLY FETCHED PRIOR AND STORED");
+    //     } else {
+    //       alert("NO CURRENT SEAT - FINDING ONE...");
+    //       this.seatService.acquireSeat().then((d) => {
+    //         alert("ACQUIRED SEAT! ALL GOOD!");
+    //       });
+    //     }
+    //   });
    
     // this.infoService.async().then((data) => {      
     //   this.seatService.getSeat().then((data) => {
