@@ -10,7 +10,7 @@
 <ion-content>
   <div class="settings-container">
 
-    <ion-card class="settings-card inline-card-button">
+    <ion-card class="settings-card inline-card-button" (tap)="navigateToEventList()">
       <ion-row>
         <ion-col class="inline-card-icon" width-25 text-center stretch>
           <ion-icon name="ios-swap"></ion-icon>
@@ -82,10 +82,10 @@
         </ion-col>
          <ion-col center padding-left>
           <h1>About</h1>
-          <p class="secondary-text">AVE-LeadCapture version 2.0.0</p>
-          <p class="secondary-text">iPhone running iOS 10.2</p>
-          <p class="secondary-text">Sled-scanner: disconnected</p>
-          <p class="secondary-text">Cameras: front <ion-icon name="ios-checkmark"></ion-icon> | back <ion-icon name="ios-close"></ion-icon></p>
+          <p class="secondary-text">{{ infoService.getApplicationInformation() }}</p>
+          <p class="secondary-text">{{ infoService.getDeviceInformation() }}</p>
+          <p class="secondary-text">Sled-scanner: {{ infoService.getLineaStatus() ? "connected" : "disconnected" }}</p>
+          <p class="secondary-text">Cameras: front <ion-icon name="{{'ios-' + (infoService.getCameraStatus('FrontCamera') ? 'checkmark' : 'close')}}"></ion-icon> | back <ion-icon name="{{'ios-' + (infoService.getCameraStatus('RearCamera') ? 'checkmark' : 'close')}}"></ion-icon></p>
         </ion-col>
       </ion-row>
     </ion-card>

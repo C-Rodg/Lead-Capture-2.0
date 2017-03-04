@@ -64,6 +64,7 @@ export class ScanCamera  {
   searchByBadgeId(event) {
     // TODO: SEARCH FOR PERSON BY BADGE ID
     alert("SEARCHING for" + event.target.value);
+    this.navCtrl.push(Record);
   }
 
 }

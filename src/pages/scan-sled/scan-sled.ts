@@ -26,6 +26,10 @@ export class ScanSled {
   }
 
   ionViewWillLeave() {
+    let scanBtn = document.getElementById('scan-btn-card');
+    if (scanBtn) {
+      scanBtn.classList.remove('scan-clicked');
+    }
     this.scanSledService.sendScanCommand('disableButtonScan');      
   }
 
@@ -49,6 +53,7 @@ export class ScanSled {
   searchByBadgeId(event) {
     // TODO: SEARCH FOR ATTENDEE BY BADGE ID
     alert("Searching for " + event.target.value);
+    this.navCtrl.push(Record);
   }
 
   scanBtnClicked(event, status) {

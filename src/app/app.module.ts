@@ -20,8 +20,6 @@ import { ScanCameraService } from '../providers/scanCameraService';
 import { ScanSledService } from '../providers/scanSledService';
 import { SoundService } from '../providers/soundService';
 import { InfoService } from '../providers/infoService';
-import { SeatService } from '../providers/seatService';
-import { LoginService } from '../providers/loginService';
 import { LeadsService } from '../providers/leadsService';
 
 import { ReactiveFormsModule } from '@angular/forms';
@@ -51,7 +49,6 @@ import { ReactiveFormsModule } from '@angular/forms';
       mode : 'md'
     })
     ,ReactiveFormsModule
-    //,FormsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -69,8 +66,6 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, 
     InfoService,
-    LoginService,
-    SeatService,
     SettingsService, 
     LeadsService,
     ParseBadgeService,

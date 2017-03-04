@@ -9,7 +9,7 @@
 
 <ion-content padding>
   
-   <ion-card class="square-card-btn scan-sled-button" (touchstart)="scanBtnClicked($event, true)" (touchend)="scanBtnClicked($event, false)">
+   <ion-card class="square-card-btn scan-sled-button" id="scan-btn-card" (touchstart)="scanBtnClicked($event, true)" (touchend)="scanBtnClicked($event, false)">
       <ion-row class="scan-sled-icon">
         <ion-col text-center>
           <ion-icon name="qr-scanner"></ion-icon>

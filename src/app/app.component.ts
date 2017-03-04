@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, NgZone } from '@angular/core';
 import { Nav, Platform} from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
@@ -11,8 +11,7 @@ import { ScanCamera } from '../pages/scan-camera/scan-camera';
 import { ScanSled } from '../pages/scan-sled/scan-sled';
 
 import { InfoService } from '../providers/infoService';
-import { SeatService } from '../providers/seatService';
-import { LoginService } from '../providers/loginService';
+
 
 
 @Component({
@@ -25,7 +24,10 @@ export class MyApp {
 
   pages: Array<{title: string, component: any, icon : string}>;
 
-  constructor(public platform: Platform, private infoService: InfoService, private loginService: LoginService, private seatService: SeatService) {
+  constructor(public platform: Platform, 
+    private infoService: InfoService,
+    private zone: NgZone  
+  ) {
     this.initializeApp();
 
     // TODO: convert 'sync leads' to action button, show scan camera vs scan sled
@@ -42,52 +44,20 @@ export class MyApp {
       { title: 'View Leads', component: List, icon : 'list-box'},
       { title: 'Sync Leads', component: "", icon : 'refresh'},
       { title: 'Edit User', component: Device, icon : 'create'},
-      { title: 'Settings', component: Settings, icon : 'settings'}
+      { title: 'Settings', component: Settings, icon : 'settings'},
+      { title: 'Exit', component: "", icon : "exit"}
     ];
     
+    // Get Token, seats
     this.infoService.startUpApplication().subscribe((data) => {
-        alert('success!');
-        alert(JSON.stringify(data));
+        // All Good!
     }, (error) => {
-      alert("RAN INTO AN ISSUE!");
-      alert(error);
+      alert("There was an error logging in...");
+      alert(JSON.stringify(error));
     });
 
-    // this.infoService.getLeadClientInfo().subscribe((data) => {
-    //     alert('success!');
-    // }, (error) => {
-    //   alert("RAN INTO AN ISSUE!");
-    //   alert(error);
-    // });
-
-    // this.infoService.async()
-    //   .then(this.loginService.getAuthToken)
-    //   //.then(() => { this.loginService.getAuthToken()})
-    //   .then(this.seatService.getSeat)
-    //   .then((data) => {
-    //     if (data && data['SeatGuid']) {
-    //       alert("EXISTING SEAT HAS BEEN SUCCESSFULLY FETCHED PRIOR AND STORED");
-    //     } else {
-    //       alert("NO CURRENT SEAT - FINDING ONE...");
-    //       this.seatService.acquireSeat().then((d) => {
-    //         alert("ACQUIRED SEAT! ALL GOOD!");
-    //       });
-    //     }
-    //   });
-   
-    // this.infoService.async().then((data) => {      
-    //   this.seatService.getSeat().then((data) => {
-    //     if (data && data['SeatGuid']) {
-    //       alert("EXISTING SEAT HAS BEEN SUCCESSFULLY FETCHED PRIOR AND STORED");
-    //     } else {
-    //       alert("NO CURRENT SEAT, lets find one");
-    //       this.seatService.acquireSeat().then((data) => {
-    //         alert("ACQUIRED A SEAT!");
-    //       })
-    //     }
-    //   });
-    // }).catch((err) => {});
-
+    // OnAppActive Event from Linea
+    (<any>window).OnLineaConnect = this.onZoneOnAppActive.bind(this);
   }
 
   initializeApp() {
@@ -99,12 +69,21 @@ export class MyApp {
     });
   }
 
+  onZoneOnAppActive() {
+    this.zone.run(() => {
+      this.infoService.getClientInfo().subscribe(() => {});
+    });
+  }
+
   openPage(page) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario   
     if(page.icon === 'refresh') {
       // TODO: SYNC content
       alert("SYNCING LEADS");
+      return false;
+    } else if (page.icon === "exit") {
+      window.location.href = "http://localhost/navigate/home";
       return false;
     }
     this.nav.setRoot(page.component);

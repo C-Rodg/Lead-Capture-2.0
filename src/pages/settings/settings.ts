@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 
 import { Device } from '../device/device';
 import { SettingsService } from '../../providers/settingsService';
+import { InfoService } from '../../providers/infoService';
 
 @Component({
   selector: 'page-settings',
@@ -10,13 +11,16 @@ import { SettingsService } from '../../providers/settingsService';
 })
 export class Settings {
   devicePage : Component;
-
-  backgroundUploadWait : Number;
-  quickScanMode : boolean;
-  showDeleted : boolean;  
-
-  constructor(public navCtrl: NavController, private settingsService: SettingsService) {
-    this.devicePage = Device;    
+  
+  constructor(public navCtrl: NavController,
+    private settingsService: SettingsService,
+    private infoService : InfoService  
+  ) {
+    this.devicePage = Device;       
   }  
+
+  navigateToEventList() {
+    window.location.href = "http://localhost/navigate/home";
+  }
 
 }
