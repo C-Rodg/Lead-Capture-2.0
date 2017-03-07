@@ -4,22 +4,23 @@ import { NavController } from 'ionic-angular';
 
 import { ScanSled } from '../scan-sled/scan-sled';
 import { ScanCamera } from '../scan-camera/scan-camera';
+import { Record } from '../record/record';
 
 // TESTING
-const leads = [{
-  firstName : "Julie", lastName: "Williams", company : "Validar, Inc.", date : "JUN 20, 2:34 PM"
+let leads = [{
+  id: 1, firstName : "Julie", lastName: "Williams", company : "Validar, Inc.", date : "JUN 20, 2:34 PM"
 }, {
-  firstName : "Todd", lastName: "Bowels", company : "National Football League", date : "JUL 07, 1:54 PM"
+  id: 2, firstName : "Todd", lastName: "Bowels", company : "National Football League", date : "JUL 07, 1:54 PM"
 }, {
-  firstName : "Billy-Joe", lastName: "Maldwell", company : "Made in Washington", date : "DEC 20, 2:44 AM"
+ id: 3,  firstName : "Billy-Joe", lastName: "Maldwell", company : "Made in Washington", date : "DEC 20, 2:44 AM"
 }, {
-  firstName : "Jamison", lastName: "Bobberts", company : "IBM, inc.", date : "JUN 20, 4:35 PM"
+ id: 4, firstName : "Jamison", lastName: "Bobberts", company : "IBM, inc.", date : "JUN 20, 4:35 PM"
 }, {
-  firstName : "Edward", lastName: "Minston", company : "Salesforce events", date : "MAY 20, 8:39 PM"
+ id: 5, firstName : "Edward", lastName: "Minston", company : "Salesforce events", date : "MAY 20, 8:39 PM"
 }, {
-  firstName : "Scottopolis", lastName: "Messier", company : "Wells Fargo", date : "SEP 20, 11:30 AM"
+ id: 6, firstName : "Scottopolis", lastName: "Messier", company : "Wells Fargo", date : "SEP 20, 11:30 AM"
 }, {
-  firstName : "Tyler", lastName: "Jackson", company : "Alphabet", date : "JAN 10, 12:34 PM"
+ id: 7, firstName : "Tyler", lastName: "Jackson", company : "Alphabet", date : "JAN 10, 12:34 PM"
 }];
 
 @Component({
@@ -77,6 +78,15 @@ export class List {
     if(!this.showSearch) {
       this.initializeList();
     }
+  }
+
+  editRecord(id) {    
+    this.navCtrl.push(Record);
+  }
+
+  deleteRecord(id) {
+    leads = leads.filter((lead) => lead.id !== id);
+    this.initializeList();
   }
 
 }
