@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-
 import { NavController, AlertController } from 'ionic-angular';
+import * as moment from 'moment';
 
 import { ScanSled } from '../scan-sled/scan-sled';
 import { ScanCamera } from '../scan-camera/scan-camera';
@@ -8,26 +8,6 @@ import { EditRecord } from '../edit-record/edit-record';
 
 import { LeadsService } from '../../providers/leadsService';
 import { SettingsService } from '../../providers/settingsService';
-
-// TESTING
-let leads = [{
-  id: 1, firstName : "Julie", lastName: "Williams", company : "Validar, Inc.", date : "JUN 20, 2:34 PM"
-}, {
-  id: 2, firstName : "Todd", lastName: "Bowels", company : "National Football League", date : "JUL 07, 1:54 PM"
-}, {
- id: 3,  firstName : "Billy-Joe", lastName: "Maldwell", company : "Made in Washington", date : "DEC 20, 2:44 AM"
-}, {
- id: 4, firstName : "Jamison", lastName: "Bobberts", company : "IBM, inc.", date : "JUN 20, 4:35 PM"
-}, {
- id: 5, firstName : "Edward", lastName: "Minston", company : "Salesforce events", date : "MAY 20, 8:39 PM"
-}, {
- id: 6, firstName : "Scottopolis", lastName: "Messier", company : "Wells Fargo", date : "SEP 20, 11:30 AM"
-}, {
- id: 7, firstName : "Tyler", lastName: "Jackson", company : "Alphabet", date : "JAN 10, 12:34 PM"
-}];
-
-// Need Fields:
-// current.LeadGuid, current.LastVisitDateTime, current.DeleteDateTime,, 
 
 @Component({
   selector: 'page-list',
@@ -38,12 +18,14 @@ export class List {
   showSearch : Boolean = false;
 
   leads : Array<any> =[];
+  filteredLeads : Array<any> = [];
   scanPage : Component;
 
   constructor(public navCtrl: NavController, 
     public alertCtrl: AlertController,
     private leadsService : LeadsService,
-    private settingsService : SettingsService ) {
+    private settingsService : SettingsService 
+    ) {
 
     // TODO: convert 'sync leads' to action button, show scan camera vs scan sled
     let sled = true;
@@ -54,88 +36,78 @@ export class List {
     }
   }
 
+  // Get leads from database
   ionViewWillEnter() {
     let query  = this.settingsService.showDeleted ? '' : 'deleted=no';
     this.leadsService.find(query).subscribe((data) => {
       this.leads = this.parseLeadsInfo(data);
-      alert(JSON.stringify(this.leads));
+      this.filteredLeads = this.leads;
     });
   }
 
   // Take response from 'find' and parse into data for list view
   parseLeadsInfo(fullLeads) {
     return fullLeads.map((lead) => {
-      let firstName = lead.Responses.get('Tag', 'lcFirstName') || '';
+      let firstName = lead.Responses.get('Tag', 'lcFirstName') || lead.Responses.get('Tag', 'lcBadgeId') || '';
       let lastName = lead.Responses.get('Tag', 'lcLastName') || '';
       let company = lead.Responses.get('Tag', 'lcCompany') || '';
-      
+      let time = moment(lead.LastVisitDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMM DD, HH:mm A').toUpperCase();
+      let deleted = lead.DeleteDateTime;
       return {
         id : lead.LeadGuid,
-        time : lead.LastVisitDateTime,
+        time,
         firstName,
         lastName,
-        company
+        company,
+        deleted
       };
-
     });
   }
 
-  initializeList() {
-    this.leads = leads;
-  }
-
+  // Filter by First, Last, Company
   filterLeads(ev) {
-    this.initializeList();
-    let val = ev.target.value;
-
-    if (val && val.trim() != "") {
-      val = val.toLowerCase();
-      this.leads = this.leads.filter((item) => {
-        let first = item.firstName.toLowerCase(),
-          last = item.lastName.toLowerCase(),
-          company = item.company.toLowerCase();
-          console.log(first, last, company);
-        if(first.indexOf(val) > -1) {
-          return true;
-        } else if (last.indexOf(val) > -1) {
-          return true;
-        } else if (company.indexOf(val) > -1) {
-          return true;
-        }
-      });
-      console.log(this.leads);
-    }
+    let val = ev.target.value.toUpperCase();
+    this.filteredLeads = this.leads.filter((reg) => {
+      return (reg.firstName.toUpperCase().indexOf(val) > -1) || (reg.lastName.toUpperCase().indexOf(val) > -1) || (reg.company.toUpperCase().indexOf(val) > -1);
+    });
   }
 
+  // Show / Hide search box and remove filter
   toggleSearchBox() {
     this.showSearch = !this.showSearch;
     if(!this.showSearch) {
-      this.initializeList();
+     this.filteredLeads = this.leads;
     }
   }
 
+  // Click handler for editing record
   editRecord(id) {    
     this.navCtrl.push(EditRecord);
   }
 
+  // Click handler for deleting record
   deleteRecord(id) {
     let confirm = this.alertCtrl.create({
       title: "Delete this record?",
       message: "Are you sure you want to delete this record? All data will be lost.",
       buttons: [
         {
-          text: "No"
+          text: "Cancel"
         }, {
-          text: "Yes",
+          text: "Delete",
           handler: () => {
-            leads = leads.filter((lead) => lead.id !== id);
-            this.initializeList();
+            // TODO: HANDLE DELETING AND REMOVE from LEADS
           }
         }
       ]
     });
     confirm.present();
     return false;  
+  }
+
+  // Click handler for undeleting record
+  undeleteRecord(id) {
+    // TODO: HANDLE UNDELETING A RECORD
   }
 
 }

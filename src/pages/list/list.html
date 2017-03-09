@@ -3,7 +3,7 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>View {{leads.length}} Leads</ion-title>
+    <ion-title>View {{filteredLeads.length}} Leads</ion-title>
     <ion-buttons end class="navbar-btns">
       <button ion-button icon-only (tap)="toggleSearchBox()">
          <ion-icon name="search"></ion-icon>
@@ -18,7 +18,7 @@
 <ion-content>
 <div class="{{showSearch ? 'search-open' : ''}}">
 
-<div *ngFor="let person of leads;" >
+<div *ngFor="let person of filteredLeads;" >
 <ion-card >
     <ion-list no-lines>
       <ion-item-sliding>
@@ -28,13 +28,17 @@
           <p class="list__contactbox__date"><small>{{person.time}}</small></p>
         </ion-item>
         <ion-item-options side="right">
-          <button ion-button color="p-primary" (tap)="editRecord(person.id)">
+        <button ion-button color="p-primary" (tap)="editRecord(person.id)">
           <ion-icon name="create"></ion-icon>
           Edit
         </button>
-        <button ion-button color="danger" (tap)="deleteRecord(person.id)">
+        <button *ngIf="!person.deleted" ion-button color="danger" (tap)="deleteRecord(person.id)">
           <ion-icon name="trash"></ion-icon>
           Delete
+        </button>
+        <button *ngIf="person.deleted" ion-button color="danger" (tap)="undeleteRecord(person.id)">
+          <ion-icon name="undo"></ion-icon>
+          Undelete
         </button>
       </ion-item-options>
     </ion-item-sliding>
