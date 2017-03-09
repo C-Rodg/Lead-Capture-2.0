@@ -1,0 +1,154 @@
+page-new-record {    
+    .content-md {
+        background-color: #e5e5e5;
+    } 
+
+    .survey-form {
+        .req ion-label::after {
+            content: " *";
+            color: color($colors, danger);
+        }
+
+        .req.item-select ion-label::after {
+            position: absolute;
+            right: 2px;
+            top: 6px;
+        }
+    }
+
+    .default-info-card {
+        .icon-column {
+            border-right: 1px solid color($colors, white-divider);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            opacity: 0.8;
+
+            ion-icon {
+                font-size: 2.1em;
+            }
+            
+            p {
+                font-size: 0.7em;
+                margin-top: 4px;
+            }
+        }
+
+        .info-column {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            h2 {
+                font-weight: bold;
+            }
+        }
+
+        .lead-box .select-icon-inner,
+        .lead-box ion-label {
+            color: #333;
+        }
+    }
+
+    .small-select {
+        ion-item {
+            padding-left: 0;
+        }
+
+        ion-label {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        ion-select {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        ion-item {
+            min-height: auto;
+        }
+    }
+
+
+    .validar-form {
+        ion-item.item {
+             border-bottom: 1px solid #dedede;
+             padding-left: 3px;
+        }
+        
+        ion-item.input-has-focus ion-label {
+            color: #009688 !important;
+        }
+
+        ion-item.input-has-focus .item-inner {
+            border-bottom-color: #009688 !important;
+            box-shadow: inset 0 -1px 0 0 #009688 !important;
+        }
+
+        ion-item:not(.item-select) ion-label {
+            white-space: normal;
+        }
+
+        ion-checkbox.checkbox {
+            margin-right: 18px !important;
+        }
+
+        ion-item.item-checkbox:not(.item-checkbox-checked) .item-inner {
+            color: #999;
+        }
+
+        
+    }
+
+    .notes-card {
+        ion-item.item-input {
+            border-bottom: 0 !important;
+            box-shadow: none !important;
+            padding-left: 0;
+        }
+
+        ion-item.input-has-focus .item-inner {
+            box-shadow: none !important;
+        }
+
+        ion-item.input-has-value .item-inner {
+            border-bottom: 0 !important;
+            box-shadow: none !important;
+        }
+
+        ion-item.req ion-textarea::after {
+            content: " *";
+            color: color($colors, danger);
+            position: absolute;
+            right: -1px;
+            top: 0;
+        }
+
+        textarea {
+            margin: 0;
+            width: 100% !important;
+            min-height: 200px;
+            background-color: rgba(248, 248, 248, 0.3);
+            padding: 13px 8px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 2px;
+        }
+
+        ion-badge {
+            float: right;
+            margin: 8px;
+        }
+
+        ion-badge.error-badge {
+            background-color: color($colors, danger);
+        }
+
+        ion-label {
+            display: none;
+        }
+    }
+
+}

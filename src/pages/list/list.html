@@ -3,7 +3,7 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>View Leads</ion-title>
+    <ion-title>View {{leads.length}} Leads</ion-title>
     <ion-buttons end class="navbar-btns">
       <button ion-button icon-only (tap)="toggleSearchBox()">
          <ion-icon name="search"></ion-icon>
@@ -15,7 +15,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="{{showSearch ? 'search-open' : ''}}">
+<ion-content>
+<div class="{{showSearch ? 'search-open' : ''}}">
 
 <div *ngFor="let person of leads;" >
 <ion-card >
@@ -40,7 +41,8 @@
     </ion-list>
   </ion-card>
 </div>
-    
+
+</div>
 </ion-content>
 
 <ion-footer class="list__footer">

@@ -2,7 +2,8 @@ import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { Device } from '../device/device';
-import { Record } from '../record/record';
+import { NewRecord } from '../new-record/new-record';
+import { EditRecord } from '../edit-record/edit-record';
 
 import { SettingsService } from '../../providers/settingsService';
 import { ScanSledService } from '../../providers/scanSledService';
@@ -42,7 +43,7 @@ export class ScanSled {
     this.zone.run(() => {
       // TODO: SEND SCANNED DATA TO PARSING SERVICE
       alert(JSON.stringify(scannedData));
-      this.navCtrl.push(Record);
+      this.navCtrl.push(NewRecord);
     });
   }
 
@@ -53,7 +54,7 @@ export class ScanSled {
   searchByBadgeId(event) {
     // TODO: SEARCH FOR ATTENDEE BY BADGE ID
     alert("Searching for " + event.target.value);
-    this.navCtrl.push(Record);
+    this.navCtrl.push(NewRecord);
   }
 
   scanBtnClicked(event, status) {

@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 
 import { ScanSled } from '../scan-sled/scan-sled';
 import { ScanCamera } from '../scan-camera/scan-camera';
-import { Record } from '../record/record';
+import { EditRecord } from '../edit-record/edit-record';
+
+import { LeadsService } from '../../providers/leadsService';
+import { SettingsService } from '../../providers/settingsService';
 
 // TESTING
 let leads = [{
@@ -23,6 +26,9 @@ let leads = [{
  id: 7, firstName : "Tyler", lastName: "Jackson", company : "Alphabet", date : "JAN 10, 12:34 PM"
 }];
 
+// Need Fields:
+// current.LeadGuid, current.LastVisitDateTime, current.DeleteDateTime,, 
+
 @Component({
   selector: 'page-list',
   templateUrl: 'list.html'
@@ -34,7 +40,10 @@ export class List {
   leads : Array<any>;
   scanPage : Component;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, 
+    public alertCtrl: AlertController,
+    private leadsService : LeadsService,
+    private settingsService : SettingsService ) {
     this.leads = leads;
 
     // TODO: convert 'sync leads' to action button, show scan camera vs scan sled
@@ -44,6 +53,14 @@ export class List {
     } else {
       this.scanPage = ScanCamera;
     }
+  }
+
+  ionViewWillEnter() {
+    let query  = this.settingsService.showDeleted ? '' : 'deleted=no';
+    this.leadsService.find(query).subscribe((data) => {
+      alert(JSON.stringify(data));
+      // TODO: get leads and put as list
+    });
   }
 
   initializeList() {
@@ -81,12 +98,27 @@ export class List {
   }
 
   editRecord(id) {    
-    this.navCtrl.push(Record);
+    this.navCtrl.push(EditRecord);
   }
 
   deleteRecord(id) {
-    leads = leads.filter((lead) => lead.id !== id);
-    this.initializeList();
+    let confirm = this.alertCtrl.create({
+      title: "Delete this record?",
+      message: "Are you sure you want to delete this record? All data will be lost.",
+      buttons: [
+        {
+          text: "No"
+        }, {
+          text: "Yes",
+          handler: () => {
+            leads = leads.filter((lead) => lead.id !== id);
+            this.initializeList();
+          }
+        }
+      ]
+    });
+    confirm.present();
+    return false;  
   }
 
 }

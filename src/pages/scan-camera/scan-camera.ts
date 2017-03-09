@@ -2,7 +2,8 @@ import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { Device } from '../device/device';
-import { Record } from '../record/record';
+import { NewRecord } from '../new-record/new-record';
+import { EditRecord } from '../edit-record/edit-record';
 
 import { ScanCameraService } from '../../providers/scanCameraService';
 import { ParseBadgeService } from '../../providers/parseBadgeService';
@@ -44,8 +45,14 @@ export class ScanCamera  {
     let scannedData = data;
     this.zone.run(() => {
       this.soundService.playGranted();
-      let parsedObj = this.parseBadgeService.parse(scannedData);
-      this.navCtrl.push(Record, parsedObj);
+      this.parseBadgeService.parse(scannedData).subscribe((data) => {
+        alert(JSON.stringify(data));
+        this.navCtrl.push(NewRecord);
+      })
+
+      // TODO:
+      // If not found in DB, push NewRecord, else push EditRecord
+      //this.navCtrl.push(NewRecord, parsedObj);
     });
   } 
 
@@ -61,10 +68,14 @@ export class ScanCamera  {
     this.navCtrl.push(Device);
   }
 
-  searchByBadgeId(event) {
-    // TODO: SEARCH FOR PERSON BY BADGE ID
+  searchByBadgeId(event) {    
     alert("SEARCHING for" + event.target.value);
-    this.navCtrl.push(Record);
+
+    // TODO:
+    // Check if online
+    // If online, then try to translate and if successful push new record
+
+    this.navCtrl.push(NewRecord);
   }
 
 }

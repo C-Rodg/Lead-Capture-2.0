@@ -1,15 +1,22 @@
 import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/mergeMap';
+import { Observable } from 'rxjs/Observable';
 
 import { SettingsService } from './settingsService';
+import { LeadsService } from './leadsService';
+import { InfoService } from './infoService';
 
 @Injectable()
 export class ParseBadgeService {
 
-    constructor(private settingsService : SettingsService) {
+    constructor(private settingsService : SettingsService,
+        private leadsService : LeadsService,
+        private infoService : InfoService
+    ) {
         console.log("Creating parse badge service");
     }
 
-    parse(d) {
+    parse(d): Observable<any> {
         alert(JSON.stringify(d));
 
         let checkSymbology  = null,
@@ -35,7 +42,7 @@ export class ParseBadgeService {
         if (checkSymbology === 'CODE3OF9' || checkSymbology === 'CODE39') {
             scannedId = scannedData;
         } else if (checkSymbology === 'QRCODE') {
-            this.parseQrCode(scannedData);
+            return this.parseQrCode(scannedData);
         } else if (checkSymbology === 'PDF417') {
             this.parsePDF417(scannedData);
         } else if (checkSymbology === 'CODE128') {
@@ -110,6 +117,78 @@ export class ParseBadgeService {
             badgeId = scannedData;
             scannedId = scannedData;
         }
+
+        scannedId = scannedId.replace(/^\s+|\s+$/g, "");
+        if (scannedId !== '' && scannedId.length < 384) {
+            // TODO: PLAY GRANTED SOUND 
+            // TRY TO FIND EXISTING LEAD, IF NONE SAVE NEW             
+            alert("TIME TO FIND LEAD - "+scannedId);
+
+            return this.leadsService.find(`ScanData=${scannedId}`).flatMap((data) => {
+                if (data && data.length > 0) {
+                    alert("FOUND AN EXISTING LEAD");
+                    let visit = {
+                        ScanData: scannedId,
+                        CapturedBy: this.settingsService.currentUser,
+                        CaptureStation: this.settingsService.currentStation
+                    };
+                    
+                    // Keep as is (sync) or change to steps of async?
+                    return this.leadsService.saveVisit(visit).flatMap(() => {
+                        if (data[0].DeleteDateTime !== null) {
+                            return this.leadsService.markUndeleted(data[0].LeadGuid);
+                        } else {
+                            return this.leadsService.markDeleted(data[0].LeadGuid).flatMap(() => {
+                                return this.leadsService.markUndeleted(data[0].LeadGuid)
+                            });
+                        }
+                    });  // Change to observable of to return record at end??
+
+                    // Do translation if online
+
+                } else {
+                    let lead = {
+                        ScanData: scannedId,
+                        Keys: [{"Type":"7A56282B-4855-4585-B10B-E76B111EA1DB", "Value": badgeId}],
+                        Responses: []
+                    };
+
+                    if (scannedData) {
+                        lead.Responses.push({"Tag":"lcUnmapped", "Value": scannedData});
+                    }
+                    if (badgeId) {
+                        lead.Responses.push({"Tag":"lcBadgeId", "Value": badgeId});
+                    }
+                    if (badgeFirst) {
+                        lead.Responses.push({"Tag":"lcBadgeId", "Value": badgeFirst});
+                    }
+                    if (badgeLast) {
+                        lead.Responses.push({"Tag":"lcBadgeId", "Value": badgeLast});
+                    }
+                    if (badgeCompany) {
+                        lead.Responses.push({"Tag":"lcBadgeId", "Value": badgeCompany});
+                    }
+
+                    // This is where you could handle default lead rank
+                    // lead.Responses.push({"Tag":"lcLeadRank", "Picked": ['lcRankD']});
+                    
+                    lead.Keys.push({"Type":"F9F457FE-7E6B-406E-9946-5A23C50B4DF5", "Value": `${this.infoService.client.DeviceType}|${this.infoService.client.ClientName}`});
+                    
+                    return this.leadsService.saveNew(lead).flatMap((person) => {
+                        lead["LeadGuid"] = person.LeadGuid;
+                        let visit = {
+                            ScanData: scannedId,
+                            CapturedBy: this.settingsService.currentUser,
+                            CaptureStation: this.settingsService.currentStation
+                        };
+                        return this.leadsService.saveVisit(visit);
+                    });
+                    // Do translation if online
+                }
+            });
+        }
+
+
     }
 
 

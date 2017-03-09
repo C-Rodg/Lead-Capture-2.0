@@ -6,10 +6,11 @@ import { Settings } from '../settings/settings';
 import { ScanCamera } from '../scan-camera/scan-camera';
 import { ScanSled } from '../scan-sled/scan-sled';
 
+import { InfoService } from '../../providers/infoService';
 import { SettingsService } from '../../providers/settingsService';
 
 // TESTING - REMOVE
-import { Record } from '../record/record';
+import { NewRecord } from '../new-record/new-record';
 import { NavController } from 'ionic-angular';
 
 @Component({
@@ -23,20 +24,22 @@ export class Dashboard {
   devicePage : Component;
   settingsPage : Component;
 
-  eventName : string = "Salesforce World Tour 2017";
   totalLeads : string = "271";
 
 
   // REMOVE THIS ITEM
   recordPage : Component;
 
-  constructor(public navCtrl : NavController, private settingsService: SettingsService) {
+  constructor(public navCtrl : NavController, 
+    private settingsService: SettingsService,
+    private infoService : InfoService
+    ) {
     this.listPage = List;    
     this.devicePage = Device;
     this.settingsPage = Settings;
 
     // TODO: Remove Record page
-    this.recordPage = Record;
+    this.recordPage = NewRecord;
 
     // TODO: detect if scanner present and navigate based off of that
     let scanner = false,
@@ -50,7 +53,7 @@ export class Dashboard {
   }
 
   navigateToRecord() {
-    this.navCtrl.push(Record);
+    this.navCtrl.push(NewRecord);
   }
 
 

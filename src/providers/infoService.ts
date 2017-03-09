@@ -235,6 +235,10 @@ export class InfoService {
     }
 
     getLineaStatus() : boolean {
-        return (this.client.Scanner === "None") ? false : true;
+        return (!this.client.Scanner || this.client.Scanner === "None") ? false : true;
+    }
+
+    getExhibitorName() : string {
+        return (this.leadsource.ExhibitorName) ? this.leadsource.ExhibitorName : "Validar Lead Capture"
     }
 }

@@ -11,7 +11,8 @@ import { Settings } from '../pages/settings/settings';
 import { AddModal } from '../pages/device/add-modal/add-modal';
 import { ScanCamera } from '../pages/scan-camera/scan-camera';
 import { ScanSled } from '../pages/scan-sled/scan-sled';
-import { Record } from '../pages/record/record';
+import { NewRecord } from '../pages/new-record/new-record';
+import { EditRecord } from '../pages/edit-record/edit-record';
 import { TextInput, TextArea, PickoneInput, PickmanyInput, CheckboxInput } from '../pages/form-items/';
 
 import { ParseBadgeService } from '../providers/parseBadgeService';
@@ -37,12 +38,13 @@ import { ReactiveFormsModule } from '@angular/forms';
     Device,
     Settings,
     AddModal,
-    Record,
+    NewRecord,
     TextInput,
     TextArea,
     PickoneInput,
     PickmanyInput,
-    CheckboxInput
+    CheckboxInput,
+    EditRecord
   ],
   imports: [
     IonicModule.forRoot(MyApp, {
@@ -62,7 +64,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     Device,
     Settings,
     AddModal,
-    Record
+    NewRecord,
+    EditRecord
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, 
     InfoService,

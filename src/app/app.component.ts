@@ -51,9 +51,8 @@ export class MyApp {
     // Get Token, seats
     this.infoService.startUpApplication().subscribe((data) => {
         // All Good!
-    }, (error) => {
-      alert("There was an error logging in...");
-      alert(JSON.stringify(error));
+    }, (error) => {      
+      //alert(JSON.stringify(error));
     });
 
     // OnAppActive Event from Linea

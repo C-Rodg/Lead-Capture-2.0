@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import { Content, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 
 import { pickManyValidator } from '../../helpers/pickManyValidator';
 
 import survey from '../../config/survey';
 
 @Component({
-  selector: 'page-record',
-  templateUrl: 'record.html'
+  selector: 'page-new-record',
+  templateUrl: 'new-record.html'
 })
-export class Record {
+export class NewRecord {
+  @ViewChild(Content) contentPage : Content;
+
   capturePage : string = "contact";
   canExit : boolean = false;
   recordForm : FormGroup;
@@ -114,7 +116,7 @@ export class Record {
 
   // Alert user that data will be lost
   ionViewCanLeave() {
-    if (!this.canExit) {
+    if (!this.canExit && !this.recordForm.pristine) {
       let confirm = this.alertCtrl.create({
         title : "Leave without saving?",
         message: "Are you sure you want to exit this record without saving? All data will be lost.",
@@ -180,6 +182,10 @@ export class Record {
     });
     toast.present();
     this.navCtrl.pop();
+  }
+
+  scrollToTop() {
+    this.contentPage.scrollToTop();
   }
 
   logForm() {

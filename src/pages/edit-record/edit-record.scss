@@ -1,4 +1,8 @@
-page-record {    
+page-edit-record {    
+    .content-md {
+        background-color: #e5e5e5;
+    } 
+
     .survey-form {
         .req ion-label::after {
             content: " *";
@@ -40,6 +44,11 @@ page-record {
             h2 {
                 font-weight: bold;
             }
+        }
+
+        .lead-box .select-icon-inner,
+        .lead-box ion-label {
+            color: #333;
         }
     }
 
@@ -142,4 +151,10 @@ page-record {
         }
     }
 
+    .scans-info-card {
+        p {
+            font-size: 1.2rem;
+            color: #999;
+        }
+    }
 }

@@ -6,7 +6,7 @@
     <ion-title>Record</ion-title>
     <ion-buttons end class="navbar-btns">
       <button ion-button (click)="saveRecord()">
-         Save {{recordCount}}
+         Save Edits
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -15,7 +15,7 @@
 <ion-content>
  <form [formGroup]="recordForm" class="survey-form">
 
-   <!--<div><button (click)="logForm()">Log Form</button></div>-->
+   <div><button (click)="logForm()">Log Form</button></div>
 
  <ion-card class="default-info-card" formGroupName="leadRanking">
     <ion-row>
@@ -28,7 +28,7 @@
       <ion-col class="info-column" padding-left>
       <h2>Tyler Jackson</h2>
       <p>Imagination Enterprises, Inc.</p>
-      <ion-list class="small-select">
+      <ion-list class="small-select lead-box">
           <div *ngFor="let lead of leadrankingObj"> 
             <pickone-input *ngIf="lead.type === 'PICKONE'" prompt={{lead.prompt}} required={{lead.required}} [pickOptions]="lead.options" formControlName={{lead.tag}} ></pickone-input>
           </div>           
@@ -53,6 +53,18 @@
             </div>                       
 
           </ion-list>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="scans-info-card" [hidden]="capturePage !== 'contact'" formGroupName="contact">  
+        <ion-card-header>
+          Scans:                   
+        </ion-card-header>     
+        <ion-card-content>          
+           <p>DEC 22, 12:44 PM | Tommy Johnson | Booth</p>  
+           <p>DEC 21, 3:48 PM | Tommy Johnson | Booth</p> 
+           <p>DEC 20, 9:21 AM | Janice Stevens | Meeting</p> 
+           <p>DEC 20, 7:44 AM | Mike Williams | Session</p>
         </ion-card-content>
       </ion-card>
 
@@ -92,7 +104,7 @@
 
 <ion-footer>
   <ion-toolbar>
-    <ion-segment color="p-primary-dark" [(ngModel)]="capturePage">
+    <ion-segment color="p-primary-dark" [(ngModel)]="capturePage" (ionChange)="scrollToTop()">
       <ion-segment-button  value="contact">
         Contact
       </ion-segment-button>
