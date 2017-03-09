@@ -160,13 +160,13 @@ export class ParseBadgeService {
                         lead.Responses.push({"Tag":"lcBadgeId", "Value": badgeId});
                     }
                     if (badgeFirst) {
-                        lead.Responses.push({"Tag":"lcBadgeId", "Value": badgeFirst});
+                        lead.Responses.push({"Tag":"lcFirstName", "Value": badgeFirst});
                     }
                     if (badgeLast) {
-                        lead.Responses.push({"Tag":"lcBadgeId", "Value": badgeLast});
+                        lead.Responses.push({"Tag":"lcLastName", "Value": badgeLast});
                     }
                     if (badgeCompany) {
-                        lead.Responses.push({"Tag":"lcBadgeId", "Value": badgeCompany});
+                        lead.Responses.push({"Tag":"lcCompany", "Value": badgeCompany});
                     }
 
                     // This is where you could handle default lead rank

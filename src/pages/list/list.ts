@@ -37,14 +37,13 @@ export class List {
   
   showSearch : Boolean = false;
 
-  leads : Array<any>;
+  leads : Array<any> =[];
   scanPage : Component;
 
   constructor(public navCtrl: NavController, 
     public alertCtrl: AlertController,
     private leadsService : LeadsService,
     private settingsService : SettingsService ) {
-    this.leads = leads;
 
     // TODO: convert 'sync leads' to action button, show scan camera vs scan sled
     let sled = true;
@@ -58,8 +57,26 @@ export class List {
   ionViewWillEnter() {
     let query  = this.settingsService.showDeleted ? '' : 'deleted=no';
     this.leadsService.find(query).subscribe((data) => {
-      alert(JSON.stringify(data));
-      // TODO: get leads and put as list
+      this.leads = this.parseLeadsInfo(data);
+      alert(JSON.stringify(this.leads));
+    });
+  }
+
+  // Take response from 'find' and parse into data for list view
+  parseLeadsInfo(fullLeads) {
+    return fullLeads.map((lead) => {
+      let firstName = lead.Responses.get('Tag', 'lcFirstName') || '';
+      let lastName = lead.Responses.get('Tag', 'lcLastName') || '';
+      let company = lead.Responses.get('Tag', 'lcCompany') || '';
+      
+      return {
+        id : lead.LeadGuid,
+        time : lead.LastVisitDateTime,
+        firstName,
+        lastName,
+        company
+      };
+
     });
   }
 

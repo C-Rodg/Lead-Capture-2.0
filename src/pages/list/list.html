@@ -25,7 +25,7 @@
         <ion-item class="list__contactbox">
           <h1>{{person.firstName + " " + person.lastName}}</h1>
           <p>{{person.company}}</p>
-          <p class="list__contactbox__date"><small>{{person.date}}</small></p>
+          <p class="list__contactbox__date"><small>{{person.time}}</small></p>
         </ion-item>
         <ion-item-options side="right">
           <button ion-button color="p-primary" (tap)="editRecord(person.id)">
