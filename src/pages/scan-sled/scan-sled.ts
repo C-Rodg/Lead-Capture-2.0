@@ -5,27 +5,35 @@ import { Device } from '../device/device';
 import { NewRecord } from '../new-record/new-record';
 import { EditRecord } from '../edit-record/edit-record';
 
-import { SettingsService } from '../../providers/settingsService';
 import { ScanSledService } from '../../providers/scanSledService';
+import { ParseBadgeService } from '../../providers/parseBadgeService';
+import { SettingsService } from '../../providers/settingsService';
+import { SoundService } from '../../providers/soundService';
+
 
 @Component({
   selector: 'page-scan-sled',
   templateUrl: 'scan-sled.html'
 })
 export class ScanSled {
-
+  testWord: string = "TESTT";
   constructor(public navCtrl: NavController, 
     private zone: NgZone, 
-    private settingsService: SettingsService,
-    private scanSledService: ScanSledService ) {
-    
+    private scanSledService: ScanSledService,
+    private parseBadgeService : ParseBadgeService,
+    private settingsService: SettingsService,    
+    private soundService : SoundService
+  ) {
+    this.soundService.playSilent();
   }
 
-  ionViewDidEnter() {
+  // Bind OnDataRead to this class, enable button scan
+  ionViewWillEnter() {
     (<any>window).OnDataRead = this.onZoneDataRead.bind(this);
     this.scanSledService.sendScanCommand('enableButtonScan');   
   }
 
+  // Disable button scan
   ionViewWillLeave() {
     let scanBtn = document.getElementById('scan-btn-card');
     if (scanBtn) {
@@ -34,29 +42,41 @@ export class ScanSled {
     this.scanSledService.sendScanCommand('disableButtonScan');      
   }
 
+  // Disallow scanning on other pages
   ionViewDidLeave() {
     (<any>window).OnDataRead = null;
   }
 
+  // Zone function that parses badge data
   onZoneDataRead(data) {
     let scannedData = data;
     this.zone.run(() => {
-      // TODO: SEND SCANNED DATA TO PARSING SERVICE
-      alert(JSON.stringify(scannedData));
-      this.navCtrl.push(NewRecord);
+      this.parseBadgeService.parse(scannedData).subscribe((lead) => {
+        alert(JSON.stringify(lead));
+        if (data.hasOwnProperty('VisitCount')) {
+          this.navCtrl.push(EditRecord, lead);
+        } else {
+          this.navCtrl.push(NewRecord, lead);
+        }
+      });      
     });
   }
 
+  // Push the Edit user/station page
   editUserPage() {
     this.navCtrl.push(Device);
   }
 
+  // Manual input of badgeId
   searchByBadgeId(event) {
-    // TODO: SEARCH FOR ATTENDEE BY BADGE ID
     alert("Searching for " + event.target.value);
+    // TODO:
+    // Check if online
+    // If online, then try to translate and if successful push new record
     this.navCtrl.push(NewRecord);
   }
 
+  // Add css class for scan button
   scanBtnClicked(event, status) {
     if (status) {
       event.currentTarget.classList.add('scan-clicked');

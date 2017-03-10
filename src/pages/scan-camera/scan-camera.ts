@@ -28,46 +28,53 @@ export class ScanCamera  {
       this.soundService.playSilent();      
   } 
 
+  // Set OnDataRead function and turn on camera
   ionViewWillEnter() {
     (<any>window).OnDataRead = this.onZoneDataRead.bind(this);
     this.scanCameraService.turnOn();    
   }
 
+  // Shutoff camera on leaving
   ionViewWillLeave() {
     this.scanCameraService.turnOff();    
   }
 
+  // Disallow scanning on other pages
   ionViewDidLeave() {
     (<any>window).OnDataRead = null;
   }
 
+  // Zone function that parses badge and passes to Edit/New Record pages
   onZoneDataRead(data) {
     let scannedData = data;
     this.zone.run(() => {
-      this.soundService.playGranted();
-      this.parseBadgeService.parse(scannedData).subscribe((data) => {
-        alert(JSON.stringify(data));
-        this.navCtrl.push(NewRecord);
-      })
-
-      // TODO:
-      // If not found in DB, push NewRecord, else push EditRecord
-      //this.navCtrl.push(NewRecord, parsedObj);
+      this.parseBadgeService.parse(scannedData).subscribe((lead) => {
+        alert(JSON.stringify(lead));
+        if (data.hasOwnProperty('VisitCount')) {
+          this.navCtrl.push(EditRecord, lead);
+        } else {
+          this.navCtrl.push(NewRecord, lead);
+        }        
+      });
     });
   } 
 
+  // Toggle light on/off
   toggleLight() {
     this.scanCameraService.toggleTorch();    
   }
 
+  // Turn front/back camera
   toggleCamera() {
     this.scanCameraService.toggleCamera();    
   }
 
+  // Edit Users/Stations
   editUserPage() {
     this.navCtrl.push(Device);
   }
 
+  // Search by Badge ID, must have translation available
   searchByBadgeId(event) {    
     alert("SEARCHING for" + event.target.value);
 

@@ -1,23 +1,24 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
 
 import { SettingsService } from './settingsService';
 import { LeadsService } from './leadsService';
 import { InfoService } from './infoService';
+import { SoundService } from './soundService';
 
 @Injectable()
 export class ParseBadgeService {
 
     constructor(private settingsService : SettingsService,
         private leadsService : LeadsService,
-        private infoService : InfoService
-    ) {
-        console.log("Creating parse badge service");
-    }
+        private infoService : InfoService,
+        private soundService : SoundService
+    ) { }
 
-    parse(d): Observable<any> {
-        alert(JSON.stringify(d));
+    // Begin parsing
+    parse(d): Observable<any> {       
 
         let checkSymbology  = null,
             symbology       = null,
@@ -44,7 +45,7 @@ export class ParseBadgeService {
         } else if (checkSymbology === 'QRCODE') {
             return this.parseQrCode(scannedData);
         } else if (checkSymbology === 'PDF417') {
-            this.parsePDF417(scannedData);
+            return this.parsePDF417(scannedData);
         } else if (checkSymbology === 'CODE128') {
             this.alertSymbologyScan(symbology, scannedData);
             return;
@@ -120,20 +121,18 @@ export class ParseBadgeService {
 
         scannedId = scannedId.replace(/^\s+|\s+$/g, "");
         if (scannedId !== '' && scannedId.length < 384) {
-            // TODO: PLAY GRANTED SOUND 
-            // TRY TO FIND EXISTING LEAD, IF NONE SAVE NEW             
-            alert("TIME TO FIND LEAD - "+scannedId);
-
+            this.soundService.playGranted();
             return this.leadsService.find(`ScanData=${scannedId}`).flatMap((data) => {
                 if (data && data.length > 0) {
-                    alert("FOUND AN EXISTING LEAD");
+
+                    alert("FOUND AN EXISTING QR CODE LEAD");
+
                     let visit = {
                         ScanData: scannedId,
                         CapturedBy: this.settingsService.currentUser,
                         CaptureStation: this.settingsService.currentStation
                     };
                     
-                    // Keep as is (sync) or change to steps of async?
                     return this.leadsService.saveVisit(visit).flatMap(() => {
                         if (data[0].DeleteDateTime !== null) {
                             return this.leadsService.markUndeleted(data[0].LeadGuid);
@@ -142,31 +141,34 @@ export class ParseBadgeService {
                                 return this.leadsService.markUndeleted(data[0].LeadGuid)
                             });
                         }
-                    });  // Change to observable of to return record at end??
-
-                    // Do translation if online
-
+                    }).flatMap(() => {
+                        return Observable.of(data[0]);
+                    });
                 } else {
+
+                    alert("CREATING A NEW QR CODE LEAD");
+
                     let lead = {
                         ScanData: scannedId,
                         Keys: [{"Type":"7A56282B-4855-4585-B10B-E76B111EA1DB", "Value": badgeId}],
                         Responses: []
                     };
 
+                    let resp = lead.Responses;
                     if (scannedData) {
-                        lead.Responses.push({"Tag":"lcUnmapped", "Value": scannedData});
+                        resp.push({"Tag":"lcUnmapped", "Value": scannedData});
                     }
                     if (badgeId) {
-                        lead.Responses.push({"Tag":"lcBadgeId", "Value": badgeId});
+                        resp.push({"Tag":"lcBadgeId", "Value": badgeId});
                     }
                     if (badgeFirst) {
-                        lead.Responses.push({"Tag":"lcFirstName", "Value": badgeFirst});
+                        resp.push({"Tag":"lcFirstName", "Value": badgeFirst});
                     }
                     if (badgeLast) {
-                        lead.Responses.push({"Tag":"lcLastName", "Value": badgeLast});
+                        resp.push({"Tag":"lcLastName", "Value": badgeLast});
                     }
                     if (badgeCompany) {
-                        lead.Responses.push({"Tag":"lcCompany", "Value": badgeCompany});
+                        resp.push({"Tag":"lcCompany", "Value": badgeCompany});
                     }
 
                     // This is where you could handle default lead rank
@@ -182,8 +184,10 @@ export class ParseBadgeService {
                             CaptureStation: this.settingsService.currentStation
                         };
                         return this.leadsService.saveVisit(visit);
+                    }).flatMap(() => {
+                        alert(JSON.stringify(lead));
+                        return Observable.of(lead);
                     });
-                    // Do translation if online
                 }
             });
         }
@@ -215,7 +219,8 @@ export class ParseBadgeService {
             fullCountry      = null,
             badgeCountry     = null;
 
-        scannedFields = scannedData.split('\t');
+        //scannedFields = scannedData.split('\t');
+        scannedFields = scannedData.split(';');
 
         scannedId       = scannedFields[0].trim();
         badgeId         = scannedId;
@@ -251,21 +256,111 @@ export class ParseBadgeService {
 
         scannedId = scannedId.replace(/^\s+|\s+$/g, "");
         if (scannedId && scannedId.length < 384) {
-            // TODO: PLAY GRANTED SOUND
+            this.soundService.playGranted();
 
-            // TODO: TRY TO FIND LEAD
+            return this.leadsService.find(`ScanData=${scannedId}`).flatMap((data) => {
+                if (data && data.length > 0) {
+                    alert("FOUND AN EXISTING PDF417 lead");
 
-                // TODO: IF LEAD IS FOUND, SAVE VISIT AND MARK UNDELETED, TRY TO TRANSLATE IF ONLINE AND HAVE NOT TRANSLATED
+                    let visit = {
+                        ScanData: scannedId,
+                        CapturedBy : this.settingsService.currentUser,
+                        CaptureStation: this.settingsService.currentStation
+                    };
 
-                // TODO: LEAD ISN'T FOUND, CREATE RESPONSES ARRAY, SAVE LEAD, ATTEMPT TO TRANSLATE
+                    return this.leadsService.saveVisit(visit).flatMap(() => {
+                        if (data[0].DeleteDateTime !== null) {
+                            return this.leadsService.markUndeleted(data[0].LeadGuid);
+                        } else {
+                            return this.leadsService.markDeleted(data[0].LeadGuid).flatMap(() => {
+                                return this.leadsService.markUndeleted(data[0].LeadGuid);
+                            });
+                        }
+                    });
+                } else {
+                    alert("CREATING A NEW PDF417 LEAD");
+                    let lead = {
+                        ScanData: scannedId,
+                        Keys: [{"Type":"7A56282B-4855-4585-B10B-E76B111EA1DB", "Value": badgeId}],
+                        Responses: []
+                    };
+
+                    let resp = lead.Responses;
+                    if (scannedData) {
+                        resp.push({"Tag":"lcUnmapped", "Value": scannedData});
+                    }
+                    if (badgeId) {
+                        resp.push({"Tag":"lcBadgeId", "Value": badgeId});
+                    }
+                    if (badgeFirst) {
+                        resp.push({"Tag":"lcFirstName", "Value": badgeFirst});
+                    }
+                    if (badgeLast) {
+                        resp.push({"Tag":"lcLastName", "Value": badgeLast});
+                    }
+                    if (badgeCompany) {
+                        resp.push({"Tag":"lcCompany", "Value": badgeCompany});
+                    }
+                    if (badgeTitle) {
+                        resp.push({"Tag":"lcTitle", "Value": badgeTitle});
+                    }
+                    if (badgeAdd1) {
+                        resp.push({"Tag":"lcAddress1", "Value": badgeAdd1});
+                    }
+                    if (badgeAdd2) {
+                        resp.push({"Tag":"lcAddress2", "Value": badgeAdd2});
+                    }
+                    if (badgeAdd3) {
+                        resp.push({"Tag":"lcAddress3", "Value": badgeAdd3});
+                    }
+                    if (badgeCity) {
+                        resp.push({"Tag":"lcCity", "Value": badgeCity});
+                    }
+                    if (badgeState) {
+                        resp.push({"Tag":"lcState", "Value": badgeState});
+                    }
+                    if (badgeZip) {
+                        resp.push({"Tag":"lcZip", "Value": badgeZip});
+                    }
+                    if (badgeCountry) {
+                        resp.push({"Tag":"lcCountry", "Value": badgeCountry});
+                    }
+                    if (badgeEmail) {
+                        resp.push({"Tag":"lcEmail", "Value": badgeEmail});
+                    }
+                    if (badgePhone) {
+                        resp.push({"Tag":"lcPhone", "Value": badgePhone});
+                    }
+                    if (badgeFax) {
+                        resp.push({"Tag":"lcFax", "Value": badgeFax});
+                    }
+
+                    // This is where you could handle default lead rank
+                    // resp.push({"Tag":"lcLeadRank", "Picked": ['lcRankD']});
+
+                    lead.Keys.push({"Type":"F9F457FE-7E6B-406E-9946-5A23C50B4DF5", "Value": `${this.infoService.client.DeviceType}|${this.infoService.client.ClientName}`});
+
+                    return this.leadsService.saveNew(lead).flatMap((person) => {
+                        lead["LeadGuid"] = person.LeadGuid;
+                        let visit = {
+                            ScanData: scannedId,
+                            CapturedBy: this.settingsService.currentUser,
+                            CaptureStation: this.settingsService.currentStation
+                        };
+                        return this.leadsService.saveVisit(visit);
+                    }).flatMap(() => {
+                        return Observable.of(lead);
+                    });
+                }
+            });
         }
     }
 
     // Alert symbology, show scan data
     alertSymbologyScan(sym, d) {
+        this.soundService.playDenied();
         alert('This app was not written to support ' + sym + ' symbology. \n\nScanned Data: ' + d);
-        // TODO: Play denied noise
-        return;
+        throw new Error('Symbology not supported');
     }
 }
 
