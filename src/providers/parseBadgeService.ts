@@ -276,6 +276,8 @@ export class ParseBadgeService {
                                 return this.leadsService.markUndeleted(data[0].LeadGuid);
                             });
                         }
+                    }).flatMap(() => {
+                        return Observable.of(data[0]);
                     });
                 } else {
                     alert("CREATING A NEW PDF417 LEAD");

@@ -19,7 +19,7 @@
 <div class="{{showSearch ? 'search-open' : ''}}">
 
 <div *ngFor="let person of filteredLeads;" >
-<ion-card >
+<ion-card [ngClass]="{'deleted-list-item': person.deleted}">
     <ion-list no-lines>
       <ion-item-sliding>
         <ion-item class="list__contactbox">

@@ -61,7 +61,7 @@ export class InfoService {
                 if (t) {
                     this.currentToken.SessionToken = t;
                     return Observable.of(t);
-                } else {                 
+                } else {              
                     return this.updateToken();
                 }
             })

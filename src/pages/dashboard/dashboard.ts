@@ -8,6 +8,7 @@ import { ScanSled } from '../scan-sled/scan-sled';
 
 import { InfoService } from '../../providers/infoService';
 import { SettingsService } from '../../providers/settingsService';
+import { LeadsService } from '../../providers/leadsService';
 
 // TESTING - REMOVE
 import { NewRecord } from '../new-record/new-record';
@@ -24,7 +25,7 @@ export class Dashboard {
   devicePage : Component;
   settingsPage : Component;
 
-  totalLeads : string = "271";
+  totalLeads : number = 0;
 
 
   // REMOVE THIS ITEM
@@ -32,7 +33,8 @@ export class Dashboard {
 
   constructor(public navCtrl : NavController, 
     private settingsService: SettingsService,
-    private infoService : InfoService
+    private infoService : InfoService,
+    private leadsService : LeadsService
     ) {
     this.listPage = List;    
     this.devicePage = Device;
@@ -50,6 +52,17 @@ export class Dashboard {
       scanPage = ScanCamera;
     }
     this.scanPage = scanPage;
+  }
+
+  // Get leads from database
+  ionViewWillEnter() {
+    this.leadsService.find('deleted=no').subscribe((data) => {
+      if (data && data.length >= 0) {
+        this.totalLeads = data.length;
+      } else {
+        this.totalLeads = 0;
+      }
+    });
   }
 
   navigateToRecord() {

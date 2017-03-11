@@ -38,6 +38,11 @@ export class List {
 
   // Get leads from database
   ionViewWillEnter() {
+    this.refreshLeadsList();
+  }
+
+  // Refresh leads list
+  refreshLeadsList() {
     let query  = this.settingsService.showDeleted ? '' : 'deleted=no';
     this.leadsService.find(query).subscribe((data) => {
       this.leads = this.parseLeadsInfo(data);
@@ -51,7 +56,7 @@ export class List {
       let firstName = lead.Responses.get('Tag', 'lcFirstName') || lead.Responses.get('Tag', 'lcBadgeId') || '';
       let lastName = lead.Responses.get('Tag', 'lcLastName') || '';
       let company = lead.Responses.get('Tag', 'lcCompany') || '';
-      let time = moment(lead.LastVisitDateTime, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMM DD, HH:mm A').toUpperCase();
+      let time = this.parseDate(lead.LastVisitDateTime);
       let deleted = lead.DeleteDateTime;
       return {
         id : lead.LeadGuid,
@@ -64,9 +69,19 @@ export class List {
     });
   }
 
+  parseDate(dateStr) {
+    if (dateStr) {
+      return moment(dateStr, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMM DD, hh:mm A').toUpperCase();
+    }
+    return "";
+  }
+
   // Filter by First, Last, Company
   filterLeads(ev) {
-    let val = ev.target.value.toUpperCase();
+    let val = '';
+    if(ev.target && ev.target.value) {
+      val = ev.target.value.toUpperCase();
+    }
     this.filteredLeads = this.leads.filter((reg) => {
       return (reg.firstName.toUpperCase().indexOf(val) > -1) || (reg.lastName.toUpperCase().indexOf(val) > -1) || (reg.company.toUpperCase().indexOf(val) > -1);
     });
@@ -81,8 +96,11 @@ export class List {
   }
 
   // Click handler for editing record
-  editRecord(id) {    
-    this.navCtrl.push(EditRecord);
+  editRecord(id) {   
+    this.leadsService.load(id).subscribe((data) => {
+      //alert(JSON.stringify(data));
+      this.navCtrl.push(EditRecord, data);
+    });    
   }
 
   // Click handler for deleting record
@@ -96,7 +114,9 @@ export class List {
         }, {
           text: "Delete",
           handler: () => {
-            // TODO: HANDLE DELETING AND REMOVE from LEADS
+            this.leadsService.markDeleted(id).subscribe((data) => {
+              this.refreshLeadsList();
+            });
           }
         }
       ]
@@ -107,7 +127,9 @@ export class List {
 
   // Click handler for undeleting record
   undeleteRecord(id) {
-    // TODO: HANDLE UNDELETING A RECORD
+    this.leadsService.markUndeleted(id).subscribe((data) => {
+      this.refreshLeadsList();
+    });
   }
 
 }

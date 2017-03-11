@@ -53,7 +53,7 @@ export class ScanSled {
     this.zone.run(() => {
       this.parseBadgeService.parse(scannedData).subscribe((lead) => {
         alert(JSON.stringify(lead));
-        if (data.hasOwnProperty('VisitCount')) {
+        if (lead.hasOwnProperty('VisitCount')) {          
           this.navCtrl.push(EditRecord, lead);
         } else {
           this.navCtrl.push(NewRecord, lead);

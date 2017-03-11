@@ -46,4 +46,8 @@ page-list {
             font-size: 1.6em;
         }
     }
+
+    ion-card.deleted-list-item .list__contactbox {        
+        background-color: rgba(0,0,0,0.10);
+    }
 }

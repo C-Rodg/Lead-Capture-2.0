@@ -1,9 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Content, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import * as moment from 'moment';
 
+import { LeadsService } from '../../providers/leadsService';
+import { InfoService } from '../../providers/infoService';
 import { pickManyValidator } from '../../helpers/pickManyValidator';
-
 import survey from '../../config/survey';
 
 @Component({
@@ -24,17 +26,29 @@ export class EditRecord {
 
   requiredFields : any = [];
   
-  firstName;
-  lastName;
-  badgeId;
-  company;
-  notes : string = "";  
+  firstName : string = "";
+  lastName : string = "";
+  badgeId : string = "";
+  company : string = "";
+  notes : string = "";
+
+  person : any = {
+    Translation : {},
+    Responses : []
+  };
+  visits : any = [];
+
+  count : number = 0;
+  
 
   constructor(public navCtrl: NavController, 
               params: NavParams, 
               public toastCtrl: ToastController, 
               public alertCtrl : AlertController,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private leadsService: LeadsService ,
+              private infoService : InfoService           
+  ) {
 
     let formItems = survey.survey;
     this.contactObj = formItems.contact;
@@ -42,17 +56,75 @@ export class EditRecord {
     this.leadrankingObj = formItems.leadRanking;
     this.notesObj = formItems.notes;
 
-    // TODO: Parse out data passed...
-    // let person = params.data;
-    // this.firstName = person.firstName,
-    // this.lastName = person.lastName,
-    // this.badgeId = person.badgeId,
-    // this.company = person.company;     
+    this.person = params.data;
+    let responses = this.person.Responses;
+    this.firstName = responses.get('Tag', 'lcFirstName') || '';
+    this.lastName = responses.get('Tag', 'lcLastName') || '';
+    this.badgeId = responses.get('Tag', 'lcBadgeId') || '';
+    this.company = responses.get('Tag', 'lcCompany') || '';
 
     // TODO: Import Form object
     this.recordForm = this.formBuilder.group(this.generateFreshForm());
     this.requiredFields = this.markRequiredFields(formItems);    
     
+  }
+
+  // Get Visits list
+  ionViewWillEnter() {
+    this.leadsService.findVisits(`ScanData=${this.person.ScanData}`).subscribe((data) => {
+      this.visits = data;
+    });
+
+    if (window.navigator.onLine && this.infoService.leadsource.HasTranslation ) {
+      this.leadsService.translate(this.person).subscribe((data) => {
+        //alert(JSON.stringify(data));
+        this.person.Translation = data;
+      }, (err) => {
+        let error = err.json();
+        if (error.Fault && error.Fault.Type) {          
+          let type = error.Fault.Type;
+          if (type === 'AlreadyExistsFault') {}
+          else if (type === 'InvalidSessionFault') {
+            this.infoService.updateToken().flatMap(() => {
+              return this.leadsService.translate(this.person);
+            }).subscribe((d) => {
+              //alert(JSON.stringify(d));
+              this.person.Translation = d;
+            }, (e) => {
+              alert("ERROR: Still can't translate..");
+              alert(JSON.stringify(e));
+            });
+          } else {}
+        }
+      })
+    }
+  }
+
+  // Return Translation Id
+  extractDisplayString(id) {   
+    this.count++;
+    if (this.count > 2500) {
+      alert("WOAH");
+    }
+    if (this.person.Translation && this.person.Translation.Declarations) {
+      let declarations = this.person.Translation.Declarations;
+      let i = 0,
+        j = declarations.length;
+      for(; i < j; i++) {
+        if (declarations[i].Id === id && declarations[i].CultureStrings && declarations[i].CultureStrings.length > 0) {
+          return declarations[i].CultureStrings[0].DisplayString;          
+        }
+      }
+      return "";
+    }
+  }
+
+  // Parse date object into display string
+  parseDate(dateStr) {
+    if (dateStr) {
+      return moment(dateStr, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMM DD, hh:mm A').toUpperCase();
+    }
+    return "";
   }
 
   // Determine which fields are required for form submission
@@ -101,17 +173,24 @@ export class EditRecord {
 
   // Create the validation object
   createQuestionFormGroup(item, arr) {
-    let validateArr = <any>[''];
-      if (item.required) {        
-        if (item.type === "TEXT" || item.type === 'TEXTAREA' || item.type === 'PICKONE') {
-          validateArr.push(Validators.required);
-        } else if (item.type === 'PICKMANY') {
-          validateArr.push(Validators.compose([Validators.required, pickManyValidator]));
-        } else if (item.type === 'CHECKBOX') {
-          validateArr.push(Validators.pattern('true'));
-        }        
+    let validate = <any>[];
+    if (item.type === 'TEXT' || item.type === 'TEXTAREA' || item.type === 'PICKONE') {
+      validate.push(this.person.Responses.get('Tag', item.tag) || '');
+      if (item.required) {
+        validate.push(Validators.required);
       }
-      arr[item.tag] = validateArr;
+    } else if (item.type === 'PICKMANY') {
+      // TODO: GET RESPONSE TAG FOR PICKMANY,PICKONE?, CHECKBOXES and SET VALUE
+      if (item.required) {
+        validate.push(Validators.compose([Validators.required, pickManyValidator]));
+      }
+    } else if (item.type === 'CHECKBOX') { 
+      // TODO: GET RESPONSE TAG FOR PICKMANY,PICKONE?, CHECKBOXES and SET VALUE     
+      if (item.required) {
+        validate.push(Validators.pattern('true'));
+      }
+    }
+    arr[item.tag] = validate;
   }
 
   // Alert user that data will be lost
@@ -122,13 +201,13 @@ export class EditRecord {
         message: "Are you sure you want to exit this record without saving? All data will be lost.",
         buttons: [
           {
-            text: "No",
+            text: "Stay",
             handler: () => {
               this.canExit = false;
             }
           }, 
           {
-            text: "Yes",
+            text: "Leave",
             handler: () => {
               this.canExit = true;
               this.navCtrl.pop();
@@ -184,6 +263,7 @@ export class EditRecord {
     this.navCtrl.pop();
   }
 
+  // Go to top of page
   scrollToTop() {
     this.contentPage.scrollToTop();
   }

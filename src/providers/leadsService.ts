@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
-import { LeadSourceGuid } from '../helpers/leadSourceGuid';
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
+
+import { InfoService } from './infoService';
+import { LeadSourceGuid } from '../helpers/leadSourceGuid';
 
 Array.prototype['get'] = function(propName, tag) {
     let i = 0,
@@ -15,8 +20,10 @@ Array.prototype['get'] = function(propName, tag) {
 
 @Injectable()
 export class LeadsService {
-    constructor(private http: Http) {
-        console.log("Creating LEADS SERVICE");
+    constructor(private http: Http,
+            private infoService : InfoService
+    ) {
+
     }
 
     load(leadGuid) {
@@ -59,15 +66,37 @@ export class LeadsService {
         return this.http.put(`http://localhost/leadsources/${LeadSourceGuid.guid}/visits`, lead).map(res => res.json());
     }
 
-    getVisits(query) {
-        return this.http.get(`http://localhost/leadsources/${LeadSourceGuid.guid}/visits${query}`, {}).map(res => res.json());
-    }
+    findVisits(query) {
+        return this.http.get(`http://localhost/leadsources/${LeadSourceGuid.guid}/visits?${query}`).map(res => res.json());
+    }    
 
     upload() {
 
     }
 
-    translate() {
+    // Translate Record
+    translate(record) {
+        let trans = null;
+        return this.infoService.getSeat().flatMap((newSeat) => {
+            let seat = newSeat.SeatGuid;
+            let url = `${this.infoService.leadsource.LeadSourceUrl}/Translate/${LeadSourceGuid.guid}/${seat}`;
+            let req = {
+                "Source" : record.ScanData,
+                "RequestingApplication": record.LeadGuid,
+                "RequestingClientGuid": this.infoService.client.ClientGuid
+            };
 
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            headers.append('Authorization', `ValidarSession token="${this.infoService.getCurrentToken()}"`);
+            return this.http.post(url, req, { headers }).map(res => res.json());
+        }).flatMap((transObj) => {
+            transObj["Status"] = transObj.TranslationStatus;
+            delete transObj.TranslationStatus;
+            trans = transObj;
+            return this.updateTranslation(record.LeadGuid, transObj);
+        }).flatMap(() => {
+            return Observable.of(trans);
+        });
     }
 }

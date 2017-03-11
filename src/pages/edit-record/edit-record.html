@@ -23,11 +23,11 @@
           <div>
             <ion-icon name="contact"></ion-icon>
           </div>
-          <p center>T1234567</p>
+          <p center>{{badgeId}}</p>
       </ion-col>
       <ion-col class="info-column" padding-left>
-      <h2>Tyler Jackson</h2>
-      <p>Imagination Enterprises, Inc.</p>
+      <h2>{{firstName + ' ' + lastName}}</h2>
+      <p>{{company}}</p>
       <ion-list class="small-select lead-box">
           <div *ngFor="let lead of leadrankingObj"> 
             <pickone-input *ngIf="lead.type === 'PICKONE'" prompt={{lead.prompt}} required={{lead.required}} [pickOptions]="lead.options" formControlName={{lead.tag}} ></pickone-input>
@@ -56,15 +56,23 @@
         </ion-card-content>
       </ion-card>
 
-      <ion-card class="scans-info-card" [hidden]="capturePage !== 'contact'" formGroupName="contact">  
+      <ion-card class="scans-info-card" [hidden]="capturePage !== 'contact'">  
         <ion-card-header>
           Scans:                   
         </ion-card-header>     
-        <ion-card-content>          
-           <p>DEC 22, 12:44 PM | Tommy Johnson | Booth</p>  
-           <p>DEC 21, 3:48 PM | Tommy Johnson | Booth</p> 
-           <p>DEC 20, 9:21 AM | Janice Stevens | Meeting</p> 
-           <p>DEC 20, 7:44 AM | Mike Williams | Session</p>
+        <ion-card-content> 
+           <p *ngFor="let visit of visits">{{parseDate(visit.VisitDateTime) + ' | ' + visit.CapturedBy + ' | ' + visit.CaptureStation}}</p>            
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="translation-info-card" *ngIf="capturePage === 'contact' && infoService.leadsource.HasTranslation && person.Translation.Status === 0 && person.Translation.DataItems && person.Translation.DataItems.length > 0">
+        <ion-card-header>
+          Translation Data:
+        </ion-card-header>
+        <ion-card-content>
+          <p *ngFor="let item of person.Translation.DataItems">
+            <span class="field-title">{{extractDisplayString(item.Id) + ': '}}</span><span class="field-value">{{item.Value}}</span>
+          </p>
         </ion-card-content>
       </ion-card>
 
