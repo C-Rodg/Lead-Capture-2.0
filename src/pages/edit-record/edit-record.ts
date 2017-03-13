@@ -37,8 +37,7 @@ export class EditRecord {
     Responses : []
   };
   visits : any = [];
-
-  count : number = 0;
+  translationFields : any = [];
   
 
   constructor(public navCtrl: NavController, 
@@ -69,16 +68,19 @@ export class EditRecord {
     
   }
 
-  // Get Visits list
+  // Get Visits list and attempt to translate
   ionViewWillEnter() {
+    
+    // Get Visits
     this.leadsService.findVisits(`ScanData=${this.person.ScanData}`).subscribe((data) => {
-      this.visits = data;
+      this.visits = this.extractVisitsStrings(data);
     });
 
+    // Get Translation
     if (window.navigator.onLine && this.infoService.leadsource.HasTranslation ) {
-      this.leadsService.translate(this.person).subscribe((data) => {
-        //alert(JSON.stringify(data));
+      this.leadsService.translate(this.person).subscribe((data) => {        
         this.person.Translation = data;
+        this.translationFields = this.extractTranslationStrings(data.DataItems);
       }, (err) => {
         let error = err.json();
         if (error.Fault && error.Fault.Type) {          
@@ -87,9 +89,9 @@ export class EditRecord {
           else if (type === 'InvalidSessionFault') {
             this.infoService.updateToken().flatMap(() => {
               return this.leadsService.translate(this.person);
-            }).subscribe((d) => {
-              //alert(JSON.stringify(d));
+            }).subscribe((d) => {              
               this.person.Translation = d;
+              this.translationFields = this.extractTranslationStrings(d.DataItems);
             }, (e) => {
               alert("ERROR: Still can't translate..");
               alert(JSON.stringify(e));
@@ -100,26 +102,45 @@ export class EditRecord {
     }
   }
 
-  // Return Translation Id
-  extractDisplayString(id) {   
-    this.count++;
-    if (this.count > 2500) {
-      alert("WOAH");
-    }
-    if (this.person.Translation && this.person.Translation.Declarations) {
-      let declarations = this.person.Translation.Declarations;
-      let i = 0,
-        j = declarations.length;
-      for(; i < j; i++) {
-        if (declarations[i].Id === id && declarations[i].CultureStrings && declarations[i].CultureStrings.length > 0) {
-          return declarations[i].CultureStrings[0].DisplayString;          
-        }
-      }
-      return "";
-    }
+  // Helper to return visits in proper viewing format
+  extractVisitsStrings(v) {
+    return v.map((visit) => {
+      return {
+        by: visit.CapturedBy,
+        station : visit.CaptureStation,
+        date : this.parseDate(visit.VisitDateTime)
+      };
+    });
   }
 
-  // Parse date object into display string
+  // Helper to return translation in proper viewing format
+  extractTranslationStrings(fields) {
+    let arr = [];
+    if (fields && this.person.Translation && this.person.Translation.Declarations) {
+      let dec = this.person.Translation.Declarations,
+          i = 0,
+          j = fields.length,
+          c = dec.length;
+      for(; i < j; i++) {
+        let id = fields[i].Id;
+        let b = 0;
+        for (; b < c; b++) {
+          if (id === dec[b].Id) {
+            if (dec[b].CultureStrings && dec[b].CultureStrings.length > 0 && dec[b].CultureStrings[0].DisplayString) {
+              arr.push({ 
+                title: dec[b].CultureStrings[0].DisplayString,
+                value: fields[i].Value
+              });
+              break;
+            }            
+          }
+        }
+      }
+    }
+    return arr;
+  }
+
+  // Helper to parse date object into display string
   parseDate(dateStr) {
     if (dateStr) {
       return moment(dateStr, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMM DD, hh:mm A').toUpperCase();

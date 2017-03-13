@@ -61,17 +61,17 @@
           Scans:                   
         </ion-card-header>     
         <ion-card-content> 
-           <p *ngFor="let visit of visits">{{parseDate(visit.VisitDateTime) + ' | ' + visit.CapturedBy + ' | ' + visit.CaptureStation}}</p>            
+           <p *ngFor="let visit of visits">{{visit.date + ' | ' + visit.by + ' | ' + visit.station}}</p>            
         </ion-card-content>
       </ion-card>
 
-      <ion-card class="translation-info-card" *ngIf="capturePage === 'contact' && infoService.leadsource.HasTranslation && person.Translation.Status === 0 && person.Translation.DataItems && person.Translation.DataItems.length > 0">
+      <ion-card class="translation-info-card" *ngIf="capturePage === 'contact' && infoService.leadsource.HasTranslation && person.Translation.Status === 0 && translationFields && translationFields.length > 0">
         <ion-card-header>
           Translation Data:
         </ion-card-header>
         <ion-card-content>
-          <p *ngFor="let item of person.Translation.DataItems">
-            <span class="field-title">{{extractDisplayString(item.Id) + ': '}}</span><span class="field-value">{{item.Value}}</span>
+          <p *ngFor="let item of translationFields">
+            <span class="field-title">{{item.title}}: </span><span class="field-value">{{item.value}}</span>
           </p>
         </ion-card-content>
       </ion-card>
