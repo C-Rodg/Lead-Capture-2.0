@@ -62,8 +62,6 @@ export class ParseBadgeService {
     parseQrCode(scannedData) {
         let scannedId        = scannedData,
             scannedFields    = null,
-            type             = null,
-            source           = null,
             badgeId          = null,
             badgeFirst       = null,
             badgeLast        = null,
@@ -76,22 +74,8 @@ export class ParseBadgeService {
                 scannedFields.forEach((fieldGroup) => {
                     let field = fieldGroup.split(":");
                     if (field != null && field.length > 0) {
-                        if (field[0] === 'T') {
-                            let typeCode = field[1];
-                            if (typeCode === 'E') {
-                                type = "EventHub QR Code";
-                            } else if (typeCode === 'U') {
-                                type = "EventHub QR Code Image URL";
-                            } else if (typeCode === 'R') {
-                                type = 'EventHub Quick Reg Code';                            
-                            } else if (typeCode === 'P') {
-                                type = 'PkPass via EventHub';
-                            } else if (typeCode === 'B') {
-                                type = 'Badge';
-                            }
-                        } else if (field[0] === 'S') {
-                            source = field[1];
-                        } else if (field[0] === 'ID') {
+                        // Currently ignoring type field 'T' and 'S' (source)
+                        if (field[0] === 'ID') {
                             badgeId = field[1];
                         } else if (field[0] === 'FN') {
                             badgeFirst = field[1];
@@ -200,8 +184,6 @@ export class ParseBadgeService {
     parsePDF417(scannedData) {
         let scannedId        = scannedData,
             scannedFields    = null,
-            type             = null,
-            source           = null,
             badgeId          = null,
             badgeFirst       = null,
             badgeLast        = null,
