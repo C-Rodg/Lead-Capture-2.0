@@ -169,7 +169,6 @@ export class ParseBadgeService {
                         };
                         return this.leadsService.saveVisit(visit);
                     }).flatMap(() => {
-                        alert(JSON.stringify(lead));
                         return Observable.of(lead);
                     });
                 }

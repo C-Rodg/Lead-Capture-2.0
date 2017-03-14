@@ -23,11 +23,11 @@
           <div>
             <ion-icon name="contact"></ion-icon>
           </div>
-          <p center>T1234567</p>
+          <p center>{{badgeId}}</p>
       </ion-col>
       <ion-col class="info-column" padding-left>
-      <h2>Tyler Jackson</h2>
-      <p>Imagination Enterprises, Inc.</p>
+      <h2>{{firstName + ' ' + lastName}}</h2>
+      <p>{{company}}</p>
       <ion-list class="small-select lead-box">
           <div *ngFor="let lead of leadrankingObj"> 
             <pickone-input *ngIf="lead.type === 'PICKONE'" prompt={{lead.prompt}} required={{lead.required}} [pickOptions]="lead.options" formControlName={{lead.tag}} ></pickone-input>
@@ -56,6 +56,26 @@
         </ion-card-content>
       </ion-card>
 
+      <ion-card class="scans-info-card" [hidden]="capturePage !== 'contact'">  
+        <ion-card-header>
+          Scans:                   
+        </ion-card-header>     
+        <ion-card-content> 
+           <p *ngFor="let visit of visits">{{visit.date + ' | ' + visit.by + ' | ' + visit.station}}</p>            
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="translation-info-card" *ngIf="capturePage === 'contact' && infoService.leadsource.HasTranslation && person.Translation && person.Translation.Status === 0 && translationFields && translationFields.length > 0">
+        <ion-card-header>
+          Translation Data:
+        </ion-card-header>
+        <ion-card-content>
+          <p *ngFor="let item of translationFields">
+            <span class="field-title">{{item.title}}: </span><span class="field-value">{{item.value}}</span>
+          </p>
+        </ion-card-content>
+      </ion-card>
+
       <ion-card class="qualifiers-card validar-form" [hidden]="capturePage !== 'qualifiers'" formGroupName="qualifiers">
         <ion-card-header>Qualifiers:</ion-card-header>
         <ion-card-content>
@@ -66,7 +86,7 @@
               <text-area *ngIf="qualifier.type === 'TEXTAREA'" prompt={{qualifier.prompt}} required={{qualifier.required}} formControlName={{qualifier.tag}}></text-area>              
               <checkbox-input *ngIf="qualifier.type === 'CHECKBOX'" prompt={{qualifier.prompt}} required={{qualifier.required}} formControlName={{qualifier.tag}}></checkbox-input>
               <pickmany-input *ngIf="qualifier.type === 'PICKMANY'" prompt={{qualifier.prompt}} required={{qualifier.required}} [pickOptions]="qualifier.options" formControlName={{qualifier.tag}}></pickmany-input> 
-              <pickone-input *ngIf="qualifier.type === 'PICKONE'" prompt={{qualifier.prompt}} required={{qualifier.required}} [pickOptions]="qualifier.options" formControlName={{qualifier.tag}} ></pickone-input>
+              <pickone-input *ngIf="qualifier.type === 'PICKONE'" prompt={{qualifier.prompt}} required={{qualifier.required}} [pickOptions]="qualifier.options" formControlName={{qualifier.tag}}></pickone-input>
             </div>
 
           </ion-list>

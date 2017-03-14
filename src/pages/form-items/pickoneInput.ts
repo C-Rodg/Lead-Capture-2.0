@@ -15,7 +15,7 @@ export const CUSTOM_PICKONE_CONTROL_VALUE_ACCESSOR: any = {
     template: `
     <ion-item [ngClass]="{'req' : (required == 'true')}">
         <ion-label>{{prompt}}</ion-label>
-        <ion-select (ionChange)="selectItem($event)" (click)="selectOpened()">
+        <ion-select (ionChange)="selectItem($event)" (click)="selectOpened()" [(ngModel)]="innerValue">
             <ion-option  *ngFor="let option of pickOptions"
             value={{option.tag}}
             >
@@ -32,6 +32,17 @@ export class PickoneInput implements ControlValueAccessor {
     private innerValue : any ="";
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_:any) => void = noop;
+
+    get value(): any {
+        return this.innerValue;
+    }
+
+    set value(v: any) {
+        if (v !== this.innerValue) {
+            this.innerValue = v;
+            this.onChangeCallback(v);
+        }
+    }
 
     selectItem(ev) {
         if(ev !== this.innerValue) {

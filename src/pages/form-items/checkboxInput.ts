@@ -15,7 +15,7 @@ export const CUSTOM_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
     template: `    
     <ion-item [ngClass]="{'req' : (required == 'true')}">
          <ion-label>{{prompt}}</ion-label>
-         <ion-checkbox color="p-primary-dark" (ionChange)="selectItem($event)"></ion-checkbox>
+         <ion-checkbox color="p-primary-dark" (ionChange)="selectItem($event)" [(ngModel)]="innerValue"></ion-checkbox>
     </ion-item>
     `
 })

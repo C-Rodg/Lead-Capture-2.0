@@ -15,7 +15,7 @@ export const CUSTOM_PICKMANY_CONTROL_VALUE_ACCESSOR: any = {
     template: `
     <ion-item [ngClass]="{'req' : (required == 'true')}">
         <ion-label>{{prompt}}</ion-label>
-        <ion-select (ionChange)="selectItem($event)" (click)="selectOpened()" multiple="true">
+        <ion-select (ionChange)="selectItem($event)" (click)="selectOpened()" multiple="true" [(ngModel)]="innerValue">
             <ion-option  *ngFor="let option of pickOptions"
             value={{option.tag}}
             >

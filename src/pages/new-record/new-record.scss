@@ -150,5 +150,15 @@ page-new-record {
             display: none;
         }
     }
+    
+    .scans-info-card {
+        p {
+            font-size: 1.2rem;
+            color: #999;
+        }
+    }
 
+    .translation-info-card .field-value {
+        color: #999;
+    }
 }

@@ -57,10 +57,12 @@ export class EditRecord {
 
     this.person = params.data;
     let responses = this.person.Responses;
-    this.firstName = responses.get('Tag', 'lcFirstName') || '';
-    this.lastName = responses.get('Tag', 'lcLastName') || '';
-    this.badgeId = responses.get('Tag', 'lcBadgeId') || '';
-    this.company = responses.get('Tag', 'lcCompany') || '';
+    if (responses) {
+      this.firstName = responses.get('Tag', 'lcFirstName') || '';
+      this.lastName = responses.get('Tag', 'lcLastName') || '';
+      this.badgeId = responses.get('Tag', 'lcBadgeId') || '';
+      this.company = responses.get('Tag', 'lcCompany') || '';
+    }    
 
     // TODO: Import Form object
     this.recordForm = this.formBuilder.group(this.generateFreshForm());
@@ -98,7 +100,7 @@ export class EditRecord {
             });
           } else {}
         }
-      })
+      });
     }
   }
 
@@ -196,7 +198,11 @@ export class EditRecord {
   createQuestionFormGroup(item, arr) {
     let validate = <any>[];
     if (item.type === 'TEXT' || item.type === 'TEXTAREA' || item.type === 'PICKONE') {
-      validate.push(this.person.Responses.get('Tag', item.tag) || '');
+      if (this.person.Responses) {
+        validate.push(this.person.Responses.get('Tag', item.tag) || '');
+      } else {
+        validate.push('');
+      }     
       if (item.required) {
         validate.push(Validators.required);
       }
@@ -206,7 +212,8 @@ export class EditRecord {
         validate.push(Validators.compose([Validators.required, pickManyValidator]));
       }
     } else if (item.type === 'CHECKBOX') { 
-      // TODO: GET RESPONSE TAG FOR PICKMANY,PICKONE?, CHECKBOXES and SET VALUE     
+      // TODO: GET RESPONSE TAG FOR PICKMANY,PICKONE?, CHECKBOXES and SET VALUE  
+      //validate.push(true);   
       if (item.required) {
         validate.push(Validators.pattern('true'));
       }
@@ -283,6 +290,8 @@ export class EditRecord {
     toast.present();
     this.navCtrl.pop();
   }
+
+
 
   // Go to top of page
   scrollToTop() {

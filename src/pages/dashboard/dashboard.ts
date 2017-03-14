@@ -12,6 +12,7 @@ import { LeadsService } from '../../providers/leadsService';
 
 // TESTING - REMOVE
 import { NewRecord } from '../new-record/new-record';
+import { EditRecord } from '../edit-record/edit-record';
 import { NavController } from 'ionic-angular';
 
 @Component({
@@ -66,7 +67,7 @@ export class Dashboard {
   }
 
   navigateToRecord() {
-    this.navCtrl.push(NewRecord);
+    this.navCtrl.push(EditRecord);
   }
 
 

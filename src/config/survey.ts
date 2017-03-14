@@ -55,7 +55,7 @@ const survey = {
             type: "TEXT",
             tag: "lcProductList",
             prompt: "Company Product List",
-            required: false
+            required: true
         },
         {
             type: "CHECKBOX",
@@ -68,13 +68,7 @@ const survey = {
                     prompt: ""
                 }
             ]
-        },
-        {
-            type: "TEXT",
-            tag: "lcControllers",
-            prompt: "What types of controllers do you use? And where do you think you'll use them?",
-            required: true
-        },
+        },        
         {
             type: "PICKONE",
             tag: "lcProducts",
@@ -106,31 +100,7 @@ const survey = {
                     prompt: "Everything"
                 }
             ]
-        },
-        {
-            type: "PICKONE",
-            tag: "lcColor",
-            prompt: "What is the best color?",
-            required: false,
-            options: [
-                {
-                    tag: "lcColor_1",
-                    prompt: "Blue"
-                },
-                {
-                    tag: "lcColor_2",
-                    prompt: "Red"
-                },
-                {
-                    tag: "lcColor_3",
-                    prompt: "Green"
-                },
-                {
-                    tag: "lcColor_4",
-                    prompt: "Purple"
-                }
-            ]
-        },
+        },        
         {
             type: "PICKMANY",
             tag: "lcBands",
@@ -158,29 +128,7 @@ const survey = {
                     prompt: "The Beatles"
                 }
             ]
-        },
-        {
-            type: "PICKONE",
-            tag: "lcContactMe",
-            prompt: "Should we contact you?",
-            required: false,
-            options: [
-                {
-                    tag: "lcContactMe_1",
-                    prompt: "Yes"
-                },
-                {
-                    tag: "lcContactMe_2",
-                    prompt: "No"
-                }
-            ]
-        },
-        {
-            type: "TEXT",
-            tag: "lcConcerns",
-            prompt: "Any other concerns?",
-            required: false
-        }
+        }        
     ],
 
     leadRanking: [

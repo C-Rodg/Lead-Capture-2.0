@@ -65,7 +65,7 @@
         </ion-card-content>
       </ion-card>
 
-      <ion-card class="translation-info-card" *ngIf="capturePage === 'contact' && infoService.leadsource.HasTranslation && person.Translation.Status === 0 && translationFields && translationFields.length > 0">
+      <ion-card class="translation-info-card" *ngIf="capturePage === 'contact' && infoService.leadsource.HasTranslation && person.Translation && person.Translation.Status === 0 && translationFields && translationFields.length > 0">
         <ion-card-header>
           Translation Data:
         </ion-card-header>
