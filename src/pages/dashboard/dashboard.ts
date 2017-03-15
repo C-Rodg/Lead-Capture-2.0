@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NavController } from 'ionic-angular';
 
 import { List } from '../list/list';
 import { Device } from '../device/device';
@@ -9,11 +10,6 @@ import { ScanSled } from '../scan-sled/scan-sled';
 import { InfoService } from '../../providers/infoService';
 import { SettingsService } from '../../providers/settingsService';
 import { LeadsService } from '../../providers/leadsService';
-
-// TESTING - REMOVE
-import { NewRecord } from '../new-record/new-record';
-import { EditRecord } from '../edit-record/edit-record';
-import { NavController } from 'ionic-angular';
 
 @Component({
   selector: 'page-dashboard',
@@ -28,10 +24,6 @@ export class Dashboard {
 
   totalLeads : number = 0;
 
-
-  // REMOVE THIS ITEM
-  recordPage : Component;
-
   constructor(public navCtrl : NavController, 
     private settingsService: SettingsService,
     private infoService : InfoService,
@@ -40,9 +32,6 @@ export class Dashboard {
     this.listPage = List;    
     this.devicePage = Device;
     this.settingsPage = Settings;
-
-    // TODO: Remove Record page
-    this.recordPage = NewRecord;
 
     // TODO: detect if scanner present and navigate based off of that
     let scanner = false,
@@ -65,10 +54,5 @@ export class Dashboard {
       }
     });
   }
-
-  navigateToRecord() {
-    this.navCtrl.push(EditRecord);
-  }
-
 
 }

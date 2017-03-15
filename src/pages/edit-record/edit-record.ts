@@ -34,7 +34,8 @@ export class EditRecord {
 
   person : any = {
     Translation : {},
-    Responses : []
+    Responses : [],
+    Keys : []
   };
   visits : any = [];
   translationFields : any = [];
@@ -211,7 +212,7 @@ export class EditRecord {
     }
 
     this.buildLeadObject().subscribe((data) => {
-      alert(JSON.stringify(data));
+
       // All good, save record
       this.canExit = true;
       
@@ -245,7 +246,7 @@ export class EditRecord {
     if ( lead.Keys.filter((k) => k.Type === "F9F457FE-7E6B-406E-9946-5A23C50B4DF5").length > 0 ) {
       lead.Keys.forEach((obj) => {
         if (obj.Type === "F9F457FE-7E6B-406E-9946-5A23C50B4DF5") {
-          obj.Value = "";
+          obj.Value =  `${this.infoService.client.DeviceType}|${this.infoService.client.ClientName}`;
         }
       });
     } else {
@@ -271,8 +272,6 @@ export class EditRecord {
     formDef.leadRanking.forEach((field) => {
        this.mapDefinitionToForm(field, this.recordForm.value.leadRanking, lead.Responses);
     });
-
-    console.log(lead.Responses);
 
     return this.leadsService.saveReturning(lead, this.person.LeadGuid);
   }
@@ -398,10 +397,5 @@ export class EditRecord {
   // DOM Helper - go to top of page
   scrollToTop() {
     this.contentPage.scrollToTop();
-  }
-
-  // DEV - log form
-  logForm() {
-    console.log(this.recordForm);
   }
 }

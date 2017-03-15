@@ -36,7 +36,8 @@ export class NewRecord {
 
   person : any = {
     Translation : {},
-    Responses : []
+    Responses : [],
+    Keys : []
   };
   visits : any = [];
   translationFields : any = [];
@@ -222,56 +223,78 @@ export class NewRecord {
   // Prepare to save completed lead 
   buildLeadObject() {
     let formDef = survey.survey,
-        lead = { Responses: [], Keys: [] },
-        device = { Type: "F9F457FE-7E6B-406E-9946-5A23C50B4DF5", Value: `${this.infoService.client.DeviceType}|${this.infoService.client.ClientName}`};
+        lead = { Responses: this.person.Responses, Keys: this.person.Keys };        
     
-    lead.Keys.push(device);
+    if (lead.Keys.filter((k) => k.Type === "F9F457FE-7E6B-406E-9946-5A23C50B4DF5").length > 0 ) {
+      lead.Keys.forEach((obj) => {
+        if (obj.Type === "F9F457FE-7E6B-406E-9946-5A23C50B4DF5") {
+          obj.Value =  `${this.infoService.client.DeviceType}|${this.infoService.client.ClientName}`;
+        }
+      });
+    } else {
+      let device = { Type: "F9F457FE-7E6B-406E-9946-5A23C50B4DF5", Value: `${this.infoService.client.DeviceType}|${this.infoService.client.ClientName}`};
+      lead.Keys.push(device);
+    }
 
-    let contactFields = formDef.contact.map((ques) => {
-      return this.mapSurveyToValues(ques, this.recordForm.value.contact);
+    formDef.contact.forEach((ques) => {
+      return this.mapSurveyToValues(ques, this.recordForm.value.contact, lead.Responses);
     });
 
-    let qualifierFields = formDef.qualifiers.map((ques) => {
-      return this.mapSurveyToValues(ques, this.recordForm.value.qualifiers);
+    formDef.qualifiers.forEach((ques) => {
+      return this.mapSurveyToValues(ques, this.recordForm.value.qualifiers, lead.Responses);
     });
 
-    let notesFields = formDef.notes.map((ques) => {
-      return this.mapSurveyToValues(ques, this.recordForm.value.notes);
+    formDef.notes.forEach((ques) => {
+      return this.mapSurveyToValues(ques, this.recordForm.value.notes, lead.Responses);
     });
 
-    let leadrankFields = formDef.leadRanking.map((ques) => {
-      return this.mapSurveyToValues(ques, this.recordForm.value.leadRanking);
+    formDef.leadRanking.forEach((ques) => {
+      return this.mapSurveyToValues(ques, this.recordForm.value.leadRanking, lead.Responses);
     });
 
-    lead.Responses = contactFields.concat(qualifierFields, notesFields, leadrankFields);
-    
     return this.leadsService.saveReturning(lead, this.person.LeadGuid);
   }
 
   // Helper - Map survey definition to values
-  mapSurveyToValues(ques, formObj) : any {
+  mapSurveyToValues(ques, formObj, resp) : any {
     if (ques.type === "TEXT" || ques.type === "TEXTAREA") {
-      return {
-        Tag: ques.tag,
-        Value: formObj[ques.tag]
-      };
+      this.addOrUpdateText(resp, ques.tag, formObj[ques.tag]);
     } else if (ques.type === "CHECKBOX") {
       let val = (formObj[ques.tag] && ques.options && ques.options.length > 0) ? [ques.options[0].tag] : [];
-      return {
-        Tag: ques.tag,
-        Picked: val
-      };
+      this.addOrUpdatePicks(resp, ques.tag, val);
     } else if (ques.type === 'PICKMANY') {
-      return {
-        Tag: ques.tag,
-        Picked: formObj[ques.tag]
-      };
+      this.addOrUpdatePicks(resp, ques.tag, formObj[ques.tag]);      
     } else if (ques.type === 'PICKONE') {      
       let val = (formObj[ques.tag]) ? [formObj[ques.tag]] : [];
-      return {
-        Tag: ques.tag,
-        Picked: val
-      };
+      this.addOrUpdatePicks(resp, ques.tag, val);
+    }
+  }
+
+  // Helper - search through pick responses and push or edit new value
+  addOrUpdatePicks(resp, tag, val) {
+    if (resp.filter(r => r.Tag === tag).length > 0) {
+      let i = 0, j = resp.length;
+      for(; i < j; i++) {
+        if (resp[i].Tag === tag) {
+          resp[i].Picked = val;
+        }
+      }
+    } else {
+      resp.push({ Tag: tag, Picked: val });
+    }
+  }
+
+  // Helper - search through text responses and push or edit new value
+  addOrUpdateText(resp, tag, val){
+    if(resp.filter((r) => r.Tag === tag ).length > 0) {
+      let i = 0, j = resp.length;
+      for(; i < j; i++) {
+        if (resp[i].Tag === tag) {
+          resp[i].Value = val;
+        }
+      }
+    } else {
+      resp.push({ Tag: tag, Value: val });
     }
   }
 
@@ -353,11 +376,6 @@ export class NewRecord {
   // DOM Helper - Scroll to top of page
   scrollToTop() {
     this.contentPage.scrollToTop();
-  }
-
-  // DEV - log form
-  logForm() {
-    console.log(this.recordForm);
   }
 
 }
