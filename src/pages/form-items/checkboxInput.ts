@@ -1,5 +1,6 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, Input, forwardRef, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { Checkbox } from 'ionic-angular';
 
 const noop = () => {};
 
@@ -15,7 +16,7 @@ export const CUSTOM_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
     template: `    
     <ion-item [ngClass]="{'req' : (required == 'true')}">
          <ion-label>{{prompt}}</ion-label>
-         <ion-checkbox color="p-primary-dark" (ionChange)="selectItem($event)" [(ngModel)]="innerValue"></ion-checkbox>
+         <ion-checkbox color="p-primary-dark" (ionChange)="selectItem($event)"></ion-checkbox>
     </ion-item>
     `
 })
@@ -25,6 +26,8 @@ export class CheckboxInput implements ControlValueAccessor {
     private innerValue : any = false;
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_:any) => void = noop;
+
+    @ViewChild(Checkbox) checkComp;
 
     selectItem(ev) {
         if(ev.checked !== this.innerValue) {
@@ -37,6 +40,7 @@ export class CheckboxInput implements ControlValueAccessor {
     // Methods that extend ControlValueAccessor
     writeValue(value: any) {
         if (value !== this.innerValue) {
+            this.checkComp.onChange(value);
             this.innerValue = value;
         }        
     }

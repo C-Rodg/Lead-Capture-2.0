@@ -5,6 +5,7 @@ import * as moment from 'moment';
 
 import { LeadsService } from '../../providers/leadsService';
 import { InfoService } from '../../providers/infoService';
+import { SettingsService } from '../../providers/settingsService';
 import { pickManyValidator } from '../../helpers/pickManyValidator';
 
 import survey from '../../config/survey';
@@ -46,7 +47,8 @@ export class NewRecord {
               public alertCtrl : AlertController,
               private formBuilder: FormBuilder,
               private leadsService: LeadsService,
-              private infoService: InfoService ) {
+              private infoService: InfoService,
+              private settingsService: SettingsService ) {
 
     let formItems = survey.survey;
     this.contactObj = formItems.contact;
@@ -62,11 +64,12 @@ export class NewRecord {
       this.badgeId = responses.get('Tag', 'lcBadgeId') || '';
       this.company = responses.get('Tag', 'lcCompany') || '';
     }
-
+    
     this.recordForm = this.formBuilder.group(this.generateFreshForm());
     this.requiredFields = this.markRequiredFields(formItems);        
   }
 
+  // Get visits and attempt to translate
   ionViewWillEnter() {
 
     // Get visits
@@ -100,64 +103,32 @@ export class NewRecord {
     }
   }
 
-  // Format translation data
-  extractTranslationStrings(fields) {
-    let arr = [];
-    if (fields && this.person.Translation && this.person.Translation.Declarations) {
-      let dec = this.person.Translation.Declarations,
-          i = 0,
-          j = fields.length,
-          c = dec.length;
-      for(; i < j; i++) {
-        let id = fields[i].Id;
-        let b = 0;
-        for (; b < c; b++) {
-          if (id === dec[b].Id) {
-            if (dec[b].CultureStrings && dec[b].CultureStrings.length > 0 && dec[b].CultureStrings[0].DisplayString) {
-              arr.push({ 
-                title: dec[b].CultureStrings[0].DisplayString,
-                value: fields[i].Value
-              });
-              break;
-            }            
+  // Alert user that data will be lost
+  ionViewCanLeave() {
+    if (!this.canExit && !this.recordForm.pristine) {
+      let confirm = this.alertCtrl.create({
+        title : "Leave without saving?",
+        message: "Are you sure you want to exit this record without saving? All data will be lost.",
+        buttons: [
+          {
+            text: "No",
+            handler: () => {
+              this.canExit = false;
+            }
+          }, 
+          {
+            text: "Yes",
+            handler: () => {
+              this.canExit = true;
+              this.navCtrl.pop();
+            }
           }
-        }
-      }
-    }
-    return arr;
-  }
-
-  // Format visits strings
-  extractVisitsStrings(v) {
-    return v.map((visit) => {
-      return {
-        by: visit.CapturedBy,
-        station : visit.CaptureStation,
-        date : this.parseDate(visit.VisitDateTime)
-      };
-    });
-  }
-
-  // Parse date into display format
-  parseDate(d) {
-    if (d) {
-      return moment(d, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMM DD, hh:mm A').toUpperCase();
-    }
-    return "";
-  }
-
-  // Determine which fields are required for form submission
-  markRequiredFields(form) {
-    const { contact, qualifiers, notes, leadRanking } = form;
-    let reqs = {};
-    [contact, qualifiers, notes, leadRanking].forEach((group) => {
-      group.forEach((question) => {
-        if (question.required) {
-          reqs[question.tag] = question.prompt;          
-        }
+        ]
       });
-    });
-    return reqs;
+      confirm.present();
+      return false;
+    }
+    return true;
   }
 
   // Generate the 3-page form - contact, qualifiers, notes + leadranking
@@ -193,68 +164,28 @@ export class NewRecord {
   // Create the validation object
   createQuestionFormGroup(item, arr) {
     let validateArr = <any>[];             
-    if (item.type === "TEXT" || item.type === 'TEXTAREA' || item.type === 'PICKONE') {
+    if (item.type === "TEXT" || item.type === 'TEXTAREA') {
       validateArr.push(this.person.Responses.get('Tag', item.tag) || '');
       if (item.required) { 
         validateArr.push(Validators.required);
       }
-    } else if (item.type === 'PICKMANY') {
-      //validateArr.push(['lcBands_1', 'lcBands_3', 'lcBands_4']);
+    } else if (item.type === 'PICKONE') {
       validateArr.push('');
+      if (item.required) {
+        validateArr.push(Validators.required);
+      }
+    } else if (item.type === 'PICKMANY') {
+      validateArr.push([]);
       if (item.required) { 
         validateArr.push(Validators.compose([Validators.required, pickManyValidator]));
       }
     } else if (item.type === 'CHECKBOX') {
-      validateArr.push('');
-      //validateArr.push(true);
+      validateArr.push(false);  // Default to unchecked
       if (item.required) { 
         validateArr.push(Validators.pattern('true'));
       }
     }        
     arr[item.tag] = validateArr;
-  }
-
-  // Alert user that data will be lost
-  ionViewCanLeave() {
-    if (!this.canExit && !this.recordForm.pristine) {
-      let confirm = this.alertCtrl.create({
-        title : "Leave without saving?",
-        message: "Are you sure you want to exit this record without saving? All data will be lost.",
-        buttons: [
-          {
-            text: "No",
-            handler: () => {
-              this.canExit = false;
-            }
-          }, 
-          {
-            text: "Yes",
-            handler: () => {
-              this.canExit = true;
-              this.navCtrl.pop();
-            }
-          }
-        ]
-      });
-      confirm.present();
-      return false;
-    }
-    return true;
-  }
-
-  // Validate form
-  searchForInvalidField(form) {    
-    const { contact, leadRanking, qualifiers, notes } = form;
-    for (let group of [contact, leadRanking, qualifiers, notes]) {
-      if (!group.valid) {
-        let controls = group.controls;
-        for (let prop in controls) {
-          if (controls.hasOwnProperty(prop) && !controls[prop].valid) {
-            return prop;
-          }
-        }
-      }
-    }
   }
 
   // Save form
@@ -270,24 +201,161 @@ export class NewRecord {
       toast.present();
       return false;
     }
-
-    // All good, save record
-    this.canExit = true;
     
-    // Show confirmation and return to scan page
-    let toast = this.toastCtrl.create({
-      message: "Record was successfully saved!",
-      duration: 2500,
-      position: 'top'
-    });
-    toast.present();
-    this.navCtrl.pop();
+    // All good, save record
+    this.buildLeadObject().subscribe((data) => {
+      this.canExit = true;
+      // Show confirmation and return to scan page
+      let toast = this.toastCtrl.create({
+        message: "Record was successfully saved!",
+        duration: 2500,
+        position: 'top'
+      });
+      toast.present();
+      this.navCtrl.pop();
+    }, (err) => {
+      alert("ERROR!");
+      alert(JSON.stringify(err));
+    });      
   }
 
+  // Prepare to save completed lead 
+  buildLeadObject() {
+    let formDef = survey.survey,
+        lead = { Responses: [], Keys: [] },
+        device = { Type: "F9F457FE-7E6B-406E-9946-5A23C50B4DF5", Value: `${this.infoService.client.DeviceType}|${this.infoService.client.ClientName}`};
+    
+    lead.Keys.push(device);
+
+    let contactFields = formDef.contact.map((ques) => {
+      return this.mapSurveyToValues(ques, this.recordForm.value.contact);
+    });
+
+    let qualifierFields = formDef.qualifiers.map((ques) => {
+      return this.mapSurveyToValues(ques, this.recordForm.value.qualifiers);
+    });
+
+    let notesFields = formDef.notes.map((ques) => {
+      return this.mapSurveyToValues(ques, this.recordForm.value.notes);
+    });
+
+    let leadrankFields = formDef.leadRanking.map((ques) => {
+      return this.mapSurveyToValues(ques, this.recordForm.value.leadRanking);
+    });
+
+    lead.Responses = contactFields.concat(qualifierFields, notesFields, leadrankFields);
+    
+    return this.leadsService.saveReturning(lead, this.person.LeadGuid);
+  }
+
+  // Helper - Map survey definition to values
+  mapSurveyToValues(ques, formObj) : any {
+    if (ques.type === "TEXT" || ques.type === "TEXTAREA") {
+      return {
+        Tag: ques.tag,
+        Value: formObj[ques.tag]
+      };
+    } else if (ques.type === "CHECKBOX") {
+      let val = (formObj[ques.tag] && ques.options && ques.options.length > 0) ? [ques.options[0].tag] : [];
+      return {
+        Tag: ques.tag,
+        Picked: val
+      };
+    } else if (ques.type === 'PICKMANY') {
+      return {
+        Tag: ques.tag,
+        Picked: formObj[ques.tag]
+      };
+    } else if (ques.type === 'PICKONE') {      
+      let val = (formObj[ques.tag]) ? [formObj[ques.tag]] : [];
+      return {
+        Tag: ques.tag,
+        Picked: val
+      };
+    }
+  }
+
+  // Helper - Format translation data
+  extractTranslationStrings(fields) {
+    let arr = [];
+    if (fields && this.person.Translation && this.person.Translation.Declarations) {
+      let dec = this.person.Translation.Declarations,
+          i = 0,
+          j = fields.length,
+          c = dec.length;
+      for(; i < j; i++) {
+        let id = fields[i].Id;
+        let b = 0;
+        for (; b < c; b++) {
+          if (id === dec[b].Id) {
+            if (dec[b].CultureStrings && dec[b].CultureStrings.length > 0 && dec[b].CultureStrings[0].DisplayString) {
+              arr.push({ 
+                title: dec[b].CultureStrings[0].DisplayString,
+                value: fields[i].Value
+              });
+              break;
+            }            
+          }
+        }
+      }
+    }
+    return arr;
+  }
+
+  // Helper - Format visits strings
+  extractVisitsStrings(v) {
+    return v.map((visit) => {
+      return {
+        by: visit.CapturedBy,
+        station : visit.CaptureStation,
+        date : this.parseDate(visit.VisitDateTime)
+      };
+    });
+  }
+
+  // Helper - Parse date into display format
+  parseDate(d) {
+    if (d) {
+      return moment(d, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMM DD, hh:mm A').toUpperCase();
+    }
+    return "";
+  }
+
+  // Helper - Determine which fields are required for form submission
+  markRequiredFields(form) {
+    const { contact, qualifiers, notes, leadRanking } = form;
+    let reqs = {};
+    [contact, qualifiers, notes, leadRanking].forEach((group) => {
+      group.forEach((question) => {
+        if (question.required) {
+          reqs[question.tag] = question.prompt;          
+        }
+      });
+    });
+    return reqs;
+  }  
+
+  // Helper - Validate form
+  searchForInvalidField(form) {    
+    const { contact, leadRanking, qualifiers, notes } = form;
+    for (let group of [contact, leadRanking, qualifiers, notes]) {
+      if (!group.valid) {
+        let controls = group.controls;
+        for (let prop in controls) {
+          if (controls.hasOwnProperty(prop) && !controls[prop].valid) {
+            return prop;
+          }
+        }
+      }
+    }
+  }  
+
+  // DOM Helper - Scroll to top of page
   scrollToTop() {
     this.contentPage.scrollToTop();
   }
 
+  // DEV - log form
   logForm() {
     console.log(this.recordForm);
   }

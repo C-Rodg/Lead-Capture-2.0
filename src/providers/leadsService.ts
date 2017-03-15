@@ -18,6 +18,16 @@ Array.prototype['get'] = function(propName, tag) {
     }
 };
 
+Array.prototype['getPicks'] = function(propName, tag) {
+    let i = 0,
+        j = this.length;
+    for (; i < j; i++) {
+        if (typeof this[i] == "object" && this[i][propName] === tag) {
+            return this[i].Picked;
+        }
+    }
+};
+
 @Injectable()
 export class LeadsService {
     constructor(private http: Http,

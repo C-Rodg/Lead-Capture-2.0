@@ -1,5 +1,6 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, Input, forwardRef, ViewChild} from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { Select } from 'ionic-angular';
 
 const noop = () => {};
 
@@ -15,7 +16,7 @@ export const CUSTOM_PICKONE_CONTROL_VALUE_ACCESSOR: any = {
     template: `
     <ion-item [ngClass]="{'req' : (required == 'true')}">
         <ion-label>{{prompt}}</ion-label>
-        <ion-select (ionChange)="selectItem($event)" (click)="selectOpened()" [(ngModel)]="innerValue">
+        <ion-select (ionChange)="selectItem($event)" (click)="selectOpened()" >
             <ion-option  *ngFor="let option of pickOptions"
             value={{option.tag}}
             >
@@ -24,7 +25,7 @@ export const CUSTOM_PICKONE_CONTROL_VALUE_ACCESSOR: any = {
         </ion-select>
     </ion-item>
     `
-})
+})      // [(ngModel)]="innerValue"
 export class PickoneInput implements ControlValueAccessor {
     @Input() prompt:string;
     @Input() required: string;
@@ -32,6 +33,8 @@ export class PickoneInput implements ControlValueAccessor {
     private innerValue : any ="";
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_:any) => void = noop;
+
+   @ViewChild(Select) selectComp;
 
     get value(): any {
         return this.innerValue;
@@ -56,8 +59,9 @@ export class PickoneInput implements ControlValueAccessor {
     }
 
     // Methods that extend ControlValueAccessor
-    writeValue(value: any) {
+    writeValue(value: any) {                       
         if (value !== this.innerValue) {
+            this.selectComp.onChange(value); 
             this.innerValue = value;
         }        
     }

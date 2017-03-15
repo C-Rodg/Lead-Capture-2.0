@@ -55,7 +55,7 @@ const survey = {
             type: "TEXT",
             tag: "lcProductList",
             prompt: "Company Product List",
-            required: true
+            required: false
         },
         {
             type: "CHECKBOX",
@@ -73,7 +73,7 @@ const survey = {
             type: "PICKONE",
             tag: "lcProducts",
             prompt: "What type of products are you interested in?",
-            required: true,
+            required: false,
             options : [
                 {
                     tag: "lcProducts_1",
@@ -105,7 +105,7 @@ const survey = {
             type: "PICKMANY",
             tag: "lcBands",
             prompt: "What bands do you enjoy?",
-            required: true,
+            required: false,
             options: [
                 {
                     tag: "lcBands_1",
@@ -136,7 +136,7 @@ const survey = {
             type: 'PICKONE',
             tag: 'lcLeadRank',
             prompt: 'Lead Ranking',
-            required : true,
+            required : false,
             options : [
                 {
                     tag: 'lcRankHot',
@@ -159,7 +159,7 @@ const survey = {
             type: 'TEXTAREA',
             tag: 'lcNotes',
             prompt: 'Notes',
-            required : true
+            required : false
         }
     ]
 };
