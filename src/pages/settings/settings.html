@@ -39,8 +39,8 @@
         </ion-col>
          <ion-col center padding-left>
           <h1>Sync Leads</h1>
-          <p class="secondary-text" >Pending Upload: 21</p>
-          <p class="secondary-text" >Pending Translation: 42</p>          
+          <p class="secondary-text" >Pending Upload: {{pendingUpload}}</p>
+          <p class="secondary-text" >Pending Translation: {{pendingTranslation}}</p>          
         </ion-col>
       </ion-row>
     </ion-card>
@@ -58,7 +58,7 @@
         <ion-col>
            <ion-item>
             <ion-label>Show Deleted Records</ion-label>
-            <ion-toggle color="p-accent" [(ngModel)]="settingsService.showDeleted"></ion-toggle>
+            <ion-toggle color="p-accent" [(ngModel)]="settingsService.showDeleted" (ionChange)="refreshCounts()"></ion-toggle>
           </ion-item>         
         </ion-col>
       </ion-row>

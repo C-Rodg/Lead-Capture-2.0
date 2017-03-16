@@ -46,12 +46,9 @@ export class Dashboard {
 
   // Get leads from database
   ionViewWillEnter() {
-    this.leadsService.find('deleted=no').subscribe((data) => {
-      if (data && data.length >= 0) {
-        this.totalLeads = data.length;
-      } else {
-        this.totalLeads = 0;
-      }
+    let query = this.settingsService.showDeleted ? '' : '?deleted=no';
+    this.leadsService.count(query).subscribe((data) => {
+      this.totalLeads = data.Count;
     });
   }
 

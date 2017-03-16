@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { ToastController, NavController } from 'ionic-angular';
 
 import { Device } from '../device/device';
 import { NewRecord } from '../new-record/new-record';
@@ -9,6 +9,7 @@ import { ScanCameraService } from '../../providers/scanCameraService';
 import { ParseBadgeService } from '../../providers/parseBadgeService';
 import { SettingsService } from '../../providers/settingsService';
 import { SoundService } from '../../providers/soundService';
+import { InfoService } from '../../providers/infoService';
 
 
 @Component({
@@ -23,7 +24,9 @@ export class ScanCamera  {
     private scanCameraService : ScanCameraService,
     private parseBadgeService : ParseBadgeService, 
     private settingsService: SettingsService,
-    private soundService: SoundService) {
+    private soundService: SoundService, 
+    private infoService: InfoService,
+    private toastCtrl: ToastController ) {
       this.devicePage = Device;  
       this.soundService.playSilent();      
   } 
@@ -55,6 +58,14 @@ export class ScanCamera  {
         } else {
           this.navCtrl.push(NewRecord, lead);
         }        
+      }, (err) => {
+        let toast = this.toastCtrl.create({
+          message: err,
+          duration: 3000,
+          position: 'top'
+        });
+        toast.present();
+        return false;
       });
     });
   } 
@@ -76,13 +87,35 @@ export class ScanCamera  {
 
   // Search by Badge ID, must have translation available
   searchByBadgeId(event) {    
-    alert("SEARCHING for" + event.target.value);
-
-    // TODO:
-    // Check if online
-    // If online, then try to translate and if successful push new record
-
-    this.navCtrl.push(NewRecord);
+    if (window.navigator.onLine && this.infoService.leadsource.HasTranslation) {
+      this.parseBadgeService.manuallyEnterBadge(event.target.value).subscribe((data) => {
+        if (data.hasOwnProperty('VisitCount')) {
+          this.navCtrl.push(EditRecord, data);
+        } else {
+          this.navCtrl.push(NewRecord, data);
+        }
+      }, (err) => {
+        let toast = this.toastCtrl.create({
+          message: err,
+          duration: 3000,
+          position: 'top'
+        });
+        toast.present();
+        return false;
+      });      
+    } else {
+      let msg = "There seems to be issues searching for records at this time."
+      if (!window.navigator.onLine) {
+        msg = "Please check your internet connection and try again."
+      }
+      let toast = this.toastCtrl.create({
+        message: msg,
+        duration: 3000,
+        position: 'top'
+      });
+      toast.present();
+      return false;
+    }
   }
 
 }

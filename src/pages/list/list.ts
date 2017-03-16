@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController, ToastController } from 'ionic-angular';
 import * as moment from 'moment';
 
 import { ScanSled } from '../scan-sled/scan-sled';
@@ -24,7 +24,8 @@ export class List {
   constructor(public navCtrl: NavController, 
     public alertCtrl: AlertController,
     private leadsService : LeadsService,
-    private settingsService : SettingsService 
+    private settingsService : SettingsService,
+    private toastCtrl: ToastController
     ) {
 
     // TODO: convert 'sync leads' to action button, show scan camera vs scan sled
@@ -100,6 +101,14 @@ export class List {
     this.leadsService.load(id).subscribe((data) => {
       //alert(JSON.stringify(data));
       this.navCtrl.push(EditRecord, data);
+    }, (err) => {
+      let toast = this.toastCtrl.create({
+        message: "There seems to be an issue loading this record.",
+        duration: 3000,
+        position: 'top'
+      });
+      toast.present();
+      return false;
     });    
   }
 
@@ -116,6 +125,14 @@ export class List {
           handler: () => {
             this.leadsService.markDeleted(id).subscribe((data) => {
               this.refreshLeadsList();
+            }, (err) => {
+              let toast = this.toastCtrl.create({
+                message: "There seems to be an issue deleting this record.",
+                duration: 3000,
+                position: 'top'
+              });
+              toast.present();
+              return false;
             });
           }
         }
@@ -129,6 +146,14 @@ export class List {
   undeleteRecord(id) {
     this.leadsService.markUndeleted(id).subscribe((data) => {
       this.refreshLeadsList();
+    }, (err) => {
+      let toast = this.toastCtrl.create({
+        message: "There seems to be an issue undeleting this record.",
+        duration: 3000,
+        position: 'top'
+      });
+      toast.present();
+      return false;
     });
   }
 

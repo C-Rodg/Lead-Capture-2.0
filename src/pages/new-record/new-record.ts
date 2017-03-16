@@ -215,8 +215,11 @@ export class NewRecord {
       toast.present();
       this.navCtrl.pop();
     }, (err) => {
-      alert("ERROR!");
-      alert(JSON.stringify(err));
+      let toast = this.toastCtrl.create({
+        message: "There seems to be an issue saving this record.",
+        duration: 3000,
+        position: 'top'
+      });
     });      
   }
 

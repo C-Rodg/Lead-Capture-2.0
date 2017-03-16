@@ -11,7 +11,7 @@ export class ScanCameraService {
         top: 62,
         left: 0,
         width: 320,
-        height: 404
+        height: 456  // With search bar, height = 404
     };
     public torch : string = "OFF";
     private endpoint : string = "http://localhost/barcodecontrol";

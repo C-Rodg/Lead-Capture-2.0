@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ToastController } from 'ionic-angular';
 
 import { Device } from '../device/device';
 import { NewRecord } from '../new-record/new-record';
@@ -9,6 +9,7 @@ import { ScanSledService } from '../../providers/scanSledService';
 import { ParseBadgeService } from '../../providers/parseBadgeService';
 import { SettingsService } from '../../providers/settingsService';
 import { SoundService } from '../../providers/soundService';
+import { InfoService } from '../../providers/infoService';
 
 
 @Component({
@@ -22,7 +23,9 @@ export class ScanSled {
     private scanSledService: ScanSledService,
     private parseBadgeService : ParseBadgeService,
     private settingsService: SettingsService,    
-    private soundService : SoundService
+    private soundService : SoundService,
+    private infoService : InfoService,
+    private toastCtrl : ToastController
   ) {
     this.soundService.playSilent();
   }
@@ -58,6 +61,14 @@ export class ScanSled {
         } else {
           this.navCtrl.push(NewRecord, lead);
         }
+      }, (err) => {
+        let toast = this.toastCtrl.create({
+          message: err,
+          duration: 3000,
+          position: 'top'
+        });
+        toast.present();
+        return false;
       });      
     });
   }
@@ -65,15 +76,6 @@ export class ScanSled {
   // Push the Edit user/station page
   editUserPage() {
     this.navCtrl.push(Device);
-  }
-
-  // Manual input of badgeId
-  searchByBadgeId(event) {
-    alert("Searching for " + event.target.value);
-    // TODO:
-    // Check if online
-    // If online, then try to translate and if successful push new record
-    this.navCtrl.push(NewRecord);
   }
 
   // Add css class for scan button
@@ -85,6 +87,39 @@ export class ScanSled {
       event.currentTarget.classList.remove('scan-clicked');
       this.scanSledService.sendScanCommand('stopScan');
     }
+  }
+
+  // Manual input of badgeId
+  searchByBadgeId(event) {
+    if (window.navigator.onLine && this.infoService.leadsource.HasTranslation) {
+      this.parseBadgeService.manuallyEnterBadge(event.target.value).subscribe((data) => {
+        if (data.hasOwnProperty('VisitCount')) {
+          this.navCtrl.push(EditRecord, data);
+        } else {
+          this.navCtrl.push(NewRecord, data);
+        }
+      }, (err) => {
+        let toast = this.toastCtrl.create({
+          message: err,
+          duration: 3000,
+          position: 'top'
+        });
+        toast.present();
+        return false;
+      });      
+    } else {
+      let msg = "There seems to be issues searching for records at this time."
+      if (!window.navigator.onLine) {
+        msg = "Please check your internet connection and try again."
+      }
+      let toast = this.toastCtrl.create({
+        message: msg,
+        duration: 3000,
+        position: 'top'
+      });
+      toast.present();
+      return false;
+    }    
   }
   
 }
