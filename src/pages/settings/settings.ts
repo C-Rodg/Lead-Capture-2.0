@@ -23,24 +23,38 @@ export class Settings {
     this.devicePage = Device;       
   }  
 
-  //
+  // Get Lead counts on view load
   ionViewWillEnter() {
     let query = this.settingsService.showDeleted ? '' : '&deleted=no';
+    this.getLeadCounts(query);
+  }
+
+  // Sync leads 
+  syncLeads() {
+    // TODO: begin uploading/translating? leads
+  }
+
+  // Toggle change event
+  refreshCounts() {
+    let query = this.settingsService.showDeleted ? '' : '&deleted=no';
+    this.getLeadCounts(query);
+    this.settingsService.storeCurrentSettings();
+  }
+
+  // Refresh pending and translated counts
+  getLeadCounts(query) {
     this.leadsService.count('?uploaded=no' + query).subscribe((data) => {
       this.pendingUpload = data.Count;
-    }, (err) => {
-      alert(JSON.stringify(err));
-    });
+    }, (err) => {});
 
     this.leadsService.count('?translated=no' + query).subscribe((data) => {
       this.pendingTranslation = data.Count;
-    }, (err) => {
-      alert(JSON.stringify(err));
-    });
+    }, (err) => {});
   }
 
-  refreshCounts() {
-    
+  // Settings changed, save to local storage
+  saveSettings() {
+    this.settingsService.storeCurrentSettings();
   }
 
   // Navigate to Root

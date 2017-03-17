@@ -32,7 +32,7 @@
       </ion-row>
     </ion-card>
 
-     <ion-card class="settings-card inline-card-button">
+     <ion-card class="settings-card inline-card-button" (tap)="syncLeads()">
       <ion-row>
         <ion-col class="inline-card-icon" width-25 text-center stretch>
           <ion-icon name="ios-cloud-upload-outline"></ion-icon>
@@ -50,7 +50,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Quick Scan Mode</ion-label>
-            <ion-toggle color="p-accent" [(ngModel)]="settingsService.quickScanMode"></ion-toggle>
+            <ion-toggle color="p-accent" [(ngModel)]="settingsService.quickScanMode" (ionChange)="saveSettings()"></ion-toggle>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -66,7 +66,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Autoupload every {{ settingsService.backgroundUploadWait }} mins</ion-label>
-           <ion-range min="1" max="10" step="1" snaps="true" color="p-accent" [(ngModel)]="settingsService.backgroundUploadWait">
+           <ion-range min="1" max="10" step="1" snaps="true" color="p-accent" [(ngModel)]="settingsService.backgroundUploadWait" (ionChange)="saveSettings()">
              <ion-icon range-left isActive="false" name="ios-timer-outline"></ion-icon>
              <ion-icon range-right name="timer" name="ios-timer"></ion-icon>
            </ion-range>

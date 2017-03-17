@@ -220,6 +220,7 @@ export class NewRecord {
         duration: 3000,
         position: 'top'
       });
+      toast.present();
     });      
   }
 
