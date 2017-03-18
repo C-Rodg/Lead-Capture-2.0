@@ -11,7 +11,7 @@ import { ScanCamera } from '../pages/scan-camera/scan-camera';
 import { ScanSled } from '../pages/scan-sled/scan-sled';
 
 import { InfoService } from '../providers/infoService';
-
+import { SettingsService } from '../providers/settingsService';
 
 
 @Component({
@@ -26,6 +26,7 @@ export class MyApp {
 
   constructor(public platform: Platform, 
     private infoService: InfoService,
+    private settingsService : SettingsService,
     private zone: NgZone  
   ) {
     this.initializeApp();
@@ -51,8 +52,10 @@ export class MyApp {
     // Get Token, seats
     this.infoService.startUpApplication().subscribe((data) => {
         // All Good!
+        console.log("Alll good");
     }, (error) => {      
       //alert(JSON.stringify(error));
+      console.log("Uh, oh . Not so good");
     });
 
     // OnAppActive Event from Linea
@@ -86,5 +89,13 @@ export class MyApp {
       return false;
     }
     this.nav.setRoot(page.component);
+  }
+
+  backgroundUpload() {
+    let pending = null;
+
+    if ( !window.navigator.onLine ) {
+      return false;
+    }
   }
 }

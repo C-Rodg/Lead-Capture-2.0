@@ -5,6 +5,7 @@ import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw';
 
 import { LeadSourceGuid } from '../helpers/leadSourceGuid';
 
@@ -108,12 +109,12 @@ export class InfoService {
         return this.http.get('http://localhost/leadsources/' + LeadSourceGuid.guid + '/sessiontoken').map((res) => res.json()).map((data) => {
             if (data !== null) {
                 if (data.Fault) {
-                    throw new Error(data.Fault);
+                    Observable.throw(data.Fault);
                 } else {                                                                
                     return data.SessionToken;
                 }
             } else {   
-                throw new Error("Invalid response object returned by ajax call");
+                Observable.throw("Invalid response object returned by ajax call");
             }
         });
     }

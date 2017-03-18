@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ToastController } from 'ionic-angular';
 
 import { Device } from '../device/device';
 import { SettingsService } from '../../providers/settingsService';
@@ -16,6 +16,7 @@ export class Settings {
   pendingTranslation : number = 0;
   
   constructor(public navCtrl: NavController,
+    private toastCtrl : ToastController,
     private settingsService: SettingsService,
     private infoService : InfoService,
     private leadsService : LeadsService
@@ -24,30 +25,45 @@ export class Settings {
   }  
 
   // Get Lead counts on view load
-  ionViewWillEnter() {
-    let query = this.settingsService.showDeleted ? '' : '&deleted=no';
-    this.getLeadCounts(query);
+  ionViewWillEnter() {  
+    this.getLeadCounts();
   }
 
   // Sync leads 
   syncLeads() {
-    // TODO: begin uploading/translating? leads
+    this.leadsService.translateAndUpload()
+      .subscribe((data) => {
+        let toast = this.toastCtrl.create({
+          message: "Finished syncing leads!",
+          duration: 2500,
+          position: 'top'
+        });
+        toast.present();
+        this.getLeadCounts();
+      }, (err) => {
+        let toast = this.toastCtrl.create({
+          message: err,
+          duration: 2500,
+          position: 'top'
+        });
+        toast.present();
+        this.getLeadCounts();
+      });
   }
 
   // Toggle change event
   refreshCounts() {
-    let query = this.settingsService.showDeleted ? '' : '&deleted=no';
-    this.getLeadCounts(query);
+    this.getLeadCounts();
     this.settingsService.storeCurrentSettings();
   }
 
   // Refresh pending and translated counts
-  getLeadCounts(query) {
-    this.leadsService.count('?uploaded=no' + query).subscribe((data) => {
+  getLeadCounts() {
+    this.leadsService.count('?uploaded=no').subscribe((data) => {
       this.pendingUpload = data.Count;
     }, (err) => {});
 
-    this.leadsService.count('?translated=no' + query).subscribe((data) => {
+    this.leadsService.count('?translated=no').subscribe((data) => {
       this.pendingTranslation = data.Count;
     }, (err) => {});
   }

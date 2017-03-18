@@ -4,6 +4,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
+import * as moment from 'moment';
 
 import { InfoService } from './infoService';
 import { LeadSourceGuid } from '../helpers/leadSourceGuid';
@@ -32,9 +33,7 @@ Array.prototype['getPicks'] = function(propName, tag) {
 export class LeadsService {
     constructor(private http: Http,
             private infoService : InfoService
-    ) {
-
-    }
+    ) {}
 
     load(leadGuid) {
         return this.http.get(`http://localhost/leadsources/${LeadSourceGuid.guid}/leads/${leadGuid}`).map(res => res.json());
@@ -80,8 +79,117 @@ export class LeadsService {
         return this.http.get(`http://localhost/leadsources/${LeadSourceGuid.guid}/visits?${query}`).map(res => res.json());
     }    
 
-    upload() {
+    // Upload the current lead
+    upload(lead) {
+        let seat = null;
+        return this.infoService.getSeat()
+        .flatMap((newSeat) => {        
+            seat = newSeat.SeatGuid;            
+            return Observable.of(seat);
+        })
+        .flatMap(() => this.findVisits(`ScanData=${lead.ScanData}`))
+        .flatMap((visits) => {
+            let visitTimes = [],
+                localTime = null;
 
+            // Create visits array
+            visits.forEach((visit) => {
+                if (visit.CapturedBy && visit.CaptureStation && visit.VisitDateTime) {
+                    localTime = moment.utc(visit.VisitDateTime).toDate();
+                    visitTimes.push(`${moment(localTime).format("YYYY-MM-DD HH:mm:ss")} | ${visit.CapturedBy} | ${visit.CaptureStation}`);
+                }
+            });
+
+            // Add/Edit lcVisitDateTimes            
+            if ( visitTimes.length > 0 ) {
+                let n = {
+                    Tag : 'lcVisitDateTimes',
+                    Value : visitTimes.join('^^')
+                };
+                this.searchForDupes(lead, 'lcVisitDateTimes', n);                
+            }
+
+            // Add/Edit lcFirstVisitDate
+            if ( lead.CreateDateTime ) {
+                let createLocalTimeDate = moment.utc( lead.CreateDateTime ).toDate();
+                let createLocalTime = moment(createLocalTimeDate).format('YYYY-MM-DD HH:mm:ss');
+                let n = {
+                    Tag : 'lcFirstVisitDate',
+                    Value : createLocalTime
+                };
+                this.searchForDupes(lead, 'lcFirstVisitDate', n);
+            }
+
+            // Add/Edit lcUpdateDateTime
+            if ( lead.UpdateDateTime ) {
+                let updateLocalTimeDate = moment.utc(lead.UpdateDateTime).toDate();
+                let updateLocalTime = moment(updateLocalTimeDate).format('YYYY-MM-DD HH:mm:ss');
+                let n = {
+                    Tag : 'lcUpdateDateTime',
+                    Value : updateLocalTime
+                };
+                this.searchForDupes(lead, 'lcUpdateDateTime', n);
+            }
+
+            let translateKeys = null;
+            if (lead.Translation !== null) {
+                translateKeys = lead.Translation.Keys;
+            }
+
+            let markDeleted = lead.DeleteDateTime !== null;
+
+            let req = {
+                SourceApplicationId: lead.LeadGuid,
+                AcquisitionUtcDateTime: lead.CreateDateTime,
+                Keys: lead.Keys,
+                TranslateKeys: translateKeys,
+                Responses : lead.Responses,
+                MarkAsDeleted: markDeleted
+            };
+
+            let url = `${this.infoService.leadsource.LeadSourceUrl}/UpsertLead/${LeadSourceGuid.guid}/${seat}`;
+            let headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            headers.append('Authorization', `ValidarSession token="${this.infoService.getCurrentToken()}"`);
+            console.log(req);
+            return this.http.post(url, req, { headers }).map(res => res.json())
+                .flatMap(() => {
+                    return this.markUploaded((lead.LeadGuid));
+                })
+                .catch((err) => {                    
+                    if (err && err.Fault && err.Fault.Type) {
+                        if (err.Fault.Type === "InvalidSessionFault") {
+                            return this.infoService.updateToken().flatMap(() => this.upload(lead));
+                        } 
+                    }
+                    return Observable.throw(err);
+                });
+        });
+    }
+
+    // Upload pending records 
+    uploadPending() {
+        if (!window.navigator.onLine) {
+            return Observable.throw("Please check your internet connection.");
+        }
+
+        return this.find('uploaded=no&error=no')
+            .flatMap((data) => {
+                let leads = data,
+                    requests = [],
+                    i = 0,
+                    len = leads.length;
+                console.log(data);
+                for(; i< len; i++) {
+                    requests.push(this.upload(leads[i]));
+                }
+
+                console.log("About to upload..." + requests.length);
+                return this.infoService.updateToken()
+                    .flatMap(() => {                        
+                        return Observable.forkJoin(requests);
+                    });
+            });
     }
 
     // Translate Record
@@ -108,5 +216,64 @@ export class LeadsService {
         }).flatMap(() => {
             return Observable.of(trans);
         });
+    }
+
+    // Translate Pending Records
+    translatePending() {
+        if (!window.navigator.onLine) {
+            return Observable.throw("Please check your internet connection.");
+        }
+        return this.find('translated=no&error=no')
+            .flatMap((data) => {           
+                let all = data,
+                    leads = [],
+                    i = 0,
+                    len = all.length;
+                for(; i < len; i++) {
+                    if (!all[i].Translation.Keys) {
+                        leads.push(this.translate(all[i]));
+                    }
+                }
+
+                if(leads.length === 0) {
+                    return Observable.of([]);
+                }
+
+                return this.infoService.updateToken()
+                    .flatMap(() => {
+                        return Observable.forkJoin(leads);
+                    });
+            });
+    }
+
+    // Translate (if needed) and Upload
+    translateAndUpload() {
+        if (this.infoService.leadsource.HasTranslation) {
+            return this.translatePending().flatMap((data) => {
+                return this.uploadPending();
+            });
+        } else {
+            return this.uploadPending();
+        }
+    }
+
+    // Helper - search for duplicate tags, push new if not found
+    searchForDupes(lead, tag, n) {
+        if (lead.Responses.filter(k => k.Tag === tag).length > 0 ) {
+            let dupes = false;
+            let i = 0, j = lead.Responses.length;
+            for (; i < j; i++) {
+                if (lead.Responses[i].Tag === tag) {
+                    if (!dupes) {
+                        lead.Responses[i].Value = n.Value;
+                        dupes = true;
+                    } else {
+                        lead.Responses.splice(i, 1);
+                    }
+                }
+            }
+        } else {
+            lead.Responses.push(n);
+        }
     }
 }
