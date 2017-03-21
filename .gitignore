@@ -34,4 +34,4 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 
 yarn.lock
-leadsourcerecorddefinition.xml
+src/config/leadsourcerecorddefinition.xml
