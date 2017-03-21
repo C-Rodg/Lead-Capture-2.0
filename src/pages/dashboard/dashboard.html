@@ -24,7 +24,7 @@
       </ion-row>    
     </ion-card>  
 
-    <ion-card class="square-card-btn" [navPush]="scanPage">
+    <ion-card class="square-card-btn" (tap)="getScanPage()">
       <ion-row >
         <ion-col text-center>
           <ion-icon name="add"></ion-icon>

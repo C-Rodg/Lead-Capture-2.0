@@ -1,5 +1,5 @@
 import { Component, ViewChild, NgZone } from '@angular/core';
-import { Nav, Platform, ToastController, LoadingController } from 'ionic-angular';
+import { Nav, Platform, ToastController, LoadingController, AlertController } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 // Side Menu Pages
@@ -13,6 +13,7 @@ import { ScanSled } from '../pages/scan-sled/scan-sled';
 import { InfoService } from '../providers/infoService';
 import { SettingsService } from '../providers/settingsService';
 import { LeadsService } from '../providers/leadsService';
+import { ScanCameraService } from '../providers/scanCameraService';
 
 
 @Component({
@@ -30,23 +31,18 @@ export class MyApp {
     private infoService: InfoService,
     private settingsService : SettingsService,
     private leadsService : LeadsService,
+    private scanCameraService : ScanCameraService,
     private zone: NgZone,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController
   ) {
     this.initializeApp();
 
-    // TODO: convert 'sync leads' to action button, show scan camera vs scan sled
-    let sled = true,
-        scanPage;
-    if (sled){
-      scanPage = ScanSled;
-    } else {
-      scanPage = ScanCamera;
-    }
+    
     this.pages = [
       { title: 'Dashboard', component: Dashboard, icon : 'home'},
-      { title: 'Add New Lead', component: scanPage, icon : 'add'},
+      { title: 'Add New Lead', component: "", icon : 'add'},
       { title: 'View Leads', component: List, icon : 'list-box'},
       { title: 'Sync Leads', component: "", icon : 'refresh' },
       { title: 'Edit User', component: Device, icon : 'create'},
@@ -75,10 +71,41 @@ export class MyApp {
     });
   }
 
-  //  When Linea connects, update client info
+  //  When Linea connects, update client info. If on camera page, ask to head to scan page 
   onZoneOnAppActive() {
     this.zone.run(() => {
-      this.infoService.getClientInfo().subscribe(() => {});
+      this.infoService.getClientInfo().subscribe((data) => {
+        let view = this.nav.getActive();
+        if (view.instance instanceof ScanCamera) {
+          if (this.infoService.getLineaStatus()) {
+            this.scanCameraService.turnOff();
+            let msg = this.alertCtrl.create({
+              title: "Sled scanner detected",
+              message: "Do you want to leave the camera scanning page?",
+              buttons: [
+                {
+                  text: 'Stay',
+                  handler: () => {
+                    this.scanCameraService.turnOn();
+                  }
+                }, 
+                {
+                  text: "Leave",
+                  handler: () => {
+                    this.nav.push(ScanSled).then(() => {
+                      const idx = this.nav.getActive().index;
+                      this.nav.remove(idx - 1);
+                    });
+                  }
+                }
+              ]
+            });
+            msg.present();
+          }          
+        }
+      }, (err) => {
+
+      });
     });
   }
 
@@ -115,9 +142,25 @@ export class MyApp {
     } else if (page.icon === "exit") {
       window.location.href = "http://localhost/navigate/home";
       return false;
+    } else if (page.icon === 'add') {
+      this.determineScanPage();
     } else {
-      this.nav.setRoot(page.component);
+      this.nav.push(page.component);
     }    
+  }
+
+  // Determine Scan Page to navigate to 
+  determineScanPage() {
+    this.infoService.getClientInfo().subscribe((data) => {    
+      if(this.infoService.getLineaStatus()) {
+        this.nav.push(ScanSled);
+      } else {
+        this.nav.push(ScanCamera);
+      }
+    }, (err) => {
+      // Fallback to camera
+      this.nav.push(ScanCamera);
+    });
   }
 
   // Helper - Translate and Upload pending 

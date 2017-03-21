@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { List } from '../list/list';
@@ -18,7 +18,6 @@ import { LeadsService } from '../../providers/leadsService';
 export class Dashboard {
   
   listPage: Component;
-  scanPage : Component;
   devicePage : Component;
   settingsPage : Component;
 
@@ -31,17 +30,7 @@ export class Dashboard {
     ) {
     this.listPage = List;    
     this.devicePage = Device;
-    this.settingsPage = Settings;
-
-    // TODO: detect if scanner present and navigate based off of that
-    let scanner = false,
-      scanPage;
-    if(scanner) {
-      scanPage = ScanSled;
-    } else {
-      scanPage = ScanCamera;
-    }
-    this.scanPage = scanPage;
+    this.settingsPage = Settings;   
   }
 
   // Get leads from database
@@ -52,4 +41,16 @@ export class Dashboard {
     });
   }
 
+  // Get sled or camera scan page
+  getScanPage() {    
+    this.infoService.getClientInfo().subscribe((data) => {
+      if (this.infoService.getLineaStatus()) {
+        this.navCtrl.push(ScanSled);
+      } else {
+        this.navCtrl.push(ScanCamera);
+      }      
+    }, (err) => {
+      this.navCtrl.push(ScanCamera);
+    });   
+  }
 }

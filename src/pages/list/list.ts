@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, ToastController } from 'ionic-angular';
+import { NavController, AlertController, ToastController, LoadingController } from 'ionic-angular';
 import * as moment from 'moment';
 
 import { ScanSled } from '../scan-sled/scan-sled';
@@ -8,6 +8,7 @@ import { EditRecord } from '../edit-record/edit-record';
 
 import { LeadsService } from '../../providers/leadsService';
 import { SettingsService } from '../../providers/settingsService';
+import { InfoService } from '../../providers/infoService';
 
 @Component({
   selector: 'page-list',
@@ -19,35 +20,41 @@ export class List {
 
   leads : Array<any> =[];
   filteredLeads : Array<any> = [];
-  scanPage : Component;
 
   constructor(public navCtrl: NavController, 
     public alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+    private loadingCtrl : LoadingController,
     private leadsService : LeadsService,
-    private settingsService : SettingsService,
-    private toastCtrl: ToastController
-    ) {
-
-    // TODO: convert 'sync leads' to action button, show scan camera vs scan sled
-    let sled = true;
-    if (sled){
-      this.scanPage = ScanSled;
-    } else {
-      this.scanPage = ScanCamera;
-    }
+    private settingsService : SettingsService,    
+    private infoService : InfoService
+    ) {    
   }
 
   // Get leads from database
   ionViewWillEnter() {
-    this.refreshLeadsList();
+    let loader = this.loadingCtrl.create({
+      content: 'Loading leads...'
+    });
+    loader.present();
+    let q = this.settingsService.showDeleted ? '' : 'deleted=no';
+    this.leadsService.find(q).subscribe((data) => {
+      loader.dismiss();
+      this.leads = this.parseLeadsInfo(data);
+      this.filteredLeads = this.leads; 
+    }, (err) => {
+      loader.dismiss();
+    });
   }
 
   // Refresh leads list
-  refreshLeadsList() {
+  refreshLeadsList() {   
     let query  = this.settingsService.showDeleted ? '' : 'deleted=no';
     this.leadsService.find(query).subscribe((data) => {
       this.leads = this.parseLeadsInfo(data);
-      this.filteredLeads = this.leads;
+      this.filteredLeads = this.leads;    
+    }, (err) => {
+
     });
   }
 
@@ -70,6 +77,7 @@ export class List {
     });
   }
 
+  // Helper - parse date into display string
   parseDate(dateStr) {
     if (dateStr) {
       return moment(dateStr, 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('MMM DD, hh:mm A').toUpperCase();
@@ -99,7 +107,6 @@ export class List {
   // Click handler for editing record
   editRecord(id) {   
     this.leadsService.load(id).subscribe((data) => {
-      //alert(JSON.stringify(data));
       this.navCtrl.push(EditRecord, data);
     }, (err) => {
       let toast = this.toastCtrl.create({
@@ -154,6 +161,19 @@ export class List {
       });
       toast.present();
       return false;
+    });
+  }
+
+  // Click handler for Add New Record 
+  getScanPage() {
+    this.infoService.getClientInfo().subscribe((data) => {
+      if (this.infoService.getLineaStatus()) {
+        this.navCtrl.push(ScanSled);
+      } else {
+        this.navCtrl.push(ScanCamera);
+      }
+    }, (err) => {
+      this.navCtrl.push(ScanCamera);
     });
   }
 
