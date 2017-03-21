@@ -31,9 +31,14 @@ Array.prototype['getPicks'] = function(propName, tag) {
 
 @Injectable()
 export class LeadsService {
+    
+    backgroundInterval : any;
+
     constructor(private http: Http,
             private infoService : InfoService
-    ) {}
+    ) {
+
+    }    
 
     load(leadGuid) {
         return this.http.get(`http://localhost/leadsources/${LeadSourceGuid.guid}/leads/${leadGuid}`).map(res => res.json());
@@ -144,7 +149,7 @@ export class LeadsService {
                 Keys: lead.Keys,
                 TranslateKeys: translateKeys,
                 Responses : lead.Responses,
-                MarkAsDeleted: markDeleted
+                MarkedAsDeleted: markDeleted
             };
 
             let url = `${this.infoService.leadsource.LeadSourceUrl}/UpsertLead/${LeadSourceGuid.guid}/${seat}`;
@@ -184,9 +189,40 @@ export class LeadsService {
                     requests.push(this.upload(leads[i]));
                 }
 
+                if(len === 0) {
+                    return Observable.of([]);
+                }
+
                 console.log("About to upload..." + requests.length);
                 return this.infoService.updateToken()
                     .flatMap(() => {                        
+                        return Observable.forkJoin(requests);
+                    });
+            });
+    }
+
+    // Upload all records 
+    uploadAll() {
+        if (!window.navigator.onLine) {
+            return Observable.throw("Please check your internet connection.");
+        }
+
+        return this.find('error=no')
+            .flatMap((data) => {
+                let leads = data,
+                    requests = [],
+                    i = 0,
+                    len = leads.length;
+                
+                for(; i < len; i++) {
+                    requests.push(this.upload(leads[i]));
+                }
+
+                if(len === 0) {
+                    return Observable.of([]);
+                }
+                return this.infoService.updateToken()
+                    .flatMap(() => {
                         return Observable.forkJoin(requests);
                     });
             });
@@ -235,7 +271,34 @@ export class LeadsService {
                     }
                 }
 
-                if(leads.length === 0) {
+                if(len === 0) {
+                    return Observable.of([]);
+                }
+
+                return this.infoService.updateToken()
+                    .flatMap(() => {
+                        return Observable.forkJoin(leads);
+                    });
+            });
+    }
+
+    // Translate ALL records
+    translateAll() {
+        if (!window.navigator.onLine) {
+            return Observable.throw("Please check your internet connection.");
+        }
+        return this.find('error=no')
+            .flatMap((data) => {
+                let all = data,
+                    leads = [],
+                    i = 0,
+                    len = all.length;
+                
+                for(; i < len; i++) {
+                    leads.push(this.translate(all[i]));
+                }
+
+                if (len === 0) {
                     return Observable.of([]);
                 }
 
@@ -257,6 +320,17 @@ export class LeadsService {
         }
     }
 
+    // Translate and re-upload ALL leads 
+    translateAndUploadAll() {
+        if (this.infoService.leadsource.HasTranslation) {
+            return this.translateAll().flatMap((data) => {
+                return this.uploadAll();
+            });
+        } else {
+            return this.uploadAll();
+        }
+    }
+
     // Helper - search for duplicate tags, push new if not found
     searchForDupes(lead, tag, n) {
         if (lead.Responses.filter(k => k.Tag === tag).length > 0 ) {
@@ -275,5 +349,29 @@ export class LeadsService {
         } else {
             lead.Responses.push(n);
         }
+    }
+
+    // Clear current background interval and start new
+    initializeBackgroundUpload(mins) {
+        clearInterval(this.backgroundInterval);
+        if (mins === 0) {
+            return false;
+        }
+        let time = mins * 60 * 1000;
+        this.backgroundInterval = setInterval(() => {
+            this.backgroundUpload();
+        }, time);
+    }
+
+    // Upload in the background
+    backgroundUpload() {
+        if (!window.navigator.onLine) {
+            return false;
+        }
+        this.translateAndUpload().subscribe((data) => {
+            // Do nothing...
+        }, (err) => {
+            // Do nothing...
+        });
     }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ToastController } from 'ionic-angular';
+import { NavController, ToastController, LoadingController } from 'ionic-angular';
 
 import { Device } from '../device/device';
 import { SettingsService } from '../../providers/settingsService';
@@ -17,6 +17,7 @@ export class Settings {
   
   constructor(public navCtrl: NavController,
     private toastCtrl : ToastController,
+    private loadingCtrl : LoadingController,
     private settingsService: SettingsService,
     private infoService : InfoService,
     private leadsService : LeadsService
@@ -31,8 +32,14 @@ export class Settings {
 
   // Sync leads 
   syncLeads() {
+    let loader = this.loadingCtrl.create({
+      content: 'Syncing leads...',
+      dismissOnPageChange: true
+    });
+    loader.present();
     this.leadsService.translateAndUpload()
       .subscribe((data) => {
+        loader.dismiss();
         let toast = this.toastCtrl.create({
           message: "Finished syncing leads!",
           duration: 2500,
@@ -41,6 +48,36 @@ export class Settings {
         toast.present();
         this.getLeadCounts();
       }, (err) => {
+        loader.dismiss();
+        let toast = this.toastCtrl.create({
+          message: err,
+          duration: 2500,
+          position: 'top'
+        });
+        toast.present();
+        this.getLeadCounts();
+      });
+  } 
+
+  // Resync ALL leads - translate and re-upload 
+  resyncAllLeads() {
+    let loader = this.loadingCtrl.create({
+      content: 'Resyncing all leads',
+      dismissOnPageChange: true
+    });
+    loader.present();
+    this.leadsService.translateAndUploadAll()
+      .subscribe((data) => {
+        loader.dismiss();
+        let toast = this.toastCtrl.create({
+          message: "Finished resyncing everything!",
+          duration: 2500,
+          position: 'top'
+        });
+        toast.present();
+        this.getLeadCounts();
+      }, (err) => {
+        loader.dismiss();
         let toast = this.toastCtrl.create({
           message: err,
           duration: 2500,
@@ -66,6 +103,12 @@ export class Settings {
     this.leadsService.count('?translated=no').subscribe((data) => {
       this.pendingTranslation = data.Count;
     }, (err) => {});
+  }
+
+  // Set new automatic upload time
+  startNewUploadTime() {
+    this.settingsService.storeCurrentSettings();
+    this.leadsService.initializeBackgroundUpload(this.settingsService.backgroundUploadWait);
   }
 
   // Settings changed, save to local storage

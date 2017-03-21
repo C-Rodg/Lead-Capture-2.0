@@ -1,7 +1,9 @@
-<ion-menu [content]="content" color="p-primary">
+<ion-menu [content]="content" color="p-primary" (ionOpen)="getPendingCount()">
   <ion-header>
     <ion-toolbar color="p-primary-dark" padding-top>
-      <ion-title>Validar Lead Capture</ion-title>
+      <ion-title>
+        Validar Lead Capture
+      </ion-title>
     </ion-toolbar>
   </ion-header>
 
@@ -10,6 +12,7 @@
       <button menuClose ion-item *ngFor="let p of pages" (tap)="openPage(p)">
         <ion-icon name={{p.icon}} item-left></ion-icon>
         {{p.title}}
+        <ion-badge *ngIf="p.icon === 'refresh'" color="p-primary-dark" item-right>{{pendingUploads}}</ion-badge>
       </button>      
     </ion-list>
   </ion-content>

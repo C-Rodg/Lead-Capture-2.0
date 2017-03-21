@@ -66,7 +66,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Autoupload every {{ settingsService.backgroundUploadWait }} mins</ion-label>
-           <ion-range min="1" max="10" step="1" snaps="true" color="p-accent" [(ngModel)]="settingsService.backgroundUploadWait" (ionChange)="saveSettings()">
+           <ion-range min="0" max="10" step="1" snaps="true" color="p-accent" [(ngModel)]="settingsService.backgroundUploadWait" (ionChange)="startNewUploadTime()">
              <ion-icon range-left isActive="false" name="ios-timer-outline"></ion-icon>
              <ion-icon range-right name="timer" name="ios-timer"></ion-icon>
            </ion-range>
@@ -86,6 +86,17 @@
           <p class="secondary-text">{{ infoService.getDeviceInformation() }}</p>
           <p class="secondary-text">Sled-scanner: {{ infoService.getLineaStatus() ? "connected" : "disconnected" }}</p>
           <p class="secondary-text">Cameras: front <ion-icon name="{{'ios-' + (infoService.getCameraStatus('FrontCamera') ? 'checkmark' : 'close')}}"></ion-icon> | back <ion-icon name="{{'ios-' + (infoService.getCameraStatus('RearCamera') ? 'checkmark' : 'close')}}"></ion-icon></p>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+     <ion-card class="settings-card inline-card-button" (tap)="resyncAllLeads()">
+      <ion-row>
+        <ion-col class="inline-card-icon" width-25 text-center stretch>
+          <ion-icon name="ios-refresh-circle-outline"></ion-icon>
+        </ion-col>
+         <ion-col center padding-left>
+          <h1>Resync All Leads</h1>
         </ion-col>
       </ion-row>
     </ion-card>
