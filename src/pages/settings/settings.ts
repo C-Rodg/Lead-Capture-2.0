@@ -14,6 +14,13 @@ export class Settings {
   devicePage : Component;
   pendingUpload : number = 0;
   pendingTranslation : number = 0;
+  aboutDevice : any = {
+    appInfo : "",
+    deviceInfo : "",
+    scannerStatus: "disconnected",
+    cameraFront: "checkmark",
+    cameraBack: "checkmark"
+  };
   
   constructor(public navCtrl: NavController,
     private toastCtrl : ToastController,
@@ -27,7 +34,18 @@ export class Settings {
 
   // Get Lead counts on view load
   ionViewWillEnter() {  
+    this.buildAboutSection();
     this.getLeadCounts();
+  }
+
+  // Get About section
+  buildAboutSection() {
+     let a = this.aboutDevice;
+     a.appInfo = this.infoService.getApplicationInformation();
+     a.deviceInfo = this.infoService.getDeviceInformation();
+     a.scannerStatus = (this.infoService.getLineaStatus()) ? 'connected' : 'disconnected';
+     a.cameraFront = (this.infoService.getCameraStatus('FrontCamera')) ? 'checkmark' : 'close';
+     a.cameraBack = (this.infoService.getCameraStatus('RearCamera')) ? 'checkmark' : 'close';
   }
 
   // Sync leads 

@@ -49,6 +49,17 @@
       <ion-row>
         <ion-col>
           <ion-item>
+            <ion-label>Autoupload every {{ settingsService.backgroundUploadWait }} mins</ion-label>
+           <ion-range min="0" max="10" step="1" snaps="true" color="p-accent" [(ngModel)]="settingsService.backgroundUploadWait" (ionChange)="startNewUploadTime()">
+             <ion-icon range-left isActive="false" name="ios-timer-outline"></ion-icon>
+             <ion-icon range-right name="timer" name="ios-timer"></ion-icon>
+           </ion-range>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
             <ion-label>Quick Scan Mode</ion-label>
             <ion-toggle color="p-accent" [(ngModel)]="settingsService.quickScanMode" (ionChange)="saveSettings()"></ion-toggle>
           </ion-item>
@@ -61,18 +72,7 @@
             <ion-toggle color="p-accent" [(ngModel)]="settingsService.showDeleted" (ionChange)="refreshCounts()"></ion-toggle>
           </ion-item>         
         </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-item>
-            <ion-label>Autoupload every {{ settingsService.backgroundUploadWait }} mins</ion-label>
-           <ion-range min="0" max="10" step="1" snaps="true" color="p-accent" [(ngModel)]="settingsService.backgroundUploadWait" (ionChange)="startNewUploadTime()">
-             <ion-icon range-left isActive="false" name="ios-timer-outline"></ion-icon>
-             <ion-icon range-right name="timer" name="ios-timer"></ion-icon>
-           </ion-range>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+      </ion-row>      
     </ion-card>
 
      <ion-card class="settings-card inline-card-button">
@@ -82,10 +82,10 @@
         </ion-col>
          <ion-col center padding-left>
           <h1>About</h1>
-          <p class="secondary-text">{{ infoService.getApplicationInformation() }}</p>
-          <p class="secondary-text">{{ infoService.getDeviceInformation() }}</p>
-          <p class="secondary-text">Sled-scanner: {{ infoService.getLineaStatus() ? "connected" : "disconnected" }}</p>
-          <p class="secondary-text">Cameras: front <ion-icon name="{{'ios-' + (infoService.getCameraStatus('FrontCamera') ? 'checkmark' : 'close')}}"></ion-icon> | back <ion-icon name="{{'ios-' + (infoService.getCameraStatus('RearCamera') ? 'checkmark' : 'close')}}"></ion-icon></p>
+          <p class="secondary-text">{{ aboutDevice.appInfo }}</p>
+          <p class="secondary-text">{{ aboutDevice.deviceInfo }}</p>
+          <p class="secondary-text">Sled-scanner: {{ aboutDevice.scannerStatus }}</p>
+          <p class="secondary-text">Cameras: front <ion-icon name="{{'ios-' + aboutDevice.cameraFront }}"></ion-icon> | back <ion-icon name="{{'ios-' + aboutDevice.cameraBack }}"></ion-icon></p>
         </ion-col>
       </ion-row>
     </ion-card>
