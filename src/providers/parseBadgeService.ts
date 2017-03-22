@@ -107,8 +107,6 @@ export class ParseBadgeService {
             return this.leadsService.find(`ScanData=${scannedId}`).flatMap((data) => {
                 if (data && data.length > 0) {
 
-                    alert("FOUND AN EXISTING QR CODE LEAD");
-
                     let visit = {
                         ScanData: scannedId,
                         CapturedBy: this.settingsService.currentUser,
@@ -127,8 +125,6 @@ export class ParseBadgeService {
                         return Observable.of(data[0]);
                     });
                 } else {
-
-                    alert("CREATING A NEW QR CODE LEAD");
 
                     let lead = {
                         ScanData: scannedId,
@@ -237,7 +233,6 @@ export class ParseBadgeService {
 
             return this.leadsService.find(`ScanData=${scannedId}`).flatMap((data) => {
                 if (data && data.length > 0) {
-                    alert("FOUND AN EXISTING PDF417 lead");
 
                     let visit = {
                         ScanData: scannedId,
@@ -257,7 +252,6 @@ export class ParseBadgeService {
                         return Observable.of(data[0]);
                     });
                 } else {
-                    alert("CREATING A NEW PDF417 LEAD");
                     let lead = {
                         ScanData: scannedId,
                         Keys: [{"Type":"7A56282B-4855-4585-B10B-E76B111EA1DB", "Value": badgeId}],
@@ -335,12 +329,12 @@ export class ParseBadgeService {
         }
     }
 
+    // Not completely implemented - hold off until clarification on functionality
     manuallyEnterBadge(id) {
         let badgeId = id.replace(/^\s+|\s+$/g, "");
         if (badgeId && badgeId.length < 384) {
             return this.leadsService.find(`ScanData=${badgeId}`).flatMap((data) => {
                 if (data && data.length > 0) {
-                    alert("Searched and found existing lead!");
                     let visit = {
                         ScanData: badgeId,
                         CapturedBy : this.settingsService.currentUser,
@@ -358,7 +352,6 @@ export class ParseBadgeService {
                         return Observable.of(data[0]);
                     });
                 } else {
-                    alert("CREATING A NEW SEARCHED BY LEAD");
                     let lead = {
                         ScanData: badgeId,
                         Keys: [{"Type":"7A56282B-4855-4585-B10B-E76B111EA1DB", "Value": badgeId}],

@@ -1,5 +1,5 @@
 import { Component, ViewChild, NgZone } from '@angular/core';
-import { Nav, Platform, ToastController, LoadingController, AlertController } from 'ionic-angular';
+import { Nav, Platform, ToastController, LoadingController, AlertController, MenuController } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 // Side Menu Pages
@@ -35,7 +35,8 @@ export class MyApp {
     private zone: NgZone,
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private menuCtrl: MenuController
   ) {
     this.initializeApp();
 
@@ -68,6 +69,7 @@ export class MyApp {
     this.platform.ready().then(() => {
       StatusBar.styleDefault();
       Splashscreen.hide();
+      this.menuCtrl.swipeEnable(false);
     });
   }
 
@@ -137,16 +139,18 @@ export class MyApp {
         });
         toast.present();
         this.getPendingCount();
-      });
-      return false;
+      });      
     } else if (page.icon === "exit") {
-      window.location.href = "http://localhost/navigate/home";
-      return false;
+      window.location.href = "http://localhost/navigate/home";      
     } else if (page.icon === 'add') {
       this.determineScanPage();
+    } else if (page.icon === 'home') {
+      this.nav.setRoot(page.component);
     } else {
       this.nav.push(page.component);
-    }    
+    }  
+    this.menuCtrl.close();  
+    return false;
   }
 
   // Determine Scan Page to navigate to 

@@ -51,13 +51,26 @@ export class ScanCamera  {
   onZoneDataRead(data) {
     let scannedData = data;
     this.zone.run(() => {
-      this.parseBadgeService.parse(scannedData).subscribe((lead) => {
-        alert(JSON.stringify(lead));
-        if (lead.hasOwnProperty('VisitCount')) {
-          this.navCtrl.push(EditRecord, lead);
+      this.parseBadgeService.parse(scannedData).subscribe((lead) => {        
+        if (!this.settingsService.quickScanMode) {
+           if (lead.hasOwnProperty('VisitCount')) {          
+            this.navCtrl.push(EditRecord, lead);
+          } else {
+            this.navCtrl.push(NewRecord, lead);
+          } 
         } else {
-          this.navCtrl.push(NewRecord, lead);
-        }        
+          let msg = "New record saved!";
+          if (lead.hasOwnProperty('VisitCount')) {
+            msg = "Existing record saved!";
+          } 
+          let toast = this.toastCtrl.create({
+            message: msg,
+            duration: 3000,
+            position: 'top'
+          });
+          toast.present();
+          return false;
+        }              
       }, (err) => {
         let toast = this.toastCtrl.create({
           message: err,

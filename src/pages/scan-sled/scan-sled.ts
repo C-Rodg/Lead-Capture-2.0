@@ -17,7 +17,6 @@ import { InfoService } from '../../providers/infoService';
   templateUrl: 'scan-sled.html'
 })
 export class ScanSled {
-  testWord: string = "TESTT";
   constructor(public navCtrl: NavController, 
     private zone: NgZone, 
     private scanSledService: ScanSledService,
@@ -38,10 +37,7 @@ export class ScanSled {
 
   // Disable button scan
   ionViewWillLeave() {
-    let scanBtn = document.getElementById('scan-btn-card');
-    if (scanBtn) {
-      scanBtn.classList.remove('scan-clicked');
-    }
+    this.removeScanClickClass();
     this.scanSledService.sendScanCommand('disableButtonScan');      
   }
 
@@ -50,17 +46,40 @@ export class ScanSled {
     (<any>window).OnDataRead = null;
   }
 
+  // Helper remove scann click class 
+  removeScanClickClass() {
+    const scanBtn = document.getElementById('scan-btn-card');
+    if (scanBtn) {
+      scanBtn.classList.remove('scan-clicked');
+    }
+    return false;
+  }
+
   // Zone function that parses badge data
   onZoneDataRead(data) {
     let scannedData = data;
     this.zone.run(() => {
       this.parseBadgeService.parse(scannedData).subscribe((lead) => {
-        alert(JSON.stringify(lead));
-        if (lead.hasOwnProperty('VisitCount')) {          
-          this.navCtrl.push(EditRecord, lead);
+        if (!this.settingsService.quickScanMode) {
+          if (lead.hasOwnProperty('VisitCount')) {          
+            this.navCtrl.push(EditRecord, lead);
+          } else {
+            this.navCtrl.push(NewRecord, lead);
+          }
         } else {
-          this.navCtrl.push(NewRecord, lead);
-        }
+          let msg = "New record saved!";
+          if (lead.hasOwnProperty('VisitCount')) {
+            msg = "Existing record saved!";
+          }
+          let toast = this.toastCtrl.create({
+            message: msg,
+            duration: 3000,
+            position: 'top'
+          });
+          toast.present();
+          this.removeScanClickClass();
+          return false;
+        }        
       }, (err) => {
         let toast = this.toastCtrl.create({
           message: err,
