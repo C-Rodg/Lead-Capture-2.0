@@ -306,23 +306,63 @@ export class NewRecord {
   extractTranslationStrings(fields) {
     let arr = [];
     if (fields && this.person.Translation && this.person.Translation.Declarations) {
-      let dec = this.person.Translation.Declarations,
-          i = 0,
-          j = fields.length,
-          c = dec.length;
-      for(; i < j; i++) {
-        let id = fields[i].Id;
-        let b = 0;
-        for (; b < c; b++) {
-          if (id === dec[b].Id) {
-            if (dec[b].CultureStrings && dec[b].CultureStrings.length > 0 && dec[b].CultureStrings[0].DisplayString) {
-              arr.push({ 
-                title: dec[b].CultureStrings[0].DisplayString,
-                value: fields[i].Value
-              });
-              break;
-            }            
-          }
+      const decs = this.person.Translation.Declarations,
+          itemsLen = fields.length,
+          decsLen = decs.length;
+      let i = 0;
+      
+      // Loop through Declarations (1 per question)
+      for (; i < decsLen; i++) {
+        const decId = decs[i].Id,
+              decType = decs[i].Type;
+        if (decs[i].CultureStrings && decs[i].CultureStrings.length > 0 && decs[i].CultureStrings[0].DisplayString) {
+          const decTitle = decs[i].CultureStrings[0].DisplayString;
+          const decOpts = decs[i].Options;
+          let val = "",
+              b = 0;
+          
+          // Loop through DataItems to find corresponding value
+          for(; b < itemsLen; b++) {
+            if (decId === fields[b].Id) {
+
+              // If text response...
+              if (decType === 0) {
+                val = fields[b].Value;
+                break;
+              } 
+              // If pick one question
+              else if (decType === 1 && decOpts) {
+                const selectedId = fields[b].OptionId;
+                let z = 0,
+                    optLen = decOpts.length;
+                for(; z < optLen; z++) {
+                  if ((selectedId === decOpts[z].Id) && decOpts[z].CultureStrings && decOpts[z].CultureStrings.length > 0 && decOpts[z].CultureStrings[0].DisplayString) {
+                    val = decOpts[z].CultureStrings[0].DisplayString;
+                    break;
+                  }
+                }
+              } 
+              // If pick many question
+              else if (decType === 2 && decOpts) {
+                const selectedId = fields[b].OptionId;
+                let z = 0,
+                  optLen = decOpts.length;
+                for(; z < optLen; z++) {
+                  if ((selectedId === decOpts[z].Id) && decOpts[z].CultureStrings && decOpts[z].CultureStrings.length > 0 && decOpts[z].CultureStrings[0].DisplayString) {
+                    if (val) {
+                      val += ", ";
+                    }
+                    val += decOpts[z].CultureStrings[0].DisplayString;
+                    break;
+                  }
+                }
+              }
+            }
+          } 
+          arr.push({
+            title: decTitle,
+            value: val
+          });         
         }
       }
     }
