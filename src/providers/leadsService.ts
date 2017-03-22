@@ -99,9 +99,11 @@ export class LeadsService {
 
             // Create visits array
             visits.forEach((visit) => {
-                if (visit.CapturedBy && visit.CaptureStation && visit.VisitDateTime) {
+                if (visit.VisitDateTime) {
+                    const capturedBy = visit.CapturedBy ? visit.CapturedBy : "";
+                    const captureStation = visit.CaptureStation ? visit.CaptureStation : "";
                     localTime = moment.utc(visit.VisitDateTime).toDate();
-                    visitTimes.push(`${moment(localTime).format("YYYY-MM-DD HH:mm:ss")} | ${visit.CapturedBy} | ${visit.CaptureStation}`);
+                    visitTimes.push(`${moment(localTime).format("YYYY-MM-DD HH:mm:ss")} | ${capturedBy} | ${captureStation}`);
                 }
             });
 
