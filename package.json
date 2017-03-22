@@ -8,7 +8,7 @@
     "build": "ionic-app-scripts build",
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve",
-    "build-prod" : "ionic build browser --prod && copy src\\config\\leadsourcerecorddefinition.xml www\\leadsourcerecorddefinition.xml && echo 'Build Complete!'"
+    "build-prod": "ionic build browser --prod && copy src\\config\\leadsourcerecorddefinition.xml www\\leadsourcerecorddefinition.xml > nul && del www\\Launch.html && ren www\\index.html Launch.html && echo 'Validar Build Complete!'"
   },
   "dependencies": {
     "@angular/common": "2.2.1",
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "1.0.0",
+    "bestzip": "^1.1.4",
     "typescript": "2.0.9"
   },
   "cordovaPlugins": [
