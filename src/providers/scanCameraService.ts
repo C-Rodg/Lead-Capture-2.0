@@ -15,15 +15,44 @@ export class ScanCameraService {
     };
     public torch : string = "OFF";
     private endpoint : string = "http://localhost/barcodecontrol";
+    private cameraOn: boolean = false;
 
     constructor(private http: Http) {
+        this.calculatePosition();
+        window.addEventListener('orientationchange', () => {
+            this.calculatePosition();
+        }, false);
+    }
+
+    calculatePosition() {
+        const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        if (width < 600) {
+            // Do nothing, this is an itouch
+        } else if (width < 800) {
+            // This is iPad in portrait mode
+            this.camera.width = width;
+            this.camera.height = height - 123;
+            if (this.cameraOn) {
+                this.turnOn();
+            }
+        } else if (width < 1300) {
+            // This is iPad in landscape mode             
+            this.camera.width = width;
+            this.camera.height = height - 123;
+            if (this.cameraOn) {
+                this.turnOn();
+            }
+        }
     }
 
     turnOn() {
+        this.cameraOn = true;
         this.http.post(this.endpoint, this.camera).map(res => res.json()).subscribe((data) => { });
     }
 
     turnOff() {  
+        this.cameraOn = false;
         this.http.post(this.endpoint, { visible: "NO" }).map(res => res.json()).subscribe((data) => {});
     }
 
