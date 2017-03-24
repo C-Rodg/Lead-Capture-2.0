@@ -223,7 +223,7 @@ export class InfoService {
 
     getApplicationInformation() : string {
         let c = this.client;
-        return `${c.Application} version ${c.ApplicationVersion}`;        
+        return `vCapture Pro version ${c.ApplicationVersion}`;        
     }
 
     getDeviceInformation() : string {

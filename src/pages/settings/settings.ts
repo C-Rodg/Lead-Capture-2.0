@@ -34,16 +34,15 @@ export class Settings {
   }  
 
   // Get Lead counts on view load
-  ionViewWillEnter() {  
-    this.buildAboutSection();
+  ionViewWillEnter() { 
+    this.infoService.getClientInfo().subscribe((data) => {
+      this.buildAboutSection();
+    });  
     this.getLeadCounts();
-    this.events.subscribe('event:onLineaConnect', this.buildAboutSection);
-  }
-
-  // Unsubscribe to events 
-  ionViewWillLeave() {
-    this.events.unsubscribe('event:onLineaConnect', this.buildAboutSection);
-  }
+    this.events.subscribe('event:onLineaConnect', () => {
+      this.buildAboutSection()
+    });
+  }  
 
   // Get About section
   buildAboutSection() {

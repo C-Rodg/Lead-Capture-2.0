@@ -16,119 +16,107 @@ const survey = {
             type: "TEXT",
             tag: "lcCompany",
             prompt: "Company",
-            required: true
-        },
-        {
-            type: "TEXT",
-            tag: "lcEmail",
-            prompt: "Email",
             required: false
-        },
-        {
-            type: "TEXT",
-            tag: "lcAddress1",
-            prompt: "Address",
-            required: false
-        },
-        {
-            type: "TEXT",
-            tag: "lcCity",
-            prompt: "City",
-            required: false
-        },
-        {
-            type: "TEXT",
-            tag: "lcState",
-            prompt: "State",
-            required: false
-        },
-        {
-            type: "TEXT",
-            tag: "lcCountry",
-            prompt: "Country",
-            required: false
-        }
+        }        
     ],
 
-    qualifiers: [
+    qualifiers: [ 
         {
-            type: "TEXT",
-            tag: "lcProductList",
-            prompt: "Company Product List",
-            required: false
-        },
-        {
-            type: "CHECKBOX",
-            tag: "lcPrivacy",
-            prompt: "Yes, I agree to the privacy policy for this event?",
+            type: "PICKONE",
+            tag: "lcFollow",
+            prompt: "How should we follow-up?",
             required: false,
             options : [
                 {
-                    tag: "lcPrivacy_Yes",
+                    tag: "lcFollow_1",
+                    prompt: "Meeting"
+                },
+                {
+                    tag: "lcFollow_2",
+                    prompt: "Salesperson call"
+                },
+                {
+                    tag: "lcFollow_3",
+                    prompt: "Receive proposal"
+                },
+                {
+                    tag: "lcFollow_4",
+                    prompt: "Product demo"
+                },
+                {
+                    tag: "lcFollow_5",
+                    prompt: "No follow-up"
+                }
+            ]
+        }, 
+        {
+            type: "PICKONE",
+            tag: "lcTimeframe",
+            prompt: "What is your timeframe?",
+            required: false,
+            options : [
+                {
+                    tag: "lcTimeframe_1",
+                    prompt: "Immediate Need"
+                },
+                {
+                    tag: "lcTimeframe_2",
+                    prompt: "30 days"
+                },
+                {
+                    tag: "lcTimeframe_3",
+                    prompt: "3 months"
+                },
+                {
+                    tag: "lcTimeframe_4",
+                    prompt: "6 months"
+                },
+                {
+                    tag: "lcTimeframe_5",
+                    prompt: "1 year"
+                }
+            ]
+        },  
+        {
+            type: "PICKONE",
+            tag: "lcRole",
+            prompt: "What is your role in the decision?",
+            required: false,
+            options : [
+                {
+                    tag: "lcRole_1",
+                    prompt: "Final Say"
+                },
+                {
+                    tag: "lcRole_2",
+                    prompt: "Purchase Decision"
+                },
+                {
+                    tag: "lcRole_3",
+                    prompt: "Recommendation"
+                },
+                {
+                    tag: "lcRole_4",
+                    prompt: "Influence"
+                },
+                {
+                    tag: "lcRole_5",
+                    prompt: "Partial Interest"
+                }
+            ]
+        },     
+        {
+            type: "CHECKBOX",
+            tag: "lcInfoRequest",
+            prompt: "Information requested?",
+            required: false,
+            options : [
+                {
+                    tag: "lcInfoRequest_Yes",
                     prompt: ""
                 }
             ]
-        },        
-        {
-            type: "PICKONE",
-            tag: "lcProducts",
-            prompt: "What type of products are you interested in?",
-            required: false,
-            options : [
-                {
-                    tag: "lcProducts_1",
-                    prompt: "Validar Demo"
-                },
-                {
-                    tag: "lcProducts_2",
-                    prompt: "iOS Lead Capture"
-                },
-                {
-                    tag: "lcProducts_3",
-                    prompt: "Registration Check-in Application"
-                },
-                {
-                    tag: "lcProducts_4",
-                    prompt: "iOS Session Scanning"
-                },
-                {
-                    tag: "lcProducts_5",
-                    prompt: "Lead Import"
-                },
-                {
-                    tag: "lcProducts_6",
-                    prompt: "Everything"
-                }
-            ]
-        },        
-        {
-            type: "PICKMANY",
-            tag: "lcBands",
-            prompt: "What bands do you enjoy?",
-            required: false,
-            options: [
-                {
-                    tag: "lcBands_1",
-                    prompt: "ACDC"
-                },
-                {
-                    tag: "lcBands_2",
-                    prompt: "Rolling Stone"
-                },
-                {
-                    tag: "lcBands_3",
-                    prompt: "Jimi Hendrix"
-                },
-                {
-                    tag: "lcBands_4",
-                    prompt: "Bob Dylan"
-                },
-                {
-                    tag: "lcBands_5",
-                    prompt: "The Beatles"
-                }
-            ]
-        }        
+        }               
     ],
 
     leadRanking: [
