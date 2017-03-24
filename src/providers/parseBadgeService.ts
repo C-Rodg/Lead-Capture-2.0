@@ -24,25 +24,21 @@ export class ParseBadgeService {
         let checkSymbology  = null,
             symbology       = null,
             scannerSource   = null,
-            scannedData     = null,
-            scannedId       = null;
+            scannedData     = null;
 
         symbology = d[0].Symbology;
         scannerSource = d[0].Source;
-
         if ( scannerSource.indexOf('Camera') > -1 ) {
             scannedData = d[0].Data;
         } else {
             scannedData = decode_utf8(d[0].Data);
         }
-
         checkSymbology = symbology;
         if (checkSymbology != null) {
             checkSymbology = checkSymbology.replace(/\s+/g, '').toUpperCase();
         }
-
         if (checkSymbology === 'CODE3OF9' || checkSymbology === 'CODE39') {
-            scannedId = scannedData;
+            return this.parseQrCode(scannedData);
         } else if (checkSymbology === 'QRCODE') {
             return this.parseQrCode(scannedData);
         } else if (checkSymbology === 'PDF417') {

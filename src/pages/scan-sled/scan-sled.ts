@@ -43,7 +43,7 @@ export class ScanSled {
 
   // Disallow scanning on other pages
   ionViewDidLeave() {
-    (<any>window).OnDataRead = null;
+    (<any>window).OnDataRead = function(){};
   }
 
   // Helper remove scann click class 
@@ -58,7 +58,7 @@ export class ScanSled {
   // Zone function that parses badge data
   onZoneDataRead(data) {
     let scannedData = data;
-    this.zone.run(() => {
+    this.zone.run(() => {     
       this.parseBadgeService.parse(scannedData).subscribe((lead) => {
         if (!this.settingsService.quickScanMode) {
           if (lead.hasOwnProperty('VisitCount')) {          

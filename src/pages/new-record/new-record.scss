@@ -3,6 +3,10 @@ page-new-record {
         background-color: #e5e5e5;
     } 
 
+    .important-text {
+        font-size: 130%;
+    }
+
     .survey-form {
         .req ion-label::after {
             content: " *";

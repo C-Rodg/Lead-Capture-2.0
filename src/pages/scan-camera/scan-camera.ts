@@ -44,7 +44,7 @@ export class ScanCamera  {
 
   // Disallow scanning on other pages
   ionViewDidLeave() {
-    (<any>window).OnDataRead = null;
+    (<any>window).OnDataRead = function(){};
   }
 
   // Zone function that parses badge and passes to Edit/New Record pages
