@@ -1,5 +1,5 @@
 import { Component, ViewChild, NgZone } from '@angular/core';
-import { Nav, Platform, ToastController, LoadingController, AlertController, MenuController } from 'ionic-angular';
+import { Nav, Platform, ToastController, LoadingController, AlertController, MenuController, Events } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 // Side Menu Pages
@@ -36,7 +36,8 @@ export class MyApp {
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    private events: Events
   ) {
     this.initializeApp();
 
@@ -104,6 +105,8 @@ export class MyApp {
             });
             msg.present();
           }          
+        } else if (view.instance instanceof Settings) {
+          this.events.publish('event:onLineaConnect');
         }
       }, (err) => {
 

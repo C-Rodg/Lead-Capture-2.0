@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ToastController, LoadingController } from 'ionic-angular';
+import { NavController, ToastController, LoadingController, Events } from 'ionic-angular';
 
 import { Device } from '../device/device';
 import { SettingsService } from '../../providers/settingsService';
@@ -25,6 +25,7 @@ export class Settings {
   constructor(public navCtrl: NavController,
     private toastCtrl : ToastController,
     private loadingCtrl : LoadingController,
+    private events: Events,
     private settingsService: SettingsService,
     private infoService : InfoService,
     private leadsService : LeadsService
@@ -36,6 +37,12 @@ export class Settings {
   ionViewWillEnter() {  
     this.buildAboutSection();
     this.getLeadCounts();
+    this.events.subscribe('event:onLineaConnect', this.buildAboutSection);
+  }
+
+  // Unsubscribe to events 
+  ionViewWillLeave() {
+    this.events.unsubscribe('event:onLineaConnect', this.buildAboutSection);
   }
 
   // Get About section
