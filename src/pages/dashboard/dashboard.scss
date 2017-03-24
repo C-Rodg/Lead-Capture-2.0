@@ -72,3 +72,29 @@ page-dashboard {
     }  
 
 }
+
+@media (min-width: 768px) {
+    .dashboard-view.card h1 {
+        margin-left: 2%;
+    }
+
+    page-dashboard .square-card-btn ion-icon {
+        font-size: 15rem;
+    }
+
+    page-dashboard .dashboard-view .dashboard-view-icon {
+        font-size: 4em;
+    }
+
+    page-dashboard .settings-box ion-icon {
+        font-size: 4em;
+    }
+
+    page-dashboard .card-md h1 {
+        font-size: 3.6rem;
+    }
+
+    page-dashboard .settings-box h2 {
+        font-size: 2.3em;
+    }
+}
