@@ -18,17 +18,30 @@ export class ScanCameraService {
     private cameraOn: boolean = false;
 
     constructor(private http: Http) {
+        this.calculatePosition = this.calculatePosition.bind(this);
         this.calculatePosition();
         window.addEventListener('orientationchange', () => {
-            this.calculatePosition();
+            setTimeout(this.calculatePosition, 700);
         }, false);
     }
 
     calculatePosition() {
         const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
         const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-        if (width < 600) {
-            // Do nothing, this is an itouch
+        if (width < 420) {
+            // iTouch portrait mode
+            this.camera.width = width;
+            this.camera.height = 456;
+            if (this.cameraOn) {
+                this.turnOn();
+            }
+        } else if (width < 600) {
+            // iTouch in landscape mode
+            this.camera.width = width;
+            this.camera.height = height - 115;
+            if (this.cameraOn) {
+                this.turnOn();
+            }
         } else if (width < 800) {
             // This is iPad in portrait mode
             this.camera.width = width;
@@ -36,8 +49,8 @@ export class ScanCameraService {
             if (this.cameraOn) {
                 this.turnOn();
             }
-        } else if (width < 1300) {
-            // This is iPad in landscape mode             
+        } else {
+            // This is iPad in landscape mode or bigger...
             this.camera.width = width;
             this.camera.height = height - 123;
             if (this.cameraOn) {

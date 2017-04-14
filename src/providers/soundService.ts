@@ -18,12 +18,15 @@ export class SoundService {
     constructor() {
         if ('AudioContext' in window) {
             this.grantedAudioContext = new AudioContext();
-            this.deniedAudioContext = new AudioContext();
-            this.grantedGainNode = this.grantedAudioContext.createGain();
-            this.deniedGainNode = this.deniedAudioContext.createGain();
+            this.deniedAudioContext = new AudioContext();                       
         } else if ('webkitAudioContext' in window) {
             this.grantedAudioContext = new webkitAudioContext();
-            this.deniedAudioContext = new webkitAudioContext();
+            this.deniedAudioContext = new webkitAudioContext();                        
+        }
+        if ('createGain' in this.grantedAudioContext) {
+            this.grantedGainNode = this.grantedAudioContext.createGain();
+            this.deniedGainNode = this.deniedAudioContext.createGain();
+        } else {
             this.grantedGainNode = this.grantedAudioContext.createGainNode();
             this.deniedGainNode = this.deniedAudioContext.createGainNode();
         }
@@ -40,9 +43,9 @@ export class SoundService {
     }
 
     private play(sound) {
-        if ('AudioContext' in window) {
+        if ('start' in sound) {
             sound.start(0);
-        } else if ('webkitAudioContext' in window) {
+        } else {
             sound.noteOn(0);
         }
     }
