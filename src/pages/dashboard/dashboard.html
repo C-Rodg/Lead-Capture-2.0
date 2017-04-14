@@ -37,7 +37,7 @@
       </ion-row>
     </ion-card>
 
-    <ion-card class="dashboard-view" [navPush]="listPage">
+    <ion-card tappable class="dashboard-view" [navPush]="listPage">
       <ion-row>
         <ion-col width-25 text-center stretch class="dashboard-view-icon">
           <ion-icon name="list-box"></ion-icon>
@@ -51,7 +51,7 @@
     <ion-row class="settings-row">
 
       <ion-col width-50 class="settings-box">
-        <ion-card [navPush]="devicePage">
+        <ion-card tappable [navPush]="devicePage">
           <ion-row>
             <ion-col text-center>
               <ion-icon name="create"></ion-icon>
@@ -67,7 +67,7 @@
 
 
       <ion-col width-50 class="settings-box">
-        <ion-card [navPush]="settingsPage">
+        <ion-card tappable [navPush]="settingsPage">
           <ion-row>
             <ion-col text-center>
               <ion-icon name="settings"></ion-icon>

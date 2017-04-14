@@ -97,6 +97,13 @@ export class LeadsService {
             let visitTimes = [],
                 localTime = null;
 
+            let mostRecent = {
+                time: "",
+                timeObj: null,
+                user: "",
+                station: ""
+            };
+
             // Create visits array
             visits.forEach((visit) => {
                 if (visit.VisitDateTime) {
@@ -104,8 +111,36 @@ export class LeadsService {
                     const captureStation = visit.CaptureStation ? visit.CaptureStation : "";
                     localTime = moment.utc(visit.VisitDateTime).toDate();
                     visitTimes.push(`${moment(localTime).format("YYYY-MM-DD HH:mm:ss")} | ${capturedBy} | ${captureStation}`);
+
+                    // Find most recent values
+                    if (moment.utc(visit.VisitDateTime).isAfter(mostRecent.timeObj) || !mostRecent.timeObj) {
+                        mostRecent.time = moment(localTime).format("YYYY-MM-DD HH:mm:ss");
+                        mostRecent.timeObj = moment.utc(visit.VisitDateTime);
+                        mostRecent.user = capturedBy;
+                        mostRecent.station = captureStation;
+                    }                    
                 }
             });
+
+            // Add/Edit lcLastScanTime, lcLastScanBy, lcLastScanStation
+            if (visitTimes.length > 0) {
+                let time = {
+                    Tag: 'lcLastScanTime',
+                    Value: mostRecent.time
+                };
+                let by = {
+                    Tag: 'lcLastScanBy',
+                    Value: mostRecent.user
+                };
+                let station = {
+                    Tag: 'lcLastScanStation',
+                    Value: mostRecent.station
+                };
+
+                this.searchForDupes(lead, 'lcLastScanTime', time);
+                this.searchForDupes(lead, 'lcLastScanBy', by);
+                this.searchForDupes(lead, 'lcLastScanStation', station);
+            }
 
             // Add/Edit lcVisitDateTimes            
             if ( visitTimes.length > 0 ) {
